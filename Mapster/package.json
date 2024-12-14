@@ -18,6 +18,18 @@
   "cordova": {
     "platforms": [
       "android"
-    ]
+    ],
+    "plugins": {
+      "cordova-plugin-camera": {
+        "ANDROIDX_CORE_VERSION": "1.6.+"
+      },
+      "cordova-plugin-geolocation": {
+        "GPS_REQUIRED": "true"
+      }
+    }
+  },
+  "devDependencies": {
+    "cordova-plugin-camera": "^8.0.0",
+    "cordova-plugin-geolocation": "^5.0.0"
   }
 }
