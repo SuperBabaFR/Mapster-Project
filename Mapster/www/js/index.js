@@ -1,6 +1,6 @@
 document.addEventListener('deviceready', onDeviceReady, false);
 
-// Exemple d'utilisation :
+// ExempleS
 const date1 = new Date();
 date1.setMinutes(date1.getMinutes() - 5);
 console.log(timeAgo(date1)); // il y a 5 min
@@ -46,12 +46,14 @@ const data = {
     ]
 }
 
+addNavInteractions();
 showListPosts();
 
 function onDeviceReady() {
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
     document.getElementById('deviceready').classList.add('ready');
-    showListPosts()
+    // addNavInteractions();
+    // showListPosts();
 }
 
 
@@ -113,6 +115,24 @@ function showListPosts () {
     }
 }
 
+
+function addNavInteractions() {
+
+    document.getElementById("item-1").classList.add("selected");
+
+    for (let i = 1; i < 6; i++) {
+        let navItem = document.getElementById("item-" + i);
+        navItem.addEventListener("click", () => {
+            for (let i = 1; i < 6; i++) {
+                let navItem = document.getElementById("item-" + i);
+                navItem.classList.remove("selected");
+            }
+            navItem.classList.add("selected");
+        })
+    }
+
+
+}
 function timeAgo(date) {
     const now = new Date();
     const secondsPast = Math.floor((now - date) / 1000);
