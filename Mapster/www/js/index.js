@@ -131,20 +131,36 @@ function showListPosts () {
 
 
 function addNavInteractions() {
+    const navItems = [
+        { nav: "home", div: "consulter" },
+        { nav: "search", div: "recherche" },
+        { nav: "post", div: "poster" },
+        { nav: "map", div: "carte" },
+        { nav: "account", div: "profil" }
+    ];
 
-    document.getElementById("item-1").classList.add("selected");
+    navItems.forEach(item => {
+        const navElement = document.getElementById(item.nav);
+        const divElement = document.getElementById(item.div);
 
-    for (let i = 1; i < 6; i++) {
-        let navItem = document.getElementById("item-" + i);
-        navItem.addEventListener("click", () => {
-            for (let i = 1; i < 6; i++) {
-                let navItem = document.getElementById("item-" + i);
-                navItem.classList.remove("selected");
-            }
-            navItem.classList.add("selected");
-        })
-    }
+        navElement.addEventListener("click", () => {
+            navItems.forEach(i => {
+                document.getElementById(i.nav).classList.remove("selected");
+                document.getElementById(i.div).style.display = "none";
+            });
 
+            navElement.classList.add("selected");
+            divElement.style.display = "block"; // Affiche le div correspondant
+        });
+    });
+
+    navItems.forEach(elem => {
+        document.getElementById(elem.nav).classList.remove("selected");
+        document.getElementById(elem.div).style.display = "none";
+    });
+
+    document.getElementById("home").classList.add("selected");
+    document.getElementById("consulter").style.display = "block";
 
 }
 function timeAgo(date) {

@@ -7,13 +7,15 @@ body {
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     font-size:12px;
-    height:100vh;
-    width:100%;
-    margin:0px;
     /* Padding to avoid the "unsafe" areas behind notches in the screen */
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
 
     font-family: "celebrisans", system-ui;
+}
+html, body {
+    height: 100%; /* Assure que le corps prend toute la hauteur de la fenêtre */
+    width:100%;
+    margin: 0;    /* Supprime les marges par défaut */
 }
 
 @font-face {
@@ -26,62 +28,22 @@ body {
     src: url("../assets/berkslund_Bold.ttf");
 }
 
-/* POST CSS */
-
-.post {
-    margin-top: 10px;
-
-    .head-post {
-        display: inline-flex;
-        align-items: center;
-
-        .pp {
-            width: 12vw;
-            height: 12vw;
-            padding: 1vw 2vw .25vw 2vw;
-            border-radius: 50%;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-        }
-
-        .pseudo {
-            font-family: "berkslund";
-            font-size: 4.25vw;
-            margin: 0px;
-            font-weight: bold;
-        }
-
-        .distance {
-            font-size: 3vw;
-            margin: 0px;
-            font-weight: lighter;
-
-        }
-    }
-
-    .img-post {
-        width : 100vw;
-    }
-
-    .description {
-        font-size: 3.5vw;
-        margin: 0px;
-        padding-left: 1vw;
-    }
-
-    .date {
-        font-size: 3vw;
-        margin: 0px;
-        padding-left: 1vw;
-    }
+.MapsterApp {
+    height: calc(100% - 8vh);
+    overflow-y: auto;
 }
 
+
+/* NAVBAR CSS */
+
 .nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
     background-color: #1F8C5C;
     width: 100%;
     height: 8vh;
-    position: sticky;
-    bottom: 0;
     display: grid;
     align-items: center;
 }
@@ -120,6 +82,57 @@ body {
     width: 10vw;
     display: grid;
     justify-content: center;
+}
+/* NAVBAR CSS */
+/* POST CSS */
+
+.post {
+    margin-top: 10px;
+
+    .head-post {
+        display: inline-flex;
+        align-items: center;
+
+        .pp {
+            width: 12vw;
+            height: 12vw;
+            padding: 1vw 2vw .25vw 2vw;
+            border-radius: 50%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+        }
+
+        .pseudo {
+            font-family: "berkslund";
+            font-size: 4.25vw;
+            margin: 0px;
+            font-weight: bold;
+        }
+
+        .distance {
+            font-size: 3vw;
+            margin: 0px;
+            font-weight: lighter;
+
+        }
+    }
+
+    .img-post {
+        width : 100vw;
+    }
+
+    .description {
+        font-size: 4vw;
+        margin: 0px;
+        padding-left: 1vw;
+    }
+
+    .date {
+        color: grey;
+        font-size: 4vw;
+        margin: 0vw 1vw 0vw 0vw;
+        padding-left: 1vw;
+    }
 }
 
 /* POST CSS */
