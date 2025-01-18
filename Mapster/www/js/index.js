@@ -1,4 +1,4 @@
-document.addEventListener('deviceready', onDeviceReady, false);
+document.addEventListener('deviceready', onDeviceReady);
 
 // ExempleS
 const date1 = new Date();
@@ -66,6 +66,31 @@ showListPosts();
 function onDeviceReady() {
     // addNavInteractions();
     // showListPosts();
+
+    if (window.caches) {
+        caches.keys().then((names) => {
+            names.forEach((name) => caches.delete(name));
+        });
+    }
+
+
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+    // Appliquer le thème en fonction du mode actuel
+    if (prefersDarkScheme.matches) {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+
+    // Écouter les changements du mode système
+    prefersDarkScheme.addEventListener('change', (event) => {
+        if (event.matches) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    });
 }
 
 

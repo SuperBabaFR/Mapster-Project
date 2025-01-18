@@ -17,21 +17,34 @@ html, body {
     width:100%;
     margin: 0;    /* Supprime les marges par défaut */
 
-    background-color: #ffffff;
-    color: #000000;
-
     p {
         font-size: 3.2vw;
     }
 }
 
-/* Détecter le thème sombre et ajuster les couleurs */
+
+/*POUR LE MODE SOMBRE ET CLAIR*/
+
+body {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+body.dark-mode {
+    background-color: #000000;
+    color: #ffffff;
+}
+
 @media (prefers-color-scheme: dark) {
     body {
         background-color: #000000;
         color: #ffffff;
     }
 }
+
+/*POUR LE MODE SOMBRE ET CLAIR*/
+
+
 
 @font-face {
     font-family: "celebrisans";
