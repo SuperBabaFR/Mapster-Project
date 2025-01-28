@@ -53,11 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insérer les données dans la base de données
     try {
         $stmt = $pdo->prepare("
-            INSERT INTO posts (idMapper, hashMdp, photo, longitude, latitude, description)
-            VALUES (:idMapper, :hashMdp, :photo, :longitude, :latitude, :description)
+            INSERT INTO posts (idMapper, photo, longitude, latitude, description)
+            VALUES (:idMapper, :photo, :longitude, :latitude, :description)
         ");
         $stmt->bindParam(':idMapper', $idMapper);
-        $stmt->bindParam(':hashMdp', $hashMdp);
         $stmt->bindParam(':photo', $photoBase64);
         $stmt->bindParam(':longitude', $longitude);
         $stmt->bindParam(':latitude', $latitude);
