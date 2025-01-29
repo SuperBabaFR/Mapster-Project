@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost'; 
-$dbname = 'test_mobile'; 
+$dbname = 'db_mapster'; 
 $username = 'root'; 
 $password = ''; 
 
@@ -16,8 +16,6 @@ try {
 } catch (PDOException $e) {
     die("Erreur de connexion à la base de données : " . $e->getMessage());
 }
-
-
 
 
 
