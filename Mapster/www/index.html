@@ -1,61 +1,56 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src * 'self' data: content:;">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-    <meta name="color-scheme" content="light dark">
+    <meta charset="utf-8" />
+    <meta
+        http-equiv="Content-Security-Policy"
+        content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src * 'self' data: content:;"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta
+        name="viewport"
+        content="initial-scale=1, width=device-width, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="light dark" />
 
     <title>Mapster</title>
 
     <!-- Bootstrap CSS (local) -->
-    <link href="lib/bootstrap.min.css" rel="stylesheet">
+    <link href="lib/bootstrap.min.css" rel="stylesheet" />
 
     <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        rel="stylesheet"
+    />
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Berkslund:wght@700&family=Caveat:wght@400&display=swap"
-        rel="stylesheet">
-
+    <link
+        href="https://fonts.googleapis.com/css2?family=Berkslund:wght@700&family=Caveat:wght@400&display=swap"
+        rel="stylesheet"
+    />
 
     <!-- Styles personnalisés -->
-    <link href="css/index.css" rel="stylesheet">
-    <link href="css/profile.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet" />
+    <link href="css/profile.css" rel="stylesheet" />
 </head>
 
 <body>
     <div class="MapsterApp">
-
         <!-- LETIN et BLOU-->
         <div id="inscription" style="display: none;">
-            s'inscrire
-            pseudo
-            mdp
-            confirmation
-            ect
-            photo
-            ect ect
-            LETIN et BLOU
+            s'inscrire pseudo mdp confirmation ect photo ect ect LETIN et BLOU
         </div>
 
         <!-- HALIAR et LEVI-->
         <div id="connexion" style="display: none;">
-            se connecter
-            pseudo
-            mdp
-            connexion
-            HALIAR et LEVI
+            se connecter pseudo mdp connexion HALIAR et LEVI
         </div>
 
         <!-- JULIO ET BABAS-->
         <div id="consulter">
-            <div id="postsList">
-            </div>
+            <div id="postsList"></div>
         </div>
 
         <!-- personne assigné -->
@@ -69,8 +64,6 @@
         <div id="poster">
             <p>Appareil photo</p>
             <p>Yohann et Kény</p>
-
-
         </div>
 
         <!-- personne assigné -->
@@ -84,13 +77,12 @@
             <!-- Nicolas et Ludovic -->
             <p>consulter son profil</p>
             <p>Nicolas et Ludovic</p>
-            <br>
-
+            <br />
 
             <!-- Benjamin et William -->
             <p>modifier son profil</p>
             <p>William et Benjamin</p>
-            <br>
+            <br />
             <div class="modifierProfil container mt-4" style="display: none;">
                 <div class="card shadow scrollable-card">
                     <div class="card-header text-center">
@@ -99,8 +91,13 @@
                     <div class="card-body">
                         <!-- Conteneur pour la photo de profil -->
                         <div class="profile-photo-container text-center">
-                            <img id="photoPreview" src="img/default.png" alt="Photo de profil" class="profile-photo"
-                                onerror="this.onerror=null;this.src='img/default.png';">
+                            <img
+                                id="photoPreview"
+                                src="img/default.png"
+                                alt="Photo de profil"
+                                class="profile-photo"
+                                onerror="this.onerror=null;this.src='img/default.png';"
+                            />
                             <div class="edit-icon" id="editPhoto">
                                 <i class="fas fa-camera"></i>
                             </div>
@@ -111,48 +108,84 @@
                             <!-- Champ Prénom -->
                             <div class="mb-3">
                                 <label for="prenom" class="form-label">Prénom</label>
-                                <input type="text" class="form-control" id="prenom" placeholder="Chargement..."
-                                    required>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="prenom"
+                                    placeholder="Chargement..."
+                                    required
+                                />
                             </div>
 
                             <!-- Champ Nom -->
                             <div class="mb-3">
                                 <label for="nom" class="form-label">Nom</label>
-                                <input type="text" class="form-control" id="nom" placeholder="Chargement..." required>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="nom"
+                                    placeholder="Chargement..."
+                                    required
+                                />
                             </div>
 
                             <!-- Champ Pseudo -->
                             <div class="mb-3">
                                 <label for="pseudo" class="form-label">Pseudo</label>
-                                <input type="text" class="form-control" id="pseudo" placeholder="Chargement..."
-                                    required>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="pseudo"
+                                    placeholder="Chargement..."
+                                    required
+                                />
                             </div>
 
                             <!-- Champ Email -->
                             <div class="mb-3">
                                 <label for="email" class="form-label">Adresse e-mail</label>
-                                <input type="email" class="form-control" id="email" placeholder="Chargement..."
-                                    required>
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="email"
+                                    placeholder="Chargement..."
+                                    required
+                                />
                             </div>
 
                             <!-- Champ Mot de Passe -->
                             <div class="mb-3">
                                 <label for="password" class="form-label">Mot de passe</label>
-                                <input type="password" class="form-control" id="password"
-                                    placeholder="Nouveau mot de passe">
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="password"
+                                    placeholder="Nouveau mot de passe"
+                                />
                             </div>
 
                             <!-- Champ Confirmation Mot de Passe -->
                             <div class="mb-3">
-                                <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
-                                <input type="password" class="form-control" id="confirmPassword"
-                                    placeholder="Confirmer le mot de passe">
+                                <label for="confirmPassword" class="form-label"
+                                    >Confirmer le mot de passe</label
+                                >
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="confirmPassword"
+                                    placeholder="Confirmer le mot de passe"
+                                />
                             </div>
 
                             <!-- Bouton Sauvegarde -->
                             <div class="text-center">
-                                <button type="button" id="saveProfile" class="btn btn-primary">Enregistrer les
-                                    modifications</button>
+                                <button
+                                    type="button"
+                                    id="saveProfile"
+                                    class="btn btn-primary"
+                                >
+                                    Enregistrer les modifications
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -162,52 +195,44 @@
             <!-- Enora et Oryane -->
             <p>supprimer une Photo</p>
             <p>Enora et Oryane</p>
-            <br>
-            <div id="supprimerPhoto">
-            </div>
+            <br />
+            <div id="supprimerPhoto"></div>
         </div>
-
 
         <div class="nav-bar">
             <div class="list-nav">
                 <div id="home" class="nav-item">
                     <div class="nav-item-img">
-                        <img src="img/icons/home.svg" alt="">
+                        <img src="img/icons/home.svg" alt="" />
                     </div>
-
                     <p>Acceuil</p>
                 </div>
                 <div id="search" class="nav-item">
                     <div class="nav-item-img">
-                        <img src="img/icons/search.svg" alt="">
+                        <img src="img/icons/search.svg" alt="" />
                     </div>
-
                     <p>Rechercher</p>
                 </div>
                 <div id="post" class="nav-item">
                     <div class="nav-item-img">
-                        <img src="img/icons/publish.svg" alt="">
+                        <img src="img/icons/publish.svg" alt="" />
                     </div>
-
                     <p>Poster</p>
                 </div>
                 <div id="map" class="nav-item">
                     <div class="nav-item-img">
-                        <img src="img/icons/explore.svg" alt="">
+                        <img src="img/icons/explore.svg" alt="" />
                     </div>
-
                     <p>Carte</p>
                 </div>
                 <div id="account" class="nav-item">
                     <div class="nav-item-img">
-                        <img src="img/icons/account.svg" alt="">
+                        <img src="img/icons/account.svg" alt="" />
                     </div>
-
                     <p>Profil</p>
                 </div>
             </div>
         </div>
-
     </div>
     <!-- Cordova JS -->
     <script src="cordova.js"></script>
@@ -217,5 +242,4 @@
     <script src="lib/bootstrap.bundle.min.js"></script>
     <script src="js/profile.js"></script>
 </body>
-
 </html>
