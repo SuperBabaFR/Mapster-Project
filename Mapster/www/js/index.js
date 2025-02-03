@@ -277,3 +277,13 @@ function onSuccess(imageData) {
 function onFail(message) {
     alert('Échec de la capture : ' + message);
 }
+
+//véyé sa ou ka fè
+document.getElementById("account").addEventListener("click", function () {
+    fetch("ConsulterProfil\Backend\consulterProfil.php") // Appel à l'API PHP
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("pseudo").textContent = data.pseudo;
+            document.getElementById("mail").textContent = data.mail;
+        });
+});
