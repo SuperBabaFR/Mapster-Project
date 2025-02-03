@@ -74,8 +74,4 @@ try {
         // En cas d'erreur SQL, renvoyer une réponse JSON avec le message d'erreur
         echo json_encode(["code" => 500, "descriptif" => "Erreur serveur : " . $e->getMessage()]);
     }
- else {
-    // Si la requête n'est pas de type POST, renvoyer une réponse JSON indiquant que la méthode n'est pas autorisée
-    echo json_encode(["code" => 405, "descriptif" => "Méthode non autorisée"]);
-}
 ?>
