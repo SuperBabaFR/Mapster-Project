@@ -8,9 +8,25 @@
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
     <meta name="color-scheme" content="light dark">
-    <link rel="stylesheet" href="css/index.css">
-    <title>Hello World</title>
-</head>
+    <title>Mapster</title>
+
+    <!-- Bootstrap CSS (local) -->
+    <link href="lib/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+            rel="stylesheet"
+    />
+
+    <!-- Google Fonts -->
+    <link
+            href="https://fonts.googleapis.com/css2?family=Berkslund:wght@700&family=Caveat:wght@400&display=swap"
+            rel="stylesheet"
+    />
+
+    <!-- Styles personnalisés -->
+    <link href="css/index.css" rel="stylesheet"/>
 <body>
 <div class="MapsterApp">
 
@@ -77,18 +93,141 @@
         <p>Je suis la carte je suis la carte ....</p>
     </div>
 
-    <!-- William et Benjamin -->
     <div id="profil">
-        <p>profillll</p>
-        <p>William et Benjamin</p>
-        <br>
+        <!-- Ludo et Nico -->
+        <div class="consulterProfil " >
+            <div id="photo"></div>
+            <div id="pseudomapper"></div>
+            <div id="publication"></div>
+            <div>
+                <div id="modifierProfil"></div>
+            </div>
+        </div>
+        <div id="infoMapper">
+            <div>
+                <div id="logoMail"></div>
+                <div id="mail"></div>
+            </div>
+            <div>
+                <div id="logomdp"></div>
+                <div id="mdp"></div>
+            </div>
+        </div>
+        <div>
+            <div id="post-onglet"></div>
+            <div id="map-onget"></div>
+        </div>
+        <div id="consultBody"></div>
 
 
-        <!-- Nicolas et Ludovic -->
-        <p>modifierProfil</p>
-        <p>Nicolas et Ludovic</p>
-        <br>
-        <div id="modifierProfil">
+        <!-- William et Benjamin -->
+        <div class="modifierProfil container mt-4" style="display: none;">
+            <div class="card shadow scrollable-card">
+                <div class="card-header text-center">
+                    <h3>Modifier le profil utilisateur</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Conteneur pour la photo de profil -->
+                    <div class="profile-photo-container text-center">
+                        <img
+                                id="photoPreview"
+                                src="img/default.png"
+                                alt="Photo de profil"
+                                class="profile-photo"
+                                onerror="this.onerror=null;this.src='img/default.png';"
+                        />
+                        <div class="edit-icon" id="editPhoto">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+
+                    <!-- Formulaire -->
+                    <form id="userForm">
+                        <!-- Champ Prénom -->
+                        <div class="mb-3">
+                            <label for="prenom" class="form-label">Prénom</label>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="prenom"
+                                    placeholder="Chargement..."
+                                    required
+                            />
+                        </div>
+
+                        <!-- Champ Nom -->
+                        <div class="mb-3">
+                            <label for="nom" class="form-label">Nom</label>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="nom"
+                                    placeholder="Chargement..."
+                                    required
+                            />
+                        </div>
+
+                        <!-- Champ Pseudo -->
+                        <div class="mb-3">
+                            <label for="pseudo" class="form-label">Pseudo</label>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="pseudo"
+                                    placeholder="Chargement..."
+                                    required
+                            />
+                        </div>
+
+                        <!-- Champ Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Adresse e-mail</label>
+                            <input
+                                    type="email"
+                                    class="form-control"
+                                    id="email"
+                                    placeholder="Chargement..."
+                                    required
+                            />
+                        </div>
+
+                        <!-- Champ Mot de Passe -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mot de passe</label>
+                            <input
+                                    type="password"
+                                    class="form-control"
+                                    id="password"
+                                    placeholder="Nouveau mot de passe"
+                            />
+                        </div>
+
+                        <!-- Champ Confirmation Mot de Passe -->
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label"
+                            >Confirmer le mot de passe</label
+                            >
+                            <input
+                                    type="password"
+                                    class="form-control"
+                                    id="confirmPassword"
+                                    placeholder="Confirmer le mot de passe"
+                            />
+                        </div>
+
+                        <!-- Bouton Sauvegarde -->
+                        <div class="text-center">
+                            <button
+                                    type="button"
+                                    id="saveProfile"
+                                    class="btn btn-primary"
+                            >
+                                Enregistrer les modifications
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
 
@@ -145,5 +284,7 @@
 
 <script src="cordova.js"></script>
 <script src="js/index.js"></script>
+<script src="js/profile.js"></script>
+<script src="lib/bootstrap.bundle.min.js"></script>
 </body>
 </html>

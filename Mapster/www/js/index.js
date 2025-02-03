@@ -11,31 +11,6 @@ const latitude = 16.22395386679484;
 function onDeviceReady() {
     addNavInteractions();
     showListPosts();
-
-    if (window.caches) {
-        caches.keys().then((names) => {
-            names.forEach((name) => caches.delete(name));
-        });
-    }
-
-
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-    // Appliquer le thème en fonction du mode actuel
-    if (prefersDarkScheme.matches) {
-        document.body.classList.add('dark-mode');
-    } else {
-        document.body.classList.remove('dark-mode');
-    }
-
-    // Écouter les changements du mode système
-    prefersDarkScheme.addEventListener('change', (event) => {
-        if (event.matches) {
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-        }
-    });
 }
 
 function showListPosts () {
@@ -145,6 +120,10 @@ function addNavInteractions() {
                 takePicture();
             }
 
+            if (item.nav === "account") {
+                consulterProfil();
+            }
+
             navElement.classList.add("selected");
             divElement.style.display = "block"; // Affiche le div correspondant
         });
@@ -208,6 +187,7 @@ function onSuccess(imageData) {
     var image = document.getElementById('monImage');
     image.style.display = 'block';
     image.src = `${imageData}`;
+    alert(imageData);
 
     // Vérifier que l'image s'affiche bien
     image.onload = function () {
@@ -224,3 +204,17 @@ function onFail(message) {
     console.error("Erreur lors de la capture : " + message);
     alert('Échec :' + message);
 }
+
+function consulterProfil() {
+    fetch(URL + "consulterProfil.php")
+        .then((response) => response.json())
+        .then((json) => {
+            data = json;
+
+            // Mettre à jour le DOM avec les informations du profil
+            document.getElementById("pseudomapper").textContent = data.pseudo;
+            document.getElementById("mail").textContent = data.mail;
+        })
+        .catch((error) => console.error("Erreur lors de la requête :", error));
+}
+

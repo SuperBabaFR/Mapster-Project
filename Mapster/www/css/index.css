@@ -22,28 +22,10 @@ html, body {
     }
 }
 
-
-/*POUR LE MODE SOMBRE ET CLAIR*/
-
 body {
     background-color: #ffffff;
     color: #000000;
 }
-
-body.dark-mode {
-    background-color: #000000;
-    color: #ffffff;
-}
-
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #000000;
-        color: #ffffff;
-    }
-}
-
-/*POUR LE MODE SOMBRE ET CLAIR*/
-
 
 
 @font-face {
@@ -114,6 +96,23 @@ body.dark-mode {
     justify-content: center;
 }
 /* NAVBAR CSS */
+
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
 /* POST CSS */
 
 .post {
@@ -166,28 +165,122 @@ body.dark-mode {
 }
 
 /* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+/* POST CSS */
+
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+
+
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+
+
+#profil {
+    font-family: 'Berkslund', Arial, sans-serif;
+
+    .card-header {
+        background-color: #1f8e5c;
+        color: white;
+    }
+
+
+    /* Ajout d'une ombre légère pour délimiter visuellement la carte */
+    .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    .btn-primary {
+        background-color: #1f8e5c;
+        border-color: #1f8e5c;
+    }
+
+    .btn-primary:hover {
+        background-color: #146c47;
+        border-color: #146c47;
+    }
+
+    .profile-photo-container {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        margin: 20px auto;
+    }
+
+    .profile-photo {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #ddd;
+    }
+
+    .edit-icon {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 40px;
+        height: 40px;
+        background-color: #1f8e5c;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border: 2px solid #fff;
+    }
+
+    .edit-icon i {
+        color: white;
+        font-size: 18px;
+    }
+}
+
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
+/* MODIFIER PROFIL CSS */
 
 
 
-/* EXEMPLES */
-/*.event {*/
-/*    border-radius:4px;*/
-/*    color:#FFFFFF;*/
-/*    font-size:12px;*/
-/*    margin:0px 30px;*/
-/*    padding:2px 0px;*/
-/*}*/
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
 
-/*.event.listening {*/
-/*    background-color:#333333;*/
-/*    display:block;*/
-/*}*/
 
-/*.event.received {*/
-/*    background-color:#4B946A;*/
-/*    display:none;*/
-/*}*/
-
-/*#deviceready.ready .event.listening { display: none; }*/
-/*#deviceready.ready .event.received { display: block; }*/
 
