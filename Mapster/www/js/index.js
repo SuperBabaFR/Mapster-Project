@@ -245,3 +245,12 @@ function timeAgo(date) {
     const years = Math.floor(secondsPast / 31536000);
     return `il y a ${years} an${years > 1 ? 's' : ''}`;
 }
+
+document.getElementById("account").addEventListener("click", function () {
+    fetch("ConsulterProfil\Backend\consulterProfil.php") // Appel à l'API PHP
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("pseudo").textContent = data.pseudo;
+            document.getElementById("mail").textContent = data.mail;
+        });
+});
