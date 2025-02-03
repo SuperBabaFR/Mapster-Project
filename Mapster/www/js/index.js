@@ -1,5 +1,7 @@
 document.addEventListener('deviceready', onDeviceReady);
 
+const URL = "https://miage-antilles.fr/mapper/"
+
 // ExempleS
 const date1 = new Date();
 date1.setMinutes(date1.getMinutes() - 5);
@@ -70,7 +72,7 @@ addNavInteractions();
 showListPosts();
 
 function onDeviceReady() {
-    // addNavInteractions();
+    addNavInteractions();
     // showListPosts();
 
     if (window.caches) {
@@ -102,7 +104,7 @@ function onDeviceReady() {
 function showListPosts () {
     let data = {}
 
-    fetch("URL", {
+    fetch(URL + "consulter.php", {
         method: "POST",
         body: JSON.stringify({
             idMapper: idMapper,
@@ -197,11 +199,16 @@ function addNavInteractions() {
                 document.getElementById(i.nav).classList.remove("selected");
                 document.getElementById(i.div).style.display = "none";
             });
-
             navElement.classList.add("selected");
             divElement.style.display = "block"; // Affiche le div correspondant
+            // Si le div actif est "poster", ouvrir la caméra
+            if (item.div === "poster") {
+                openCamera();
+            }
         });
     });
+
+
 
     navItems.forEach(elem => {
         document.getElementById(elem.nav).classList.remove("selected");
@@ -244,4 +251,29 @@ function timeAgo(date) {
     }
     const years = Math.floor(secondsPast / 31536000);
     return `il y a ${years} an${years > 1 ? 's' : ''}`;
+}
+
+// Fonction pour ouvrir la caméra
+function openCamera() {
+    navigator.camera.getPicture(onSuccess, onFail, {
+        quality: 50, // Qualité de l'image
+        destinationType: Camera.DestinationType.DATA_URL, // Format Base64
+        correctOrientation: true // Corrige l'orientation de l'image
+    });
+}
+
+// Fonction appelée lorsque la capture est réussie
+function onSuccess(imageData) {
+    alert('Photo capturée avec succès !');
+    // Logique pour afficher ou traiter l'image capturée
+    var image = document.getElementById("myImage");
+    var image = document.getElementById("aa").innerHTML = imageData;
+    alert(imageData);
+    image.src = imageData;
+
+}
+
+// Fonction appelée en cas d'échec ou d'annulation
+function onFail(message) {
+    alert('Échec de la capture : ' + message);
 }
