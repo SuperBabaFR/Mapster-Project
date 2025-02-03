@@ -7,11 +7,11 @@ const hashMdp = "HashedPassword";
 let longitude = 16.22373795961566;
 let latitude = -61.528672691150106;
 
-addNavInteractions();
+// addNavInteractions();
 // showListPosts();
 
 function onDeviceReady() {
-    // addNavInteractions();
+    addNavInteractions();
     // onSuccess Callback
     // This method accepts a Position object, which contains the
     // current GPS coordinates
@@ -41,7 +41,7 @@ function onDeviceReady() {
     showListPosts();
 }
 
-function showListPosts (position) {
+function showListPosts() {
     let data = {}
     const rayon = 1000.0;
 
@@ -149,8 +149,6 @@ function addNavInteractions() {
         });
     });
 
-
-
     navItems.forEach(elem => {
         document.getElementById(elem.nav).classList.remove("selected");
         document.getElementById(elem.div).style.display = "none";
@@ -194,30 +192,7 @@ function timeAgo(date) {
     return `il y a ${years} an${years > 1 ? 's' : ''}`;
 }
 
-// Fonction pour ouvrir la caméra
-function openCamera() {
-    navigator.camera.getPicture(onSuccess, onFail, {
-        quality: 50, // Qualité de l'image
-        destinationType: Camera.DestinationType.DATA_URL, // Format Base64
-        correctOrientation: true // Corrige l'orientation de l'image
-    });
-}
 
-// Fonction appelée lorsque la capture est réussie
-function onSuccess(imageData) {
-    alert('Photo capturée avec succès !');
-    // Logique pour afficher ou traiter l'image capturée
-    var image = document.getElementById("myImage");
-    var image = document.getElementById("aa").innerHTML = imageData;
-    alert(imageData);
-    image.src = imageData;
-
-}
-
-// Fonction appelée en cas d'échec ou d'annulation
-function onFail(message) {
-    alert('Échec de la capture : ' + message);
-}
 
 //véyé sa ou ka fè
 document.getElementById("account").addEventListener("click", function () {
