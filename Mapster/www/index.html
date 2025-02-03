@@ -1,79 +1,75 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src * 'self' data: content:;">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-        <meta name="color-scheme" content="light dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src * 'self' data: content:;"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta
+      name="viewport"
+      content="initial-scale=1, width=device-width, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="light dark" />
 
-        <title>Mapster</title>
+    <title>Mapster</title>
 
-        <!-- Bootstrap CSS (local) -->
-        <link href="lib/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS (local) -->
+    <link href="lib/bootstrap.min.css" rel="stylesheet" />
 
-        <!-- Font Awesome -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
 
-        <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css2?family=Berkslund:wght@700&family=Caveat:wght@400&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Berkslund:wght@700&family=Caveat:wght@400&display=swap"
+      rel="stylesheet"
+    />
 
-
-        <!-- Styles personnalisés -->
-        <link href="css/index.css" rel="stylesheet">
-        <link href="css/profile.css" rel="stylesheet">
-    </head>
-    <body>
+    <!-- Styles personnalisés -->
+    <link href="css/index.css" rel="stylesheet" />
+    <link href="css/profile.css" rel="stylesheet" />
+  </head>
+  <body>
     <div class="MapsterApp">
+      <!-- LETIN et BLOU-->
+      <div id="inscription" style="display: none">
+        s'inscrire pseudo mdp confirmation ect photo ect ect LETIN et BLOU
+      </div>
 
-<!-- LETIN et BLOU-->
-        <div id="inscription" style="display: none;">
-            s'inscrire
-            pseudo
-            mdp
-            confirmation
-            ect
-            photo
-            ect ect
-            LETIN et BLOU
-        </div>
+      <!-- HALIAR et LEVI-->
+      <div id="connexion" style="display: none">
+        se connecter pseudo mdp connexion HALIAR et LEVI
+      </div>
 
-<!-- HALIAR et LEVI-->
-        <div id="connexion" style="display: none;">
-            se connecter
-            pseudo
-            mdp
-            connexion
-            HALIAR et LEVI
-        </div>
+      <!-- JULIO ET BABAS-->
+      <div id="consulter">
+        <div id="postsList"></div>
+      </div>
 
-<!-- JULIO ET BABAS-->
-        <div id="consulter">
-            <div id="postsList">
-            </div>
-        </div>
+      <!-- personne assigné -->
+      <div id="recherche">
+        <p>barre de recherche</p>
+        <p>filtres</p>
+        <p>personne assigné</p>
+      </div>
 
-<!-- personne assigné -->
-        <div id="recherche">
-            <p>barre de recherche</p>
-            <p>filtres</p>
-            <p>personne assigné</p>
-        </div>
+      <!-- Yohann et Kény -->
+      <div id="poster">
+        <p>Appareil photo</p>
+        <p>Yohann et Kény</p>
+      </div>
 
-<!-- Yohann et Kény -->
-        <div id="poster">
-            <p>Appareil photo</p>
-            <p>Yohann et Kény</p>
-
-
-        </div>
-
-<!-- personne assigné -->
-        <div id="carte">
-            <p>personne assigné</p>
-            <p>Je suis la carte je suis la carte ....</p>
-        </div>
+      <!-- personne assigné -->
+      <div id="carte">
+        <p>personne assigné</p>
+        <p>Je suis la carte je suis la carte ....</p>
+      </div>
 
       <!-- William et Benjamin -->
       <div id="profil">
@@ -109,14 +105,14 @@
         <div id="consultBody"></div>
         <br />
 
-            <!-- Benjamin et William -->
-            <p>modifier son profil</p>
-            <p>William et Benjamin</p>
-            <br>
-            <div class="modifierProfil container mt-4">
-        <div class="card shadow scrollable-card">
+        <!-- Benjamin et William -->
+        <p>modifier son profil</p>
+        <p>William et Benjamin</p>
+        <br />
+        <div class="modifierProfil container mt-4" style="display: none;"></div>
+          <div class="card shadow scrollable-card">
             <div class="card-header text-center">
-                <h3>Modifier le profil utilisateur</h3>
+              <h3>Modifier le profil utilisateur</h3>
             </div>
             <div class="card-body">
               <!-- Conteneur pour la photo de profil -->
@@ -229,53 +225,52 @@
         <div id="supprimerPhoto"></div>
       </div>
 
-        <div class="nav-bar">
-            <div class="list-nav">
-                <div id="home" class="nav-item">
-                    <div class="nav-item-img">
-                        <img src="img/icons/home.svg" alt="">
-                    </div>
-
-                    <p>Acceuil</p>
-                </div>
-                <div id="search" class="nav-item">
-                    <div class="nav-item-img">
-                        <img src="img/icons/search.svg" alt="">
-                    </div>
-
-                    <p>Rechercher</p>
-                </div>
-                <div id="post-nav" class="nav-item">
-                    <div class="nav-item-img">
-                        <img src="img/icons/publish.svg" alt="">
-                    </div>
-
-                    <p>Poster</p>
-                </div>
-                <div id="map-nav" class="nav-item">
-                    <div class="nav-item-img">
-                        <img src="img/icons/explore.svg" alt="">
-                    </div>
-
-                    <p>Carte</p>
-                </div>
-                <div id="account" class="nav-item">
-                    <div class="nav-item-img">
-                        <img src="img/icons/account.svg" alt="">
-                    </div>
-
-                    <p>Profil</p>
-                </div>
+      <div class="nav-bar">
+        <div class="list-nav">
+          <div id="home" class="nav-item">
+            <div class="nav-item-img">
+              <img src="img/icons/home.svg" alt="" />
             </div>
-        </div>
 
-        </div>
-        <!-- Cordova JS -->
-        <script src="cordova.js"></script>
+            <p>Acceuil</p>
+          </div>
+          <div id="search" class="nav-item">
+            <div class="nav-item-img">
+              <img src="img/icons/search.svg" alt="" />
+            </div>
 
-        <!-- JS locaux -->
-        <script src="js/index.js"></script>
-        <script src="lib/bootstrap.bundle.min.js"></script>
-        <script src="js/profile.js"></script>
-    </body>
+            <p>Rechercher</p>
+          </div>
+          <div id="post" class="nav-item">
+            <div class="nav-item-img">
+              <img src="img/icons/publish.svg" alt="" />
+            </div>
+
+            <p>Poster</p>
+          </div>
+          <div id="map" class="nav-item">
+            <div class="nav-item-img">
+              <img src="img/icons/explore.svg" alt="" />
+            </div>
+
+            <p>Carte</p>
+          </div>
+          <div id="account" class="nav-item">
+            <div class="nav-item-img">
+              <img src="img/icons/account.svg" alt="" />
+            </div>
+
+            <p>Profil</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Cordova JS -->
+    <script src="cordova.js"></script>
+
+    <!-- JS locaux -->
+    <script src="js/index.js"></script>
+    <script src="lib/bootstrap.bundle.min.js"></script>
+    <script src="js/profile.js"></script>
+  </body>
 </html>
