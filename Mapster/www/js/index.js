@@ -141,6 +141,10 @@ function addNavInteractions() {
                 document.getElementById(i.div).style.display = "none";
             });
 
+            if (item.div === "poster") {
+                takePicture();
+            }
+
             navElement.classList.add("selected");
             divElement.style.display = "block"; // Affiche le div correspondant
         });
@@ -187,4 +191,36 @@ function timeAgo(date) {
     }
     const years = Math.floor(secondsPast / 31536000);
     return `il y a ${years} an${years > 1 ? 's' : ''}`;
+}
+
+function takePicture() {
+    navigator.camera.getPicture(onSuccess, onFail, {
+        quality: 50,
+        destinationType: Camera.DestinationType.DATA_URL,
+        encodingType: Camera.EncodingType.JPEG,
+        correctOrientation: true
+    });
+}
+
+function onSuccess(imageData) {
+    console.log("Image capturée !");
+
+    var image = document.getElementById('monImage');
+    image.style.display = 'block';
+    image.src = `${imageData}`;
+
+    // Vérifier que l'image s'affiche bien
+    image.onload = function () {
+        console.log("Image chargée avec succès !");
+    };
+
+    image.onerror = function () {
+        console.error("Erreur lors du chargement de l'image");
+        alert("L'image ne s'est pas chargée correctement !");
+    };
+}
+
+function onFail(message) {
+    console.error("Erreur lors de la capture : " + message);
+    alert('Échec :' + message);
 }
