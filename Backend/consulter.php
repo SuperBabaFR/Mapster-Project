@@ -26,21 +26,50 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 exit;
 }
 
-// Vérifier si les paramètres sont présents dans la requête
-if (!isset($_REQUEST['latitude']) || !isset($_REQUEST['longitude']) || !isset($_REQUEST['rayon'])) {
-    echo json_encode(["error" => "Paramètres manquants (latitude, longitude, rayon requis)"]);
-    exit;
-}
+// Vérifier que la méthode utilisée est POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Récupérer les données envoyées via FormData
+    $mapperId = isset($_POST['idMapper']) ? intval($_POST['idMapper']) : null;
+    $hashMdp = isset($_POST['hashMdp']) ? $_POST['hashMdp'] : null;
+    $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : null;
+    $latitude = isset($_POST['latitude']) ? $_POST['latitude'] : null;
+    $rayon = isset($_POST['rayon']) ? $_POST['rayon'] : null;
 
-// Récupérer les valeurs depuis la requête HTTP (GET ou POST)
-$latitude = floatval($_REQUEST['latitude']);
-$longitude = floatval($_REQUEST['longitude']);
-$rayon = floatval($_REQUEST['rayon']);
+    // Vérifier si idMapper et hashMdp sont vides
+    if (empty($mapperId) || empty($hashMdp)) {
+        echo json_encode([
+            "Code" => 401,
+            "Descriptif" => "Non autorisé : idMapper et hashMdp sont requis."
+        ]);
+        exit;
+    }
 
+    // Vérifier que toutes les données nécessaires sont présentes
+    if (!$rayon || !$longitude || !$latitude) {
+        echo json_encode([
+            "Code" => 400,
+            "Descriptif" => "Données manquantes ou invalides"
+        ]);
+        exit;
+    }
 
-try {
-    // Préparer la requête pour récupérer les posts dans un rayon donné
-    $query = $pdo->prepare("
+    // Vérifier que le mapperId existe bien dans la table Mapper
+    $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM Mapper WHERE idMapper = :mapperId");
+    $stmtCheck->bindParam(':mapperId', $mapperId, PDO::PARAM_INT);
+    $stmtCheck->execute();
+    $exists = $stmtCheck->fetchColumn();
+
+    if ($exists == 0) {
+        echo json_encode([
+            "Code" => 400,
+            "Descriptif" => "Le mapperId spécifié n'existe pas."
+        ]);
+        exit;
+    }
+
+    try {
+        // Préparer la requête pour récupérer les posts dans un rayon donné
+        $query = $pdo->prepare("
         SELECT 
             Post.*, 
             Mapper.pseudo, 
@@ -57,20 +86,26 @@ try {
             (ABS(Post.longitude - :longitude) <= :rayon / (111000 * Post.latitude))
     ");
 
-    // Exécuter la requête avec les paramètres
-    $query->execute([
-        ':latitude'  => $latitude,
-        ':longitude' => $longitude,
-        ':rayon'     => $rayon
-    ]);
+        // Exécuter la requête avec les paramètres
+        $query->execute([
+            ':latitude'  => $latitude,
+            ':longitude' => $longitude,
+            ':rayon'     => $rayon
+        ]);
 
-    // Récupérer tous les résultats sous forme de tableau associatif
-    $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        // Récupérer tous les résultats sous forme de tableau associatif
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
 
-    // Renvoyer les résultats au format JSON
-    echo json_encode($results);
-} catch (PDOException $e) {
-    // En cas d'erreur lors de l'exécution de la requête, renvoyer un message JSON d'erreur
-    echo json_encode(["error" => "Erreur lors de l'exécution de la requête : " . $e->getMessage()]);
+        // Créer un objet contenant une propriété "liste" avec les résultats
+        $response = ["liste" => $results];
+
+        // Renvoyer les résultats au format JSON
+        echo json_encode($response);
+    } catch (PDOException $e) {
+        // En cas d'erreur lors de l'exécution de la requête, renvoyer un message JSON d'erreur
+        echo json_encode(["error" => "Erreur lors de l'exécution de la requête : " . $e->getMessage()]);
+    }
 }
+
+
 ?>

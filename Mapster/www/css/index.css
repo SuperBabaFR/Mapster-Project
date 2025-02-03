@@ -30,17 +30,17 @@ body {
     color: #000000;
 }
 
-body.dark-mode {
-    background-color: #000000;
-    color: #ffffff;
-}
+/*body.dark-mode {*/
+/*    background-color: #000000;*/
+/*    color: #ffffff;*/
+/*}*/
 
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #000000;
-        color: #ffffff;
-    }
-}
+/*@media (prefers-color-scheme: dark) {*/
+/*    body {*/
+/*        background-color: #000000;*/
+/*        color: #ffffff;*/
+/*    }*/
+/*}*/
 
 /*POUR LE MODE SOMBRE ET CLAIR*/
 
