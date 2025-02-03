@@ -1,235 +1,213 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Security-Policy"
-          content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src * 'self' data: content:;">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-    <meta name="color-scheme" content="light dark">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src * 'self' data: content:;">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+        <meta name="color-scheme" content="light dark">
 
-    <title>Mapster</title>
+        <title>Mapster</title>
 
-    <!-- Bootstrap CSS (local) -->
-    <link href="lib/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap CSS (local) -->
+        <link href="lib/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Berkslund:wght@700&family=Caveat:wght@400&display=swap"
-          rel="stylesheet">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Berkslund:wght@700&family=Caveat:wght@400&display=swap" rel="stylesheet">
 
 
-    <!-- Styles personnalisés -->
-    <link href="css/index.css" rel="stylesheet">
-    <link href="css/profile.css" rel="stylesheet">
-</head>
-<body>
-<div class="MapsterApp">
+        <!-- Styles personnalisés -->
+        <link href="css/index.css" rel="stylesheet">
+        <link href="css/profile.css" rel="stylesheet">
+    </head>
+    <body>
+    <div class="MapsterApp">
 
-    <!-- LETIN et BLOU-->
-    <div id="inscription" style="display: none;">
-        s'inscrire
-        pseudo
-        mdp
-        confirmation
-        ect
-        photo
-        ect ect
-        LETIN et BLOU
-    </div>
-
-    <!-- HALIAR et LEVI-->
-    <div id="connexion" style="display: none;">
-        se connecter
-        pseudo
-        mdp
-        connexion
-        HALIAR et LEVI
-    </div>
-
-    <!-- JULIO ET BABAS TERMINE-->
-    <div id="consulter">
-        <div id="postsList">
+<!-- LETIN et BLOU-->
+        <div id="inscription" style="display: none;">
+            s'inscrire
+            pseudo
+            mdp
+            confirmation
+            ect
+            photo
+            ect ect
+            LETIN et BLOU
         </div>
-    </div>
 
-    <!-- personne assigné -->
-    <div id="recherche">
-        <p>barre de recherche</p>
-        <p>filtres</p>
-        <p>personne assigné</p>
-    </div>
-
-    <!-- Yohann et Kény -->
-    <div id="poster">
-        <h1 style="text-align: center; color: #4CAF50;">Nouvelle
-            Publication</h1>
-            <img id="myImage" src alt="Votre photo apparaîtra ici"
-                 class="img-fluid"
-                 style="width: 100%; height: 55%" />
-
-        <!-- Zone pour ajouter une description -->
-        <div style="margin: 10px;">
-                    <textarea id="description"
-                              placeholder="Ajoutez une description..."
-                              style="width: 100%; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; resize: none; height: 100px;"></textarea>
+<!-- HALIAR et LEVI-->
+        <div id="connexion" style="display: none;">
+            se connecter
+            pseudo
+            mdp
+            connexion
+            HALIAR et LEVI
         </div>
-        <!-- Bouton pour partager la photo -->
-        <div
-                style="margin-bottom: 10px; margin-left: 70%; margin-right: 10px;">
-            <button id="btn-partager"
-                    style="display: block; width: 100%; padding: 5px; background-color: #2196F3; color: white; border: none; font-size: 16px; cursor: pointer;border-radius: 3px;">
-                Partager
-            </button>
+
+<!-- JULIO ET BABAS-->
+        <div id="consulter">
+            <div id="postsList">
+            </div>
         </div>
-    </div>
 
-    <!-- personne assigné -->
-    <div id="carte">
-        <p>personne assigné</p>
-        <p>Je suis la carte je suis la carte ....</p>
-    </div>
+<!-- personne assigné -->
+        <div id="recherche">
+            <p>barre de recherche</p>
+            <p>filtres</p>
+            <p>personne assigné</p>
+        </div>
 
-    <!-- William et Benjamin -->
-    <div id="profil">
-        <!-- Nicolas et Ludovic -->
-        <p>consulter son profil</p>
-        <p>Nicolas et Ludovic</p>
-        <br>
+<!-- Yohann et Kény -->
+        <div id="poster">
+            <p>Appareil photo</p>
+            <p>Yohann et Kény</p>
 
 
-        <!-- Benjamin et William -->
-        <p>modifier son profil</p>
-        <p>William et Benjamin</p>
-        <br>
-        <div class="modifierProfil container mt-4">
-            <div class="card shadow scrollable-card">
-                <div class="card-header text-center">
-                    <h3>Modifier le profil utilisateur</h3>
+        </div>
+
+<!-- personne assigné -->
+        <div id="carte">
+            <p>personne assigné</p>
+            <p>Je suis la carte je suis la carte ....</p>
+        </div>
+
+<!-- William et Benjamin -->
+        <div id="profil">
+            <!-- Nicolas et Ludovic -->
+            <p>consulter son profil</p>
+            <p>Nicolas et Ludovic</p>
+            <br>
+
+
+            <!-- Benjamin et William -->
+            <p>modifier son profil</p>
+            <p>William et Benjamin</p>
+            <br>
+            <div class="modifierProfil container mt-4">
+        <div class="card shadow scrollable-card">
+            <div class="card-header text-center">
+                <h3>Modifier le profil utilisateur</h3>
+            </div>
+            <div class="card-body">
+                <!-- Conteneur pour la photo de profil -->
+                <div class="profile-photo-container text-center">
+                    <img id="photoPreview" 
+                         src="img/default.png" 
+                         alt="Photo de profil" 
+                         class="profile-photo" 
+                         onerror="this.onerror=null;this.src='img/default.png';">
+                    <div class="edit-icon" id="editPhoto">
+                        <i class="fas fa-camera"></i>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <!-- Conteneur pour la photo de profil -->
-                    <div class="profile-photo-container text-center">
-                        <img id="photoPreview"
-                             src="img/default.png"
-                             alt="Photo de profil"
-                             class="profile-photo"
-                             onerror="this.onerror=null;this.src='img/default.png';">
-                        <div class="edit-icon" id="editPhoto">
-                            <i class="fas fa-camera"></i>
-                        </div>
+
+                <!-- Formulaire -->
+                <form id="userForm">
+                    <!-- Champ Prénom -->
+                    <div class="mb-3">
+                        <label for="prenom" class="form-label">Prénom</label>
+                        <input type="text" class="form-control" id="prenom" placeholder="Chargement..." required>
                     </div>
 
-                    <!-- Formulaire -->
-                    <form id="userForm">
-                        <!-- Champ Prénom -->
-                        <div class="mb-3">
-                            <label for="prenom" class="form-label">Prénom</label>
-                            <input type="text" class="form-control" id="prenom" placeholder="Chargement..." required>
-                        </div>
+                    <!-- Champ Nom -->
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="nom" placeholder="Chargement..." required>
+                    </div>
 
-                        <!-- Champ Nom -->
-                        <div class="mb-3">
-                            <label for="nom" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="nom" placeholder="Chargement..." required>
-                        </div>
+                    <!-- Champ Pseudo -->
+                    <div class="mb-3">
+                        <label for="pseudo" class="form-label">Pseudo</label>
+                        <input type="text" class="form-control" id="pseudo" placeholder="Chargement..." required>
+                    </div>
 
-                        <!-- Champ Pseudo -->
-                        <div class="mb-3">
-                            <label for="pseudo" class="form-label">Pseudo</label>
-                            <input type="text" class="form-control" id="pseudo" placeholder="Chargement..." required>
-                        </div>
+                    <!-- Champ Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Adresse e-mail</label>
+                        <input type="email" class="form-control" id="email" placeholder="Chargement..." required>
+                    </div>
 
-                        <!-- Champ Email -->
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Adresse e-mail</label>
-                            <input type="email" class="form-control" id="email" placeholder="Chargement..." required>
-                        </div>
+                    <!-- Champ Mot de Passe -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" id="password" placeholder="Nouveau mot de passe">
+                    </div>
 
-                        <!-- Champ Mot de Passe -->
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Mot de passe</label>
-                            <input type="password" class="form-control" id="password"
-                                   placeholder="Nouveau mot de passe">
-                        </div>
+                    <!-- Champ Confirmation Mot de Passe -->
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirmer le mot de passe">
+                    </div>
 
-                        <!-- Champ Confirmation Mot de Passe -->
-                        <div class="mb-3">
-                            <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
-                            <input type="password" class="form-control" id="confirmPassword"
-                                   placeholder="Confirmer le mot de passe">
-                        </div>
+                    <!-- Bouton Sauvegarde -->
+                    <div class="text-center">
+                        <button type="button" id="saveProfile" class="btn btn-primary">Enregistrer les modifications</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+            </div>
 
-                        <!-- Bouton Sauvegarde -->
-                        <div class="text-center">
-                            <button type="button" id="saveProfile" class="btn btn-primary">Enregistrer les
-                                modifications
-                            </button>
-                        </div>
-                    </form>
+            <!-- Enora et Oryane -->
+            <p>supprimer une Photo</p>
+            <p>Enora et Oryane</p>
+            <br>
+            <div id="supprimerPhoto">
+            </div>
+        </div>
+
+
+        <div class="nav-bar">
+            <div class="list-nav">
+                <div id="home" class="nav-item">
+                    <div class="nav-item-img">
+                        <img src="img/icons/home.svg" alt="">
+                    </div>
+
+                    <p>Acceuil</p>
+                </div>
+                <div id="search" class="nav-item">
+                    <div class="nav-item-img">
+                        <img src="img/icons/search.svg" alt="">
+                    </div>
+
+                    <p>Rechercher</p>
+                </div>
+                <div id="post" class="nav-item">
+                    <div class="nav-item-img">
+                        <img src="img/icons/publish.svg" alt="">
+                    </div>
+
+                    <p>Poster</p>
+                </div>
+                <div id="map" class="nav-item">
+                    <div class="nav-item-img">
+                        <img src="img/icons/explore.svg" alt="">
+                    </div>
+
+                    <p>Carte</p>
+                </div>
+                <div id="account" class="nav-item">
+                    <div class="nav-item-img">
+                        <img src="img/icons/account.svg" alt="">
+                    </div>
+
+                    <p>Profil</p>
                 </div>
             </div>
         </div>
 
-        <!-- Enora et Oryane -->
-        <p>supprimer une Photo</p>
-        <p>Enora et Oryane</p>
-        <br>
-        <div id="supprimerPhoto">
         </div>
-    </div>
+        <!-- Cordova JS -->
+        <script src="cordova.js"></script>
 
-
-    <div class="nav-bar">
-        <div class="list-nav">
-            <div id="home" class="nav-item">
-                <div class="nav-item-img">
-                    <img src="img/icons/home.svg" alt="">
-                </div>
-
-                <p>Acceuil</p>
-            </div>
-            <div id="search" class="nav-item">
-                <div class="nav-item-img">
-                    <img src="img/icons/search.svg" alt="">
-                </div>
-
-                <p>Rechercher</p>
-            </div>
-            <div id="post" class="nav-item">
-                <div class="nav-item-img">
-                    <img src="img/icons/publish.svg" alt="">
-                </div>
-
-                <p>Poster</p>
-            </div>
-            <div id="map" class="nav-item">
-                <div class="nav-item-img">
-                    <img src="img/icons/explore.svg" alt="">
-                </div>
-
-                <p>Carte</p>
-            </div>
-            <div id="account" class="nav-item">
-                <div class="nav-item-img">
-                    <img src="img/icons/account.svg" alt="">
-                </div>
-
-                <p>Profil</p>
-            </div>
-        </div>
-    </div>
-
-</div>
-<!-- Cordova JS -->
-<script src="cordova.js"></script>
-
-<!-- JS locaux -->
-<script src="js/index.js"></script>
-<script src="lib/bootstrap.bundle.min.js"></script>
-<script src="js/profile.js"></script>
-</body>
+        <!-- JS locaux -->
+        <script src="js/index.js"></script>
+        <script src="lib/bootstrap.bundle.min.js"></script>
+        <script src="js/profile.js"></script>
+    </body>
 </html>

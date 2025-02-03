@@ -1,72 +1,76 @@
 <?php
-header("Content-Type: application/json"); 
-$host = 'localhost'; 
-$dbname = 'db_mapster'; 
-$username = 'root'; 
-$password = ''; 
+// Définition de l'en-tête pour indiquer que la réponse sera en format JSON
+header("Content-Type: application/json");
+
+// Paramètres de connexion à la base de données MySQL
+$host = 'localhost';
+$dbname = 'db_mapster';
+$username = 'root';
+$password = '';
 
 try {
+    // Connexion à la base de données en utilisant PDO
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
+
+    // Configuration des attributs PDO pour activer la gestion des erreurs et définir le mode de récupération
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
+    // En cas d'échec de connexion, renvoyer une réponse JSON avec le message d'erreur
     die(json_encode(["code" => 500, "descriptif" => "Erreur de connexion : " . $e->getMessage()]));
 }
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-   
-    $data = json_decode(file_get_contents("php://input"), true);
+//    Verifier la connexion de l'utilisateur ( si l'id mapper est présent dans la session)
+if (isset($_SESSION['idMapper'])) {
+    $idMapper = $_SESSION['idMapper'];
+    echo "L'id du mapper est " . $idMapper;
+} else {
+    echo "Aucun Utilisateur connecté ";
+}
 
+try {
+    // Préparation et exécution de la requête SQL pour récupérer les informations du mapper
+    $stmt = $pdo->prepare("SELECT idMapper, pseudo, mail, photoProfil FROM Mapper WHERE idMapper = "+$idMapper );
+    $stmt->execute();
+    $mapper = $stmt->fetch(PDO::FETCH_ASSOC); // Récupération sous forme de tableau associatif
 
-    if (!isset($data['idMapper'])) {
-        echo json_encode(["code" => 400, "descriptif" => "Paramètre idMapper manquant"]);
+    // Vérification si le mapper existe dans la base de données
+    if (!$mapper) {
+        echo json_encode(["code" => 404, "descriptif" => "Mapper non trouvé"]);
         exit;
     }
 
-    $idMapper = $data['idMapper'];
+    // Préparation et exécution de la requête SQL pour récupérer les posts associés au mapper
+    $stmtPosts = $pdo->prepare("SELECT id, photo, date, longitude, latitude, description FROM Post WHERE mapperId ="+ $idMapper);
+    $stmtPosts->execute();
+    $posts = $stmtPosts->fetchAll(PDO::FETCH_ASSOC); // Récupération sous forme de tableau associatif
 
-    try {
-      
-        $stmt = $pdo->prepare("SELECT idMapper, pseudo, mail, photoProfil FROM Mapper WHERE idMapper = ?");
-        $stmt->execute([$idMapper]);
-        $mapper = $stmt->fetch();
+    // Construction de la réponse JSON avec les informations du mapper
+    $response = [
+        "id" => $mapper['idMapper'],
+        "pseudo" => $mapper['pseudo'],
+        "mail" => $mapper['mail'],
+        "mdp" => "(hashé)", // Masquage du mot de passe pour des raisons de sécurité
+        "photo" => $mapper['photoProfil'],
+        "liste" => [] // Initialisation d'un tableau vide pour stocker les posts
+    ];
 
-        if (!$mapper) {
-            echo json_encode(["code" => 404, "descriptif" => "Mapper non trouvé"]);
-            exit;
-        }
-
-        
-        $stmtPosts = $pdo->prepare("SELECT id, photo, date, longitude, latitude, description FROM Post WHERE mapperId = ?");
-        $stmtPosts->execute([$idMapper]);
-        $posts = $stmtPosts->fetchAll();
-
-        $response = [
-            "id" => $mapper['idMapper'],
-            "pseudo" => $mapper['pseudo'],
-            "mail" => $mapper['mail'],
-            "mdp" => "(hashé)", 
-            "photo" => $mapper['photoProfil'],
-            "liste" => []
+    // Ajout des posts à la liste dans la réponse JSON
+    foreach ($posts as $post) {
+        $response["liste"][] = [
+            "id" => $post['id'],
+            "photo" => $post['photo'],
+            "date" => $post['date'],
+            "longitude" => $post['longitude'],
+            "latitude" => $post['latitude'],
+            "descriptions" => $post['description']
         ];
-
-        foreach ($posts as $post) {
-            $response["liste"][] = [
-                "id" => $post['id'],
-                "photo" => $post['photo'],
-                "date" => $post['date'],
-                "longitude" => $post['longitude'],
-                "latitude" => $post['latitude'],
-                "descriptions" => $post['description']
-            ];
-        }
-
-        echo json_encode($response, JSON_PRETTY_PRINT);
-    } catch (PDOException $e) {
-        echo json_encode(["code" => 500, "descriptif" => "Erreur serveur : " . $e->getMessage()]);
     }
-} else {
-    echo json_encode(["code" => 405, "descriptif" => "Méthode non autorisée"]);
+
+
+    echo json_encode($response, JSON_PRETTY_PRINT);
+} catch (PDOException $e) {
+    // En cas d'erreur SQL, renvoyer une réponse JSON avec le message d'erreur
+    echo json_encode(["code" => 500, "descriptif" => "Erreur serveur : " . $e->getMessage()]);
 }
-?>
