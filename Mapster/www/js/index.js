@@ -1,77 +1,16 @@
 document.addEventListener('deviceready', onDeviceReady);
-
-// ExempleS
-const date1 = new Date();
-date1.setMinutes(date1.getMinutes() - 5);
-console.log(timeAgo(date1)); // il y a 5 min
-
-const date2 = new Date();
-date2.setDate(date2.getDate() - 1);
-console.log(timeAgo(date2)); // hier
-
-const date3 = new Date();
-date3.setHours(date3.getHours() - 2);
-console.log(timeAgo(date3)); // il y a 2 heures
-
-// const data = {
-//     "liste":[
-//         {
-//             "id":1,
-//             "photo":"https://wallpapercave.com/wp/wp7205972.jpg",
-//             "date": date2,
-//             "longitude":16.224012176700928,
-//             "latitude":-61.528382151240194,
-//             "distanceUser":"200m",
-//             "descriptions":"Mon plus gros Ops",
-//             "Maper":{
-//                 "idMapper":1,
-//                 "pseudoMapper":"Goku",
-//                 "photoProfil":"https://avatarfiles.alphacoders.com/243/thumb-1920-243239.jpg"
-//             }
-//         },
-//         {
-//             "id":2,
-//             "photo":"https://res.cloudinary.com/jerrick/image/upload/q_auto,w_720/h0ykfhwykixazkaxrvqi.jpg",
-//             "date":date3,
-//             "longitude":16.224012176700928,
-//             "latitude":-61.528382151240194,
-//             "distanceUser":"250m",
-//             "descriptions":"Enfin je me suis débarrassé de ce singe",
-//             "Maper":{
-//                 "idMapper":2,
-//                 "pseudoMapper":"Freezer",
-//                 "photoProfil":"https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1bd1afe0-c6ed-45b9-a819-396c9de281f0/dfbr40z-c7622f6b-846c-4098-b477-c873126f39a0.png/v1/fill/w_733,h_1090,q_70,strp/dragon_ball_super___black_freezer_by_deviantart_psycho_pp_dfbr40z-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MjA3MCIsInBhdGgiOiJcL2ZcLzFiZDFhZmUwLWM2ZWQtNDViOS1hODE5LTM5NmM5ZGUyODFmMFwvZGZicjQwei1jNzYyMmY2Yi04NDZjLTQwOTgtYjQ3Ny1jODczMTI2ZjM5YTAucG5nIiwid2lkdGgiOiI8PTEzOTIifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.hnMI0lKjkvjs_3Bxx-68DZNA_Z4_A9GnGWubKyvqPec"
-//             }
-//         },
-//         {
-//             "id":3,
-//             "photo":"https://th.bing.com/th/id/R.9f58e825e19eb59638e13d116ea3bc5f?rik=uEQ7DXejbXS1HQ&pid=ImgRaw&r=0",
-//             "date":date1,
-//             "longitude":16.224012176700928,
-//             "latitude":-62.528382151240194,
-//             "distanceUser":"578m",
-//             "descriptions":"Je me suis vachement laissé emporté là",
-//             "Maper":{
-//                 "idMapper":2,
-//                 "pseudoMapper":"Trunks",
-//                 "photoProfil":"https://th.bing.com/th/id/R.04592607487bbbf7aa5259d2d46379b5?rik=yBvtTpleNyoGLA&riu=http%3a%2f%2fcodemaster007.20m.com%2fimages%2ftrunks.jpg&ehk=vfPif%2bmKDssY7pIwm7UbjARi9rzB2g1oPFrOj4FNuJs%3d&risl=&pid=ImgRaw&r=0"
-//             }
-//         }
-//     ]
-// }
-
+const URL = "http://miage-antilles.fr/mapper/"
 const idMapper = 1;
-const hashMdp = "YES";
-const rayon = 1000.0;
-const longitude = 1.5;
-const latitude = 1.3;
+const hashMdp = "hashedPassword";
+const longitude = -61.52848293478748;
+const latitude = 16.22395386679484;
 
-addNavInteractions();
-showListPosts();
+// addNavInteractions();
+// showListPosts();
 
 function onDeviceReady() {
-    // addNavInteractions();
-    // showListPosts();
+    addNavInteractions();
+    showListPosts();
 
     if (window.caches) {
         caches.keys().then((names) => {
@@ -101,26 +40,30 @@ function onDeviceReady() {
 
 function showListPosts () {
     let data = {}
+    const rayon = 1000;
+    const formData = new FormData();
+    formData.append("idMapper", idMapper);
+    formData.append("hashMdp", hashMdp);
+    formData.append("rayon", rayon);
+    formData.append("longitude", longitude);
+    formData.append("latitude", latitude);
 
-    fetch("URL", {
+    fetch(URL + "consulter.php", {
         method: "POST",
-        body: JSON.stringify({
-            idMapper: idMapper,
-            hashMdp: hashMdp,
-            rayon: rayon,
-            longitude:longitude,
-            latitude:latitude
-        }),
+        body: formData,
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With"
+        },
+        mode:"cors"
     })
         .then((response) => response.json())
         .then((json) => {
             // Stocker le JSON dans une variable
             data = json;
-        });
-
+        })
+        .catch(error => console.error("Erreur :", error));
 
     const allPosts = data.liste;
 
