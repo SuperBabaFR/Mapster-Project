@@ -14,7 +14,6 @@ try {
     );
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    // En cas d'erreur de connexion à la base de données
     echo json_encode([
         "Code" => 500,
         "Descriptif" => "Erreur de connexion à la base de données : " . $e->getMessage()
@@ -25,15 +24,15 @@ try {
 // Vérifier que la méthode utilisée est POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les données envoyées via FormData
-    $idMapper = isset($_POST['idMapper']) ? $_POST['idMapper'] : null;
+    $mapperId = isset($_POST['idMapper']) ? intval($_POST['idMapper']) : null;
     $hashMdp = isset($_POST['hashMdp']) ? $_POST['hashMdp'] : null;
-    $photoBase64 = isset($_POST['photo']) ? $_POST['photo'] : null; // Image en Base64
+    $photoBase64 = isset($_POST['photo']) ? $_POST['photo'] : null;
     $longitude = isset($_POST['longitude']) ? $_POST['longitude'] : null;
     $latitude = isset($_POST['latitude']) ? $_POST['latitude'] : null;
     $description = isset($_POST['description']) ? $_POST['description'] : null;
 
     // Vérifier si idMapper et hashMdp sont vides
-    if (empty($idMapper) || empty($hashMdp)) {
+    if (empty($mapperId) || empty($hashMdp)) {
         echo json_encode([
             "Code" => 401,
             "Descriptif" => "Non autorisé : idMapper et hashMdp sont requis."
@@ -42,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Vérifier que toutes les données nécessaires sont présentes
-    if (!$photoBase64 || !$longitude || !$latitude ) {
+    if (!$photoBase64 || !$longitude || !$latitude) {
         echo json_encode([
             "Code" => 400,
             "Descriptif" => "Données manquantes ou invalides"
@@ -50,15 +49,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Vérifier que le mapperId existe bien dans la table Mapper
+    $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM Mapper WHERE idMapper = :mapperId");
+    $stmtCheck->bindParam(':mapperId', $mapperId, PDO::PARAM_INT);
+    $stmtCheck->execute();
+    $exists = $stmtCheck->fetchColumn();
+
+    if ($exists == 0) {
+        echo json_encode([
+            "Code" => 400,
+            "Descriptif" => "Le mapperId spécifié n'existe pas."
+        ]);
+        exit;
+    }
+
+    // Récupérer la date actuelle du serveur PHP
+    $datePost = date('Y-m-d H:i:s');
+
     // Insérer les données dans la base de données
     try {
         $stmt = $pdo->prepare("
-            INSERT INTO posts (idMapper, hashMdp, photo, longitude, latitude, description)
-            VALUES (:idMapper, :hashMdp, :photo, :longitude, :latitude, :description)
+            INSERT INTO Post (mapperId, photo, date, longitude, latitude, description)
+            VALUES (:mapperId, :photo, :date, :longitude, :latitude, :description)
         ");
-        $stmt->bindParam(':idMapper', $idMapper);
-        $stmt->bindParam(':hashMdp', $hashMdp);
+        $stmt->bindParam(':mapperId', $mapperId, PDO::PARAM_INT);
         $stmt->bindParam(':photo', $photoBase64);
+        $stmt->bindParam(':date', $datePost);
         $stmt->bindParam(':longitude', $longitude);
         $stmt->bindParam(':latitude', $latitude);
         $stmt->bindParam(':description', $description);
@@ -70,17 +86,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Réponse en cas de succès
         echo json_encode([
-            "idPost" => $idPost
+            "idPost" => $idPost,
+            "datePost" => $datePost
         ]);
     } catch (Exception $e) {
-        // Réponse en cas d'erreur d'insertion dans la base de données
         echo json_encode([
             "Code" => 500,
             "Descriptif" => "Erreur lors de l'insertion dans la base de données : " . $e->getMessage()
         ]);
     }
 } else {
-    // Réponse si la méthode n'est pas POST
     echo json_encode([
         "Code" => 405,
         "Descriptif" => "Méthode non autorisée"

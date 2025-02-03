@@ -27,7 +27,7 @@
         <icon density="xxhdpi" src="res/icon/android/xxhdpi.png"/>
         <icon density="xxxhdpi" src="res/icon/android/xxxhdpi.png"/>
 
-        <!-- SPLASH SCREEEN -->
+        <!-- SPLASH SCREEN -->
         <splash density="port-ldpi" src="res/screen/android/splash-port-ldpi.png"/>
         <splash density="port-mdpi" src="res/screen/android/splash-port-mdpi.png"/>
         <splash density="port-hdpi" src="res/screen/android/splash-port-hdpi.png"/>
@@ -36,11 +36,13 @@
         <splash density="port-xxxhdpi" src="res/screen/android/splash-port-xxxhdpi.png"/>
 
         <preference name="android-targetSdkVersion" value="33" />
-        <preference name = "AndroidInsecureFileModeEnabled" value = "true" />
+        <preference name="AndroidInsecureFileModeEnabled" value="true" />
+
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application"  xmlns:android="http://schemas.android.com/apk/res/android">
             <application android:usesCleartextTraffic="true" />
             <application android:theme="@style/Theme.AppCompat.DayNight" />
-
         </edit-config>
     </platform>
+
+
 </widget>
