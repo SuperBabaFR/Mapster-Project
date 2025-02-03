@@ -1,27 +1,45 @@
 <?php
-// Définir le chemin vers la base de données SQLite
-$databasePath = 'C:\Users\germa\PhpstormProjects\Mapster\identifier.sqlite';
 
+// Inclure la configuration de la base de données
+require_once 'db_config.php';
+
+// Définir l'en-tête pour la réponse en JSON
+header('Content-Type: application/json');
+
+// Essayer de se connecter à la base de données
 try {
-    // Créer une instance de la classe PDO pour SQLite
-    $pdo = new PDO("sqlite:" . $databasePath);
+    $pdo = new PDO(
+    "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME,
+    DB_USER,
+    DB_PASSWORD
+);
 
-    // Configurer le mode d'erreur pour PDO en cas de problème
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    echo "Connexion à la base de données SQLite réussie !<br>";
 } catch (PDOException $e) {
-    // En cas d'erreur, afficher un message d'erreur
-    die("Erreur lors de la connexion à la base de données : " . $e->getMessage());
+    echo json_encode(
+        [
+            "Code" => 500,
+            "Descriptif" => "Erreur de connexion à la base de données : " . $e->getMessage()
+        ]
+    );
+exit;
 }
 
-// Exemple de paramètres pour la requête
-$latitude = 48.8566;  // Latitude de l'utilisateur
-$longitude = 2.3522;  // Longitude de l'utilisateur
-$rayon = 1000;        // Rayon en mètres
+// Vérifier si les paramètres sont présents dans la requête
+if (!isset($_REQUEST['latitude']) || !isset($_REQUEST['longitude']) || !isset($_REQUEST['rayon'])) {
+    echo json_encode(["error" => "Paramètres manquants (latitude, longitude, rayon requis)"]);
+    exit;
+}
 
-// Exemple de requête : récupérer les posts dans un rayon donné
+// Récupérer les valeurs depuis la requête HTTP (GET ou POST)
+$latitude = floatval($_REQUEST['latitude']);
+$longitude = floatval($_REQUEST['longitude']);
+$rayon = floatval($_REQUEST['rayon']);
+
+
 try {
+    // Préparer la requête pour récupérer les posts dans un rayon donné
     $query = $pdo->prepare("
         SELECT 
             Post.*, 
@@ -36,27 +54,23 @@ try {
         WHERE 
             (ABS(Post.latitude - :latitude) <= :rayon / 111000)
             AND 
-            (ABS(Post.longitude - :longitude) <= :rayon / (111000 * latitude))
+            (ABS(Post.longitude - :longitude) <= :rayon / (111000 * Post.latitude))
     ");
 
     // Exécuter la requête avec les paramètres
     $query->execute([
-        ':latitude' => $latitude,
+        ':latitude'  => $latitude,
         ':longitude' => $longitude,
-        ':rayon' => $rayon
+        ':rayon'     => $rayon
     ]);
 
-    // Récupérer et afficher les résultats
+    // Récupérer tous les résultats sous forme de tableau associatif
     $results = $query->fetchAll(PDO::FETCH_ASSOC);
 
-    echo "<pre>";
-    print_r($results);
-    echo "</pre>";
-
+    // Renvoyer les résultats au format JSON
+    echo json_encode($results);
 } catch (PDOException $e) {
-    echo "Erreur lors de l'exécution de la requête : " . $e->getMessage();
+    // En cas d'erreur lors de l'exécution de la requête, renvoyer un message JSON d'erreur
+    echo json_encode(["error" => "Erreur lors de l'exécution de la requête : " . $e->getMessage()]);
 }
-
-// Fermer la connexion (optionnel, car PHP la ferme automatiquement en fin de script)
-$pdo = null;
 ?>
