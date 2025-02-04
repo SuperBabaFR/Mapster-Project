@@ -39,8 +39,6 @@ function showListPosts() {
       // Stocker le JSON dans une variable
 
       data = json;
-      // alert(JSON.stringify(data, null, 4));
-      // alert(JSON.stringify(data.liste, null, 4));
       const allPosts = data.liste;
 
       // alert(JSON.stringify(allPosts, null, 4));
@@ -48,7 +46,6 @@ function showListPosts() {
 
       for (let i = 0; i < allPosts.length; i++) {
         const postdata = allPosts[i];
-        // alert(JSON.stringify(postdata, null, 4));
 
         const post = document.createElement("div");
         post.id = "post " + postdata.id;
@@ -69,7 +66,7 @@ function showListPosts() {
 
         const distance = document.createElement("p");
         distance.className = "distance";
-        distance.innerHTML = "à " + postdata.distanceUser.toString() + " d'ici";
+        distance.innerHTML = "à " + postdata.distanceUser.toString() + "m d'ici";
         // distance.innerHTML = "à " + postdata.longitude + " d'ici";
 
         infosMapster.appendChild(pseudo);
