@@ -8,48 +8,13 @@ const latitude = 16.22395386679484;
 // addNavInteractions();
 // showListPosts();
 
-var currentPosition = {}; // Stocke la position actuelle
-
 function onDeviceReady() {
-
-  function onSuccess(position) {
-    currentPosition = {
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-      altitude: position.coords.altitude,
-      accuracy: position.coords.accuracy,
-      altitudeAccuracy: position.coords.altitudeAccuracy,
-      heading: position.coords.heading,
-      speed: position.coords.speed,
-      timestamp: position.timestamp
-    };
-
-    showListPosts(position.coords.longitude, position.coords.latitude);
-
-    // Exemple : utiliser la position pour afficher une carte Google Maps
-    // updateMap(currentPosition.latitude, currentPosition.longitude);
-  }
-
-  function onError(error) {
-    console.error("Erreur de géolocalisation :", error.message);
-  }
-
-  // Options pour activer la haute précision
-  var geoOptions = {
-    enableHighAccuracy: true, // 🔥 Active le mode GPS pour une position plus précise
-    timeout: 10000,           // ⏳ Temps max d'attente en millisecondes (10s)
-    maximumAge: 0             // 🕒 Ne pas utiliser une position en cache
-  };
-
-  // Récupère la position GPS
-  navigator.geolocation.getCurrentPosition(onSuccess, onError, geoOptions);
-
   addNavInteractions();
+  showListPosts();
 }
 
-function showListPosts(longitude, latitude) {
-
-  // alert(JSON.stringify(currentPosition));
+function showListPosts() {
+  let data = {};
   const rayon = 100000;
   const formData = new FormData();
   formData.append("idMapper", idMapper);
@@ -71,8 +36,12 @@ function showListPosts(longitude, latitude) {
   })
     .then((response) => response.json())
     .then((json) => {
-      const allPosts = json.liste;
+      // Stocker le JSON dans une variable
 
+      data = json;
+      const allPosts = data.liste;
+
+      // alert(JSON.stringify(allPosts, null, 4));
       const postList = document.getElementById("postsList");
 
       for (let i = 0; i < allPosts.length; i++) {
@@ -266,42 +235,124 @@ function consulterProfil() {
     })
     .catch((error) => console.error("Erreur lors de la requête :", error));
 }
+// INSCRIPTION
+// INSCRIPTION
+// INSCRIPTION
+// INSCRIPTION
+// INSCRIPTION
+// INSCRIPTION
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("registrationForm");
+  const photoInput = document.getElementById("photoInput");
+  const userPhoto = document.getElementById("userPhoto");
 
-
-function getPosition() {
-  var currentPosition = {}; // Stocke la position actuelle
-
-  function onSuccess(position) {
-    currentPosition = {
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-      altitude: position.coords.altitude,
-      accuracy: position.coords.accuracy,
-      altitudeAccuracy: position.coords.altitudeAccuracy,
-      heading: position.coords.heading,
-      speed: position.coords.speed,
-      timestamp: position.timestamp
-    };
-
-    console.log("Position récupérée :", currentPosition);
-
-    // Exemple : utiliser la position pour afficher une carte Google Maps
-    // updateMap(currentPosition.latitude, currentPosition.longitude);
+  if (form) {
+      form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          envoyerDonnees();
+      });
   }
 
-  function onError(error) {
-    console.error("Erreur de géolocalisation :", error.message);
+  // Afficher l'aperçu de l'image avant l'envoi
+  if (photoInput) {
+      photoInput.addEventListener("change", function (event) {
+          const file = event.target.files[0];
+          if (file) {
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                  userPhoto.src = e.target.result;
+                  userPhoto.classList.remove("d-none");
+              };
+              reader.readAsDataURL(file);
+          }
+      });
   }
+});
 
-  // Options pour activer la haute précision
-  var geoOptions = {
-    enableHighAccuracy: true, // 🔥 Active le mode GPS pour une position plus précise
-    timeout: 10000,           // ⏳ Temps max d'attente en millisecondes (10s)
-    maximumAge: 0             // 🕒 Ne pas utiliser une position en cache
+// Fonction pour afficher les messages de succès ou d'erreur
+function afficherMessage(message, type) {
+  const feedback = document.getElementById("feedback");
+  feedback.className = `alert alert-${type} text-center`;
+  feedback.innerText = message;
+  feedback.classList.remove("d-none");
+
+  setTimeout(() => {
+      feedback.classList.add("d-none");
+  }, 5000);
+}
+
+// Fonction pour envoyer les données au serveur
+function envoyerDonnees() {
+  const submitBtn = document.getElementById("submitBtn");
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Inscription en cours...';
+
+  // Création de l'objet JSON au lieu de FormData
+  let data = {
+      action: "create",
+      nom: document.getElementById("nom").value.trim(),
+      prenom: document.getElementById("prenom").value.trim(),
+      mail: document.getElementById("email").value.trim(),
+      pays: document.getElementById("pays").value,
+      mdp: document.getElementById("password").value,
+      pseudo: document.getElementById("pseudo").value,
+      photo: "" // Par défaut vide
   };
 
-  // Récupère la position GPS
-  navigator.geolocation.getCurrentPosition(onSuccess, onError, geoOptions);
-
-  return currentPosition;
+  // Vérification et conversion de l'image en base64
+  const photoInput = document.getElementById("photoInput");
+  if (photoInput.files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = function () {
+          data.photo = reader.result.split(",")[1]; // Convertir en base64
+          envoyerRequete(data);
+      };
+      reader.readAsDataURL(photoInput.files[0]);
+  } else {
+      envoyerRequete(data);
+  }
 }
+
+// Fonction pour envoyer la requête au serveur
+function envoyerRequete(data) {
+  fetch("http://www.miage-antilles.fr/mapper/s_inscrire.php", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      redirect: "follow",
+  })
+  .then((response) => {
+      if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+      return response.json(); // Convertir la réponse en JSON
+  })
+  .then((data) => {
+      console.log("Réponse du serveur :", data);
+
+      if (data.success) {
+          afficherMessage("Inscription réussie ! Vous allez être redirigé...", "success");
+          setTimeout(() => {
+              window.location.href = "index.html"; // Redirection après 3s
+          }, 3000);
+      } else if (data.code === "6") {
+          afficherMessage("Erreur : " + data.error, "danger");
+      } else {
+          throw new Error("Problème lors de l'inscription.");
+      }
+  })
+  .catch((error) => {
+      console.error("Erreur :", error);
+      afficherMessage(`Erreur : ${error.message}`, "danger");
+  })
+  .finally(() => {
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = "S'inscrire";
+  });
+}
+// INSCRIPTION
+// // INSCRIPTION
+// // INSCRIPTION
