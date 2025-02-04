@@ -8,13 +8,48 @@ const latitude = 16.22395386679484;
 // addNavInteractions();
 // showListPosts();
 
+var currentPosition = {}; // Stocke la position actuelle
+
 function onDeviceReady() {
+
+  function onSuccess(position) {
+    currentPosition = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+      altitude: position.coords.altitude,
+      accuracy: position.coords.accuracy,
+      altitudeAccuracy: position.coords.altitudeAccuracy,
+      heading: position.coords.heading,
+      speed: position.coords.speed,
+      timestamp: position.timestamp
+    };
+
+    showListPosts(position.coords.longitude, position.coords.latitude);
+
+    // Exemple : utiliser la position pour afficher une carte Google Maps
+    // updateMap(currentPosition.latitude, currentPosition.longitude);
+  }
+
+  function onError(error) {
+    console.error("Erreur de géolocalisation :", error.message);
+  }
+
+  // Options pour activer la haute précision
+  var geoOptions = {
+    enableHighAccuracy: true, // 🔥 Active le mode GPS pour une position plus précise
+    timeout: 10000,           // ⏳ Temps max d'attente en millisecondes (10s)
+    maximumAge: 0             // 🕒 Ne pas utiliser une position en cache
+  };
+
+  // Récupère la position GPS
+  navigator.geolocation.getCurrentPosition(onSuccess, onError, geoOptions);
+
   addNavInteractions();
-  showListPosts();
 }
 
-function showListPosts() {
-  let data = {};
+function showListPosts(longitude, latitude) {
+
+  // alert(JSON.stringify(currentPosition));
   const rayon = 100000;
   const formData = new FormData();
   formData.append("idMapper", idMapper);
@@ -36,12 +71,8 @@ function showListPosts() {
   })
     .then((response) => response.json())
     .then((json) => {
-      // Stocker le JSON dans une variable
+      const allPosts = json.liste;
 
-      data = json;
-      const allPosts = data.liste;
-
-      // alert(JSON.stringify(allPosts, null, 4));
       const postList = document.getElementById("postsList");
 
       for (let i = 0; i < allPosts.length; i++) {
@@ -234,4 +265,43 @@ function consulterProfil() {
       document.getElementById("mail").textContent = data.mail;
     })
     .catch((error) => console.error("Erreur lors de la requête :", error));
+}
+
+
+function getPosition() {
+  var currentPosition = {}; // Stocke la position actuelle
+
+  function onSuccess(position) {
+    currentPosition = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+      altitude: position.coords.altitude,
+      accuracy: position.coords.accuracy,
+      altitudeAccuracy: position.coords.altitudeAccuracy,
+      heading: position.coords.heading,
+      speed: position.coords.speed,
+      timestamp: position.timestamp
+    };
+
+    console.log("Position récupérée :", currentPosition);
+
+    // Exemple : utiliser la position pour afficher une carte Google Maps
+    // updateMap(currentPosition.latitude, currentPosition.longitude);
+  }
+
+  function onError(error) {
+    console.error("Erreur de géolocalisation :", error.message);
+  }
+
+  // Options pour activer la haute précision
+  var geoOptions = {
+    enableHighAccuracy: true, // 🔥 Active le mode GPS pour une position plus précise
+    timeout: 10000,           // ⏳ Temps max d'attente en millisecondes (10s)
+    maximumAge: 0             // 🕒 Ne pas utiliser une position en cache
+  };
+
+  // Récupère la position GPS
+  navigator.geolocation.getCurrentPosition(onSuccess, onError, geoOptions);
+
+  return currentPosition;
 }
