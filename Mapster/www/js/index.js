@@ -346,7 +346,7 @@ function envoyerDonnees() {
 
 // Fonction pour envoyer la requête au serveur
 function envoyerRequete(data) {
-  fetch("https://www.miage-antilles.fr/mapper/s_inscrire.php", {
+  fetch("http://www.miage-antilles.fr/mapper/s_inscrire.php", {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
