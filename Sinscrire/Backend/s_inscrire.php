@@ -36,10 +36,16 @@ if ($checkTable == 0) {
             mail VARCHAR(255) NOT NULL UNIQUE,
             mdp VARCHAR(255) NOT NULL,
             pays VARCHAR(50) NOT NULL,
-            photo TEXT NULL,
+            photo MEDIUMTEXT NULL, 
             date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )";
     $pdo->exec($createTableSQL);
+} else {
+    // Vérifier si la colonne "photo" est en TEXT et la modifier en MEDIUMTEXT si nécessaire
+    $columnCheck = $pdo->query("SHOW COLUMNS FROM users LIKE 'photo'")->fetch(PDO::FETCH_ASSOC);
+    if ($columnCheck && strtoupper($columnCheck['Type']) !== 'MEDIUMTEXT') {
+        $pdo->exec("ALTER TABLE users MODIFY COLUMN photo MEDIUMTEXT NULL");
+    }
 }
 
 // Gestion des requêtes HTTP
