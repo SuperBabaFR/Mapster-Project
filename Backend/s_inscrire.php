@@ -36,7 +36,7 @@ if ($checkTable == 0) {
             mail VARCHAR(255) NOT NULL UNIQUE,
             mdp VARCHAR(255) NOT NULL,
             pays VARCHAR(50) NOT NULL,
-            photo TEXT NULL,
+            photo MEDIUMTEXT NULL,
             date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )";
     $pdo->exec($createTableSQL);
