@@ -4,7 +4,12 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
-header("Content-Security-Policy: connect-src *;");
+header("Content-Security-Policy: connect-src 'self' http://www.miage-antilles.fr;");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 
 // Inclure la configuration de la base de données
@@ -50,44 +55,50 @@ if ($method === 'POST') {
         // Vérifier si l'email ou le pseudo existent déjà
         $checkStmt = $pdo->prepare("SELECT id FROM users WHERE mail = :mail OR pseudo = :pseudo");
         $checkStmt->execute(['mail' => $mail, 'pseudo' => $pseudo]);
-
+    
         if ($checkStmt->fetch()) {
             http_response_code(409);
             echo json_encode(["success" => false, "code" => 6, "error" => "Email ou pseudo déjà utilisé !"]);
             exit;
         }
-
+    
         // Hacher le mot de passe
         $hashedPassword = password_hash($mdp, PASSWORD_BCRYPT);
-
+    
         // Insérer l'utilisateur
-        $stmt = $pdo->prepare("INSERT INTO users (nom, prenom, pseudo, mail, mdp, pays, photo) VALUES (:nom, :prenom, :pseudo, :mail, :mdp, :pays, :photo)");
-        $stmt->execute([
-            'nom' => $nom,
-            'prenom' => $prenom,
-            'pseudo' => $pseudo,
-            'mail' => $mail,
-            'mdp' => $hashedPassword,
-            'pays' => $pays,
-            'photo' => $photo
-        ]);
-
+        $stmt = $pdo->prepare("INSERT INTO users (nom, prenom, pseudo, mail, mdp, pays, photo) 
+                               VALUES (:nom, :prenom, :pseudo, :mail, :mdp, :pays, :photo)");
+    
+        $stmt->bindParam(':nom', $nom);
+        $stmt->bindParam(':prenom', $prenom);
+        $stmt->bindParam(':pseudo', $pseudo);
+        $stmt->bindParam(':mail', $mail);
+        $stmt->bindParam(':mdp', $hashedPassword);
+        $stmt->bindParam(':pays', $pays);
+        $stmt->bindParam(':photo', $photo);
+        
+        $stmt->execute();
+    
         http_response_code(201);
         echo json_encode(["success" => true, "message" => "Inscription réussie"]);
+    
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode(["success" => false, "error" => "Erreur lors de l'inscription: " . $e->getMessage()]);
     }
+    
 } elseif ($method === 'GET') {
     try {
         $stmt = $pdo->query("SELECT id, nom, prenom, pseudo, mail, pays, photo FROM users");
-        echo json_encode(["success" => true, "users" => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($users) {
+            echo json_encode(["success" => true, "users" => $users]);
+        } else {
+            echo json_encode(["success" => false, "error" => "Aucun utilisateur trouvé"]);
+        }
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode(["success" => false, "error" => "Erreur lors de la récupération des utilisateurs"]);
     }
-} else {
-    http_response_code(405);
-    echo json_encode(["success" => false, "error" => "Méthode non autorisée"]);
 }
-?>

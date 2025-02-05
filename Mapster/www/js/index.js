@@ -241,6 +241,7 @@ function consulterProfil() {
 // INSCRIPTION
 // INSCRIPTION
 // INSCRIPTION
+// INSCRIPTION
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("registrationForm");
   const photoInput = document.getElementById("photoInput");
@@ -281,13 +282,43 @@ function afficherMessage(message, type) {
   }, 5000);
 }
 
+// Vérification des champs avant l'envoi des données
+function validerChamps() {
+  const nom = document.getElementById("nom").value.trim();
+  const prenom = document.getElementById("prenom").value.trim();
+  const mail = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const pseudo = document.getElementById("pseudo").value.trim();
+  const pays = document.getElementById("pays").value;
+
+  if (!nom || !prenom || !mail || !password || !pseudo || !pays) {
+      afficherMessage("Tous les champs doivent être remplis", "danger");
+      return false;
+  }
+
+  if (!mail.includes("@") || !mail.includes(".")) {
+      afficherMessage("Adresse email invalide", "danger");
+      return false;
+  }
+
+  if (password.length < 6) {
+      afficherMessage("Le mot de passe doit contenir au moins 6 caractères", "danger");
+      return false;
+  }
+
+  return true;
+}
+
 // Fonction pour envoyer les données au serveur
 function envoyerDonnees() {
+  if (!validerChamps()) {
+      return;
+  }
+
   const submitBtn = document.getElementById("submitBtn");
   submitBtn.disabled = true;
   submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Inscription en cours...';
 
-  // Création de l'objet JSON au lieu de FormData
   let data = {
       action: "create",
       nom: document.getElementById("nom").value.trim(),
@@ -315,7 +346,7 @@ function envoyerDonnees() {
 
 // Fonction pour envoyer la requête au serveur
 function envoyerRequete(data) {
-  fetch("http://www.miage-antilles.fr/mapper/s_inscrire.php", {
+  fetch("https://www.miage-antilles.fr/mapper/s_inscrire.php", {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
@@ -327,7 +358,7 @@ function envoyerRequete(data) {
       if (!response.ok) {
           throw new Error(`Erreur HTTP: ${response.status}`);
       }
-      return response.json(); // Convertir la réponse en JSON
+      return response.json();
   })
   .then((data) => {
       console.log("Réponse du serveur :", data);
@@ -353,6 +384,7 @@ function envoyerRequete(data) {
       submitBtn.innerHTML = "S'inscrire";
   });
 }
+
 // INSCRIPTION
 // // INSCRIPTION
 // // INSCRIPTION
