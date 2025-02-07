@@ -270,7 +270,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Fonction pour afficher les messages de succès ou d'erreur
+// Fonction pour afficher les messages
 function afficherMessage(message, type) {
   const feedback = document.getElementById("feedback");
   feedback.className = `alert alert-${type} text-center`;
@@ -282,16 +282,13 @@ function afficherMessage(message, type) {
   }, 5000);
 }
 
-// Vérification des champs avant l'envoi des données
+// Vérification des champs avant l'envoi
 function validerChamps() {
-  const nom = document.getElementById("nom").value.trim();
-  const prenom = document.getElementById("prenom").value.trim();
+  const pseudo = document.getElementById("pseudo").value.trim();
   const mail = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
-  const pseudo = document.getElementById("pseudo").value.trim();
-  const pays = document.getElementById("pays").value;
 
-  if (!nom || !prenom || !mail || !password || !pseudo || !pays) {
+  if (!pseudo || !mail || !password) {
       afficherMessage("Tous les champs doivent être remplis", "danger");
       return false;
   }
@@ -317,38 +314,29 @@ function envoyerDonnees() {
 
   const submitBtn = document.getElementById("submitBtn");
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Inscription en cours...';
+  submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Envoi...';
 
   let formData = new FormData();
-  formData.append("action", "create");
-  formData.append("nom", document.getElementById("nom").value.trim());
-  formData.append("prenom", document.getElementById("prenom").value.trim());
-  formData.append("mail", document.getElementById("email").value.trim());
-  formData.append("pays", document.getElementById("pays").value);
-  formData.append("mdp", document.getElementById("password").value);
   formData.append("pseudo", document.getElementById("pseudo").value);
+  formData.append("mail", document.getElementById("email").value);
+  formData.append("mdp", document.getElementById("password").value);
 
   // Gestion de la photo
   const photoInput = document.getElementById("photoInput");
   if (photoInput.files.length > 0) {
-      formData.append("photo", photoInput.files[0]);
+      formData.append("photoProfil", photoInput.files[0]);
   }
 
   envoyerRequete(formData);
 }
 
-// Fonction pour envoyer la requête au serveur avec stockage de la réponse
+// Fonction pour envoyer la requête au serveur
 function envoyerRequete(formData) {
-  fetch("http://www.miage-antilles.fr/mapper/s_inscrire.php", {
+  fetch("http://miage-antilles.fr/mapper/table_mapper.php", {
       method: "POST",
-      body: formData, 
+      body: formData,
       mode: "cors",
-      headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
-      },
-      redirect: "follow",
+      redirect: "follow"
   })
   .then((response) => {
       if (!response.ok) {
@@ -357,19 +345,12 @@ function envoyerRequete(formData) {
       return response.json();
   })
   .then((json) => {
-      // Stocker le JSON dans une variable
-      let data = json;
-      console.log("Réponse du serveur :", data);
+      console.log("Réponse du serveur :", json);
 
-      if (data.success) {
-          afficherMessage("Inscription réussie ! Vous allez être redirigé...", "success");
-          setTimeout(() => {
-              window.location.href = "index.html"; // Redirection après 3s
-          }, 3000);
-      } else if (data.code === "6") {
-          afficherMessage("Erreur : " + data.error, "danger");
+      if (json.success) {
+          afficherMessage("Données envoyées avec succès !", "success");
       } else {
-          throw new Error("Problème lors de l'inscription.");
+          afficherMessage("Erreur lors de l'envoi des données.", "danger");
       }
   })
   .catch((error) => {
@@ -379,6 +360,6 @@ function envoyerRequete(formData) {
   .finally(() => {
       const submitBtn = document.getElementById("submitBtn");
       submitBtn.disabled = false;
-      submitBtn.innerHTML = "S'inscrire";
+      submitBtn.innerHTML = "Envoyer";
   });
 }
