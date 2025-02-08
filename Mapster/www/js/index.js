@@ -232,9 +232,37 @@ function consulterProfil() {
       // Mettre à jour le DOM avec les informations du profil
       document.getElementById("pseudomapper").textContent = data.pseudo;
       document.getElementById("mail").textContent = data.mail;
+      document.getElementById("publication").textContent = count(data.liste)+" Publications";
+      document.getElementById("photo").textContent = data.photo;
+
+
+      //Grille de Photo
+      for(post in data.liste){
+        document.getElementById("consultBody").innerHTML += <div id="data.liste.id" class="delete"></div>
+      }
+       
     })
     .catch((error) => console.error("Erreur lors de la requête :", error));
+
+    
 }
+
+document.getElementById("modifierProfil").addEventListener("click",function(){
+  document.getElementsByClassName("modifierProfil").style.display = block;
+  document.getElementById("profil").style.display = none;
+});
+
+document.getElementById("saveProfile").addEventListener("click",function(){
+  document.getElementsByClassName("modifierProfil").style.display = none;
+  consulterProfil();
+  document.getElementById("profil").style.display = block;
+});
+
+
+
+
+
+
 // INSCRIPTION
 // INSCRIPTION
 // INSCRIPTION
@@ -364,6 +392,3 @@ function envoyerRequete(formData) {
   });
 }
 
-document.getElementById("modifierProfil").addEventListener("click",function(){
-  document.getElementsByClassName("modifierProfil").style.display = block
-})
