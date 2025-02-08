@@ -258,6 +258,10 @@ document.getElementById("saveProfile").addEventListener("click",function(){
   document.getElementById("profil").style.display = block;
 });
 
+document.getElementById("post-onglet").addEventListener("click",function(){
+  document.getElementsByClassName("delete").style.display = block;
+});
+
 
 
 
