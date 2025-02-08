@@ -363,3 +363,7 @@ function envoyerRequete(formData) {
       submitBtn.innerHTML = "Envoyer";
   });
 }
+
+document.getElementById("modifierProfil").addEventListener("click",function(){
+  document.getElementsByClassName("modifierProfil").style.display = block
+})
