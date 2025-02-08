@@ -1,101 +1,134 @@
 document.addEventListener("deviceready", onDeviceReady);
 const URL = "http://miage-antilles.fr/mapper/";
-const idMapper = 1;
-const hashMdp = "hashedPassword";
-const longitude = -61.52848293478748;
-const latitude = 16.22395386679484;
+// let idMapper = 3;
+// let hashMdp = "$2y$10$.oFmMHPz.9wmJ26/N..rvuEI1vrGKfqzBIc.UvHpRfph056ulpfiG";
+let idMapper, pseudo, hashMdp, photo
+// const longitude = -61.52848293478748;
+// const latitude = 16.22395386679484;
 
-// addNavInteractions();
-// showListPosts();
-
+var currentPosition = {}; // Stocke la position actuelle
+// Options pour activer la haute précision
+var geoOptions = {
+    enableHighAccuracy: true, // 🔥 Active le mode GPS pour une position plus précise
+    timeout: 10000,           // ⏳ Temps max d'attente en millisecondes (10s)
+    maximumAge: 0             // 🕒 Ne pas utiliser une position en cache
+};
 function onDeviceReady() {
-  addNavInteractions();
-  showListPosts();
+    addNavInteractions();
+    // InscriptionInteract();
+    inscriptionEvent();
 }
 
-function showListPosts() {
-  let data = {};
-  const rayon = 100000;
-  const formData = new FormData();
-  formData.append("idMapper", idMapper);
-  formData.append("hashMdp", hashMdp);
-  formData.append("rayon", rayon);
-  formData.append("longitude", longitude);
-  formData.append("latitude", latitude);
+function loadConsulter() {
+    navigator.geolocation.getCurrentPosition(onSuccessLoca, onError, geoOptions);
 
-  fetch(URL + "consulter.php", {
-    method: "POST",
-    body: formData,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers":
-        "Content-Type, Authorization, X-Requested-With",
-    },
-    mode: "cors",
-  })
-    .then((response) => response.json())
-    .then((json) => {
-      // Stocker le JSON dans une variable
+    const nav_bar = document.getElementById("nav_bar");
+    nav_bar.style.display = "grid";
+}
+function onSuccessLoca(position) {
+    currentPosition = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        altitude: position.coords.altitude,
+        accuracy: position.coords.accuracy,
+        altitudeAccuracy: position.coords.altitudeAccuracy,
+        heading: position.coords.heading,
+        speed: position.coords.speed,
+        timestamp: position.timestamp
+    };
+    showListPosts(position.coords.longitude, position.coords.latitude);
 
-      data = json;
-      const allPosts = data.liste;
+    // Exemple : utiliser la position pour afficher une carte Google Maps
+    // updateMap(currentPosition.latitude, currentPosition.longitude);
+}
 
-      // alert(JSON.stringify(allPosts, null, 4));
-      const postList = document.getElementById("postsList");
+function onError(error) {
+    console.error("Erreur de géolocalisation :", error.message);
+}
 
-      for (let i = 0; i < allPosts.length; i++) {
-        const postdata = allPosts[i];
+function showListPosts(longitude, latitude) {
+    const rayon = 100000;
+    const formData = new FormData();
+    formData.append("idMapper", idMapper);
+    formData.append("hashMdp", hashMdp);
+    formData.append("rayon", rayon);
+    formData.append("longitude", longitude);
+    formData.append("latitude", latitude);
 
-        const post = document.createElement("div");
-        post.id = "post " + postdata.id;
-        post.className = "post";
-
-        const headPost = document.createElement("div");
-        headPost.className = "head-post";
-
-        const photoprofil = document.createElement("img");
-        photoprofil.className = "pp";
-        photoprofil.src = postdata.Maper.photoProfil;
-
-        const infosMapster = document.createElement("div");
-
-        const pseudo = document.createElement("p");
-        pseudo.className = "pseudo";
-        pseudo.innerHTML = postdata.Maper.pseudoMapper;
-
-        const distance = document.createElement("p");
-        distance.className = "distance";
-        distance.innerHTML = "à " + postdata.distanceUser.toString() + "m d'ici";
-        // distance.innerHTML = "à " + postdata.longitude + " d'ici";
-
-        infosMapster.appendChild(pseudo);
-        infosMapster.appendChild(distance);
-
-        headPost.appendChild(photoprofil);
-        headPost.appendChild(infosMapster);
-
-        const image_post = document.createElement("img");
-        image_post.className = "img-post";
-        image_post.src = postdata.photo;
-
-        const description = document.createElement("p");
-        description.className = "descriptions";
-        description.innerHTML = postdata.descriptions;
-
-        const date = document.createElement("p");
-        date.className = "date";
-        date.innerHTML = timeAgo(Date.parse(postdata.date));
-
-        post.appendChild(headPost);
-        post.appendChild(image_post);
-        post.appendChild(description);
-        post.appendChild(date);
-
-        postList.appendChild(post);
-      }
+    fetch(URL + "consulter.php", {
+        method: "POST",
+        body: formData,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers":
+                "Content-Type, Authorization, X-Requested-With",
+        },
+        mode: "cors",
     })
-    .catch((error) => alert("Erreur :" + error));
+        .then((response) => response.json())
+        .then((json) => {
+            if (json == null) {
+                alert("aucune réponse")
+                return;
+            }
+
+            const allPosts = json.liste;
+
+            const postList = document.getElementById("postsList");
+
+            for (let i = 0; i < allPosts.length; i++) {
+                const postdata = allPosts[i];
+
+                const post = document.createElement("div");
+                post.id = "post " + postdata.id;
+                post.className = "post";
+
+                const headPost = document.createElement("div");
+                headPost.className = "head-post";
+
+                const photoprofil = document.createElement("img");
+                photoprofil.className = "pp";
+                photoprofil.src = postdata.Maper.photoProfil;
+
+                const infosMapster = document.createElement("div");
+
+                const pseudo = document.createElement("p");
+                pseudo.className = "pseudo";
+                pseudo.innerHTML = postdata.Maper.pseudoMapper;
+
+                const distance = document.createElement("p");
+                distance.className = "distance";
+                distance.innerHTML = "à " + postdata.distanceUser.toString() + "m d'ici";
+                // distance.innerHTML = "à " + postdata.longitude + " d'ici";
+
+                infosMapster.appendChild(pseudo);
+                infosMapster.appendChild(distance);
+
+                headPost.appendChild(photoprofil);
+                headPost.appendChild(infosMapster);
+
+                const image_post = document.createElement("img");
+                image_post.className = "img-post";
+                image_post.src = postdata.photo;
+
+                const description = document.createElement("p");
+                description.className = "descriptions";
+                description.innerHTML = postdata.descriptions;
+
+                const date = document.createElement("p");
+                date.className = "date";
+                date.innerHTML = timeAgo(Date.parse(postdata.date));
+
+                post.appendChild(headPost);
+                post.appendChild(image_post);
+                post.appendChild(description);
+                post.appendChild(date);
+
+                postList.appendChild(post);
+            }
+        })
+        .catch((error) => alert("Erreur :" + error));
 }
 
 function addNavInteractions() {
@@ -242,20 +275,87 @@ function consulterProfil() {
 // INSCRIPTION
 // INSCRIPTION
 // INSCRIPTION
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("registrationForm");
-  const photoInput = document.getElementById("photoInput");
-  const userPhoto = document.getElementById("userPhoto");
 
-  if (form) {
+async function inscription() {
+    const pseudo = document.getElementById("pseudo").value.trim();
+    const mail = document.getElementById("email").value.trim();
+    const mdp = document.getElementById("password").value.trim();
+    const photo = document.getElementById("userPhoto").src;
+
+    if (!pseudo || !mail || !mdp) {
+        alert("Veuillez remplir tous les champs obligatoires.");
+        return;
+    }
+
+    const response = await fetch(URL + "inscription.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers":
+                "Content-Type, Authorization, X-Requested-With",
+        },
+        mode: "cors",
+        body: JSON.stringify({pseudo, mail, mdp, photo})
+    });
+
+    const result = await response.json();
+    const feedback = document.getElementById("feedback");
+    feedback.classList.remove("d-none");
+
+    if (result.code === 400 || result.code === 500) {
+        feedback.classList.add("alert-danger");
+        feedback.textContent = JSON.stringify(result,null, 4) || "Une erreur s'est produite.";
+        return;
+    }
+    feedback.classList.add("alert-success");
+    feedback.textContent = "Inscription réussie !";
+
+    idMapper = result.id;
+    hashMdp = result.mdp;
+
+    // CACHE L'inscription
+    const INSCRIPTION = document.getElementById("Inscription");
+    INSCRIPTION.style.display = "none"
+    // CHARGE LA page accueil
+    loadConsulter();
+}
+
+function inscriptionEvent() {
+    document.getElementById("registerBtn").addEventListener("click", inscription);
+    const photoInput = document.getElementById("photoInput");
+    const userPhoto = document.getElementById("userPhoto");
+
+
+    photoInput.addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                userPhoto.src = e.target.result;
+                userPhoto.classList.remove("d-none");
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+
+function InscriptionInteract () {
+    const form = document.getElementById("registrationForm");
+    const photoInput = document.getElementById("photoInput");
+    const userPhoto = document.getElementById("userPhoto");
+
+    if (form) {
       form.addEventListener("submit", function (e) {
           e.preventDefault();
           envoyerDonnees();
       });
-  }
+    }
 
-  // Afficher l'aperçu de l'image avant l'envoi
-  if (photoInput) {
+    // Afficher l'aperçu de l'image avant l'envoi
+    if (photoInput) {
       photoInput.addEventListener("change", function (event) {
           const file = event.target.files[0];
           if (file) {
@@ -267,8 +367,8 @@ document.addEventListener("DOMContentLoaded", function () {
               reader.readAsDataURL(file);
           }
       });
-  }
-});
+    }
+}
 
 // Fonction pour afficher les messages
 function afficherMessage(message, type) {
@@ -360,6 +460,6 @@ function envoyerRequete(formData) {
   .finally(() => {
       const submitBtn = document.getElementById("submitBtn");
       submitBtn.disabled = false;
-      submitBtn.innerHTML = "Envoyer";
+      submitBtn.innerHTML = "Envoyé";
   });
 }
