@@ -1,5 +1,5 @@
 * {
-    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
 }
 
 :root {
@@ -10,19 +10,20 @@
 }
 
 body {
-    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
-    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
-    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    font-size:12px;
+    -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
+    font-size: 12px;
     /* Padding to avoid the "unsafe" areas behind notches in the screen */
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
 
     font-family: "celebrisans", system-ui;
 }
+
 html, body {
     height: 100%; /* Assure que le corps prend toute la hauteur de la fenêtre */
-    width:100%;
-    margin: 0;    /* Supprime les marges par défaut */
+    width: 100%;
+    margin: 0; /* Supprime les marges par défaut */
 
     p {
         font-size: 3.2vw;
@@ -49,8 +50,6 @@ body {
     height: calc(100% - 8vh);
     overflow-y: auto;
 }
-
-
 
 
 /* NAVBAR CSS */
@@ -169,13 +168,14 @@ body {
         padding-left: 1vw;
     }
 }
+
 div.head-post {
     display: inline-flex;
     align-items: center;
 }
 
 img.img-post {
-    width : 100vw;
+    width: 100vw;
 }
 
 
@@ -225,6 +225,7 @@ img.img-post {
 
 
     /* Ajout d'une ombre légère pour délimiter visuellement la carte */
+
     .card {
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
@@ -292,11 +293,9 @@ img.img-post {
 /* MODIFIER PROFIL CSS */
 
 
-
 /* ___________________________________________________________________________________________________*/
 /* ___________________________________________________________________________________________________*/
 /* ___________________________________________________________________________________________________*/
-
 
 
 /* inscription CSS */
@@ -321,16 +320,17 @@ img.img-post {
         font-family: "Helvetica Neue", Arial, sans-serif;
     }
 
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
 
     /* Logo et titre */
+
     .logo-container {
         text-align: center;
         padding: 2rem 0;
@@ -344,6 +344,7 @@ img.img-post {
     }
 
     /* Boutons et contrôles */
+
     .btn {
         background-color: #5B9B73;
         border: none;
@@ -352,267 +353,296 @@ img.img-post {
         border-radius: 8px;
         transition: all 0.3s ease;
     }
+
     .btn:hover {
         background-color: var(--mapster-light);
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+
     .btn:active {
         transform: translateY(1px);
     }
 
-/* Bouton retour */
-#backButton {
-  margin-bottom: 1rem;
-  background: transparent;
-  color: var(--mapster-dark);
-  border: 1px solid var(--mapster-dark);
-  transition: all 0.3s;
-}
-#backButton:hover {
-  background: var(--mapster-dark);
-  color: white;
-}
+    /* Bouton retour */
 
-/* Formulaires */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+    #backButton {
+        margin-bottom: 1rem;
+        background: transparent;
+        color: var(--mapster-dark);
+        border: 1px solid var(--mapster-dark);
+        transition: all 0.3s;
+    }
 
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-}
+    #backButton:hover {
+        background: var(--mapster-dark);
+        color: white;
+    }
 
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: var(--mapster-green);
-  box-shadow: 0 0 5px rgba(91, 155, 115, 0.4);
-}
+    /* Formulaires */
 
-/* Zone d'information */
-#Info {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(91, 155, 115, 0.1);
-  margin: 1rem 0;
-}
-#Info p {
-  margin: 0.8rem 0;
-  color: var(--mapster-dark);
-}
-#Info p strong {
-  color: var(--mapster-green);
-  display: inline-block;
-  min-width: 120px;
-  font-weight: 600;
-}
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
 
-/* Gestion des images */
-#imageContainer {
-  margin: 1.5rem 0;
-  padding: 1rem;
-  border: 2px solid var(--mapster-light);
-  border-radius: 12px;
-  background-color: white;
-  text-align: center;
-}
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
 
-#imageContainer img {
-  max-width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(91, 155, 115, 0.2);
-  transition: transform 0.3s ease-in-out;
-}
-#imageContainer img:hover {
-  transform: scale(1.05);
-}
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: var(--mapster-green);
+        box-shadow: 0 0 5px rgba(91, 155, 115, 0.4);
+    }
 
-/* Feedback et notifications */
+    /* Zone d'information */
+
+    #Info {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(91, 155, 115, 0.1);
+        margin: 1rem 0;
+    }
+
+    #Info p {
+        margin: 0.8rem 0;
+        color: var(--mapster-dark);
+    }
+
+    #Info p strong {
+        color: var(--mapster-green);
+        display: inline-block;
+        min-width: 120px;
+        font-weight: 600;
+    }
+
+    /* Gestion des images */
+
+    #imageContainer {
+        margin: 1.5rem 0;
+        padding: 1rem;
+        border: 2px solid var(--mapster-light);
+        border-radius: 12px;
+        background-color: white;
+        text-align: center;
+    }
+
+    #imageContainer img {
+        max-width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(91, 155, 115, 0.2);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    #imageContainer img:hover {
+        transform: scale(1.05);
+    }
+
+    /* Feedback et notifications */
+
     .alert {
         border-radius: 8px;
         border: none;
         padding: 1rem;
         margin: 1rem 0;
     }
+
     .alert-success {
         background-color: rgba(91, 155, 115, 0.1);
         color: var(--mapster-dark);
     }
+
     .alert-warning {
         background-color: #FFF3CD;
         color: #856404;
     }
+
     .alert-danger {
         background-color: #f8d7da;
         color: #721c24;
     }
 
-/* Animation des erreurs */
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
-}
-.invalid-feedback {
-  color: red;
-  font-size: 0.875rem;
-  animation: shake 0.3s ease-in-out;
-}
-
-/* Animations */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-.location-active {
-  animation: pulse 2s infinite;
-}
-
-
-
-/* inscription CSS */
-/* inscription CSS */
-/* inscription CSS */
-/* inscription CSS */
-/* inscription CSS */
-/* inscription CSS */
-/* inscription CSS */
-/* inscription CSS */
-/* inscription CSS */
-/* inscription CSS */
-/* inscription CSS */
-/* inscription CSS */
-/* inscription CSS */
-/* inscription CSS */
-
-/* ___________________________________________________________________________________________________*/
-/* ___________________________________________________________________________________________________*/
-/*supprimer photo*/
-#supprimerPhoto {
-    /* Styles de la pop-up */
-    .Confirmation {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.4);
-        justify-content: center;
-        align-items: center;
-        backdrop-filter: blur(10px);
-        z-index: 1000;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
+    /* Animation des erreurs */
+    @keyframes shake {
+        0% {
+            transform: translateX(0);
+        }
+        25% {
+            transform: translateX(-5px);
+        }
+        50% {
+            transform: translateX(5px);
+        }
+        75% {
+            transform: translateX(-5px);
+        }
+        100% {
+            transform: translateX(0);
+        }
     }
 
-    .Confirmation.show {
-        display: flex;
-        opacity: 1;
-        visibility: visible;
+    .invalid-feedback {
+        color: red;
+        font-size: 0.875rem;
+        animation: shake 0.3s ease-in-out;
     }
 
-    .Confirmation-content {
-        background-color: rgba(255, 255, 255, 0.9); /* Blanc légèrement translucide */
-        padding: 20px;
-        border-radius: 16px;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        max-width: 90%;
-        width: 320px;
-        transition: transform 0.3s cubic-bezier(0.25, 1.25, 0.5, 1);
-        transform: scale(0.95);
+    /* Animations */
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
     }
 
-    .Confirmation.show .Confirmation-content {
-        transform: scale(1);
+    .location-active {
+        animation: pulse 2s infinite;
     }
 
-    .Confirmation-content h2 {
-        font-size: 20px;
-        font-weight: 600;
-        color: #222;
-        margin-bottom: 10px;
-    }
 
-    .Confirmation-content p {
-        font-size: 15px;
-        color: #666;
-        margin-bottom: 20px;
-    }
+    /* inscription CSS */
+    /* inscription CSS */
+    /* inscription CSS */
+    /* inscription CSS */
+    /* inscription CSS */
+    /* inscription CSS */
+    /* inscription CSS */
+    /* inscription CSS */
+    /* inscription CSS */
+    /* inscription CSS */
+    /* inscription CSS */
+    /* inscription CSS */
+    /* inscription CSS */
+    /* inscription CSS */
 
-    .Confirmation-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
+    /* ___________________________________________________________________________________________________*/
+    /* ___________________________________________________________________________________________________*/
+    /*supprimer photo*/
 
-    /* Boutons façon iOS */
-    .Confirmation-content button {
-        padding: 14px;
-        width: 100%;
-        font-size: 16px;
-        font-weight: 500;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: background-color 0.2s ease, transform 0.1s ease;
-    }
+    #supprimerPhoto {
+        /* Styles de la pop-up */
 
-    #confirmAction {
-        background-color: #ff3b30; /* Rouge iOS */
-        color: white;
-    }
+        .Confirmation {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
 
-    #confirmAction:hover {
-        background-color: #d32f2f;
-    }
+        .Confirmation.show {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
 
-    #cancelConfirmation {
-        background-color: white;
-        color: #007AFF; /* Bleu iOS */
-        border: 1px solid #ddd;
-    }
-
-    #cancelConfirmation:hover {
-        background-color: #f2f2f7; /* Gris iOS */
-    }
-
-    @media (max-width: 600px) {
         .Confirmation-content {
-            width: 90%;
+            background-color: rgba(255, 255, 255, 0.9); /* Blanc légèrement translucide */
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 90%;
+            width: 320px;
+            transition: transform 0.3s cubic-bezier(0.25, 1.25, 0.5, 1);
+            transform: scale(0.95);
+        }
+
+        .Confirmation.show .Confirmation-content {
+            transform: scale(1);
+        }
+
+        .Confirmation-content h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 10px;
+        }
+
+        .Confirmation-content p {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .Confirmation-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Boutons façon iOS */
+
+        .Confirmation-content button {
+            padding: 14px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        #confirmAction {
+            background-color: #ff3b30; /* Rouge iOS */
+            color: white;
+        }
+
+        #confirmAction:hover {
+            background-color: #d32f2f;
+        }
+
+        #cancelConfirmation {
+            background-color: white;
+            color: #007AFF; /* Bleu iOS */
+            border: 1px solid #ddd;
+        }
+
+        #cancelConfirmation:hover {
+            background-color: #f2f2f7; /* Gris iOS */
+        }
+
+        @media (max-width: 600px) {
+            .Confirmation-content {
+                width: 90%;
+            }
         }
     }
 }
 
+    /*########################################################################################################
+                                            Consulter son profil
+    ##########################################################################################################*/
 
-/*########################################################################################################
-                                        Consulter son profil
-##########################################################################################################*/
-#profil {
-    font-family: 'Berkslund', Arial, sans-serif;
+    #profil {
+        font-family: 'Berkslund', Arial, sans-serif;
 
-    .centre {
-        margin-left: auto;
-        margin-right: auto;
+        .centre {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #modifierProfil {
+            /*align-self: right;*/
+        }
     }
-
-    #modifierProfil {
-        align-self: right;
-    }
-}

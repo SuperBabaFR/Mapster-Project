@@ -3,29 +3,11 @@
 
 <head>
     <meta charset="utf-8">
-    <!--        <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">-->
-    <!--        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src * 'self' data: content:;">-->
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
     <meta name="color-scheme" content="light dark">
-    <!--    <meta-->
-    <!--            http-equiv="Content-Security-Policy"-->
-    <!--            content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net http://miage-antilles.fr;-->
-    <!--                 style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; -->
-    <!--                 media-src *; -->
-    <!--                 img-src 'self' data: content:; -->
-    <!--                 connect-src 'self' http://www.miage-antilles.fr http://miage-antilles.fr;"-->
-    <!--    />-->
 
-    <!--    <meta-->
-    <!--            http-equiv="Content-Security-Policy"-->
-    <!--            content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net http://miage-antilles.fr;-->
-    <!--                    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;-->
-    <!--                    media-src *;-->
-    <!--                    img-src 'self' data: content:;-->
-    <!--                    connect-src 'self' http://miage-antilles.fr;"-->
-    <!--    />-->
     <meta
             name="viewport"
             content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
@@ -53,104 +35,103 @@
 <div class="MapsterApp">
 
         <!-- LETIN et BLOU-->
-  <body>
-    <div class="container mt-5">
-      <!-- Bouton retour vers la page de connexion -->
-      <div class="d-flex justify-content-start mb-3">
-        <button type="button" class="btn btn-outline-secondary" id="backButton">
-          <i class="fa-solid fa-arrow-left"></i> Retour
-        </button>
-      </div>
+    <div id="Inscription">
+        <div class="container mt-5">
+            <!-- Bouton retour vers la page de connexion -->
+            <div class="d-flex justify-content-start mb-3">
+                <button type="button" class="btn btn-outline-secondary" id="backButton">
+                    <i class="fa-solid fa-arrow-left"></i> Retour
+                </button>
+            </div>
 
-      <h2 class="text-center mb-4">Inscription</h2>
+            <h2 class="text-center mb-4">Inscription</h2>
 
-      <!-- Zone de feedback pour afficher des messages -->
-      <div id="feedback" class="alert d-none"></div>
+            <!-- Zone de feedback pour afficher des messages -->
+            <div id="feedback" class="alert d-none"></div>
+            <!-- Pseudo -->
+            <div class="mb-3">
+                <label for="pseudo" class="form-label">Pseudo*</label>
+                <input
+                        type="text"
+                        class="form-control"
+                        id="pseudo"
+                        required
+                        minlength="3"
+                        maxlength="20"
+                />
+                <div class="invalid-feedback">
+                    Veuillez choisir un pseudo entre 3 et 20 caractères.
+                </div>
+            </div>
 
-      <form id="registrationForm" class="needs-validation" novalidate>
-        <!-- Pseudo -->
-        <div class="mb-3">
-          <label for="pseudo" class="form-label">Pseudo*</label>
-          <input
-            type="text"
-            class="form-control"
-            id="pseudo"
-            required
-            minlength="3"
-            maxlength="20"
-          />
-          <div class="invalid-feedback">
-            Veuillez choisir un pseudo entre 3 et 20 caractères.
-          </div>
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email*</label>
+                <input type="email" class="form-control" id="email" required />
+                <div class="invalid-feedback">
+                    Veuillez entrer une adresse email valide.
+                </div>
+            </div>
+
+            <!-- Mot de passe -->
+            <div class="mb-3">
+                <label for="password" class="form-label">Mot de passe*</label>
+                <div class="input-group">
+                    <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            required
+                            minlength="6"
+                    />
+                    <button
+                            class="btn btn-outline-secondary"
+                            type="button"
+                            id="togglePassword"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+                <div class="invalid-feedback">
+                    Le mot de passe doit contenir au moins 6 caractères.
+                </div>
+            </div>
+
+            <!-- Zone pour afficher l'image de profil -->
+            <div class="mb-3 text-center">
+                <label class="form-label">Photo de profil</label>
+                <div>
+                    <img
+                            id="userPhoto"
+                            class="img-fluid rounded d-none border shadow"
+                            style="max-width: 150px"
+                            alt="Photo de profil"
+                    />
+                </div>
+            </div>
+
+            <!-- Bouton pour choisir une photo -->
+            <div class="mb-3">
+                <input
+                        type="file"
+                        class="form-control"
+                        id="photoInput"
+                        accept="image/*"
+                />
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-success" id="registerBtn">
+                    S'inscrire
+                </button>
+                <button type="reset" class="btn btn-outline-secondary">
+                    Réinitialiser
+                </button>
+            </div>
         </div>
-
-        <!-- Email -->
-        <div class="mb-3">
-          <label for="email" class="form-label">Email*</label>
-          <input type="email" class="form-control" id="email" required />
-          <div class="invalid-feedback">
-            Veuillez entrer une adresse email valide.
-          </div>
-        </div>
-
-        <!-- Mot de passe -->
-        <div class="mb-3">
-          <label for="password" class="form-label">Mot de passe*</label>
-          <div class="input-group">
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              required
-              minlength="6"
-            />
-            <button
-              class="btn btn-outline-secondary"
-              type="button"
-              id="togglePassword"
-            >
-              <i class="fa-solid fa-eye"></i>
-            </button>
-          </div>
-          <div class="invalid-feedback">
-            Le mot de passe doit contenir au moins 6 caractères.
-          </div>
-        </div>
-
-        <!-- Zone pour afficher l'image de profil -->
-        <div class="mb-3 text-center">
-          <label class="form-label">Photo de profil</label>
-          <div>
-            <img
-              id="userPhoto"
-              class="img-fluid rounded d-none border shadow"
-              style="max-width: 150px"
-              alt="Photo de profil"
-            />
-          </div>
-        </div>
-
-        <!-- Bouton pour choisir une photo -->
-        <div class="mb-3">
-          <input
-            type="file"
-            class="form-control"
-            id="photoInput"
-            accept="image/*"
-          />
-        </div>
-
-        <!-- Boutons d'action -->
-        <div class="d-grid gap-2 mt-4">
-          <button type="submit" class="btn btn-success" id="submitBtn">
-            S'inscrire
-          </button>
-          <button type="reset" class="btn btn-outline-secondary">
-            Réinitialiser
-          </button>
-        </div>
-      </form>
     </div>
+
 
     <!-- HALIAR et LEVI-->
     <div id="connexion" style="display: none;">
@@ -204,13 +185,12 @@
     </div>
 
     <div id="profil">
-        <!-- Ludo et Nico -->
-        <div class="consulterProfil " >
-            <div id="photo"></div>
-            <div id="pseudomapper"></div>
-            <div id="publication"></div>
+        <div class="consulterProfil">
+            <div id="photo" class="centre"></div>
+            <div id="pseudomapper" class="centre"></div>
+            <div id="publication" class="centre"></div>
             <div>
-                <div id="modifierProfil"></div>
+                <button id="modifierProfil" type="button" class="btn btn-dark bi bi-pencil-square"></button>
             </div>
         </div>
         <div id="infoMapper">
@@ -224,11 +204,11 @@
             </div>
         </div>
         <div>
-            <div id="post-onglet"></div>
-            <div id="map-onget"></div>
+            <div id="post-onglet">Mes Posts</div>
+            <div id="map-onget">La Map</div>
         </div>
         <div id="consultBody"></div>
-
+    </div>
 
         <!-- William et Benjamin -->
         <!--        <div class="modifierProfil container mt-4" style="display: none;">-->
@@ -341,17 +321,17 @@
         <!--        </div>-->
 
 
-        <!-- Enora et Oryane -->
+    <!-- Enora et Oryane -->
 
-        <div id="supprimerPhoto" style="display: none;">
-            <div class="Confirmation" id="confirmationModal">
-                <div class="Confirmation-content">
-                    <p>Voulez-vous supprimer cette photo ?</p>
-                    <button id="confirmYes">Oui</button>
-                    <button id="confirmNo">Non</button>
-                </div>
+    <div id="supprimerPhoto" style="display: none;">
+        <div class="Confirmation" id="confirmationModal">
+            <div class="Confirmation-content">
+                <p>Voulez-vous supprimer cette photo ?</p>
+                <button id="confirmYes">Oui</button>
+                <button id="confirmNo">Non</button>
             </div>
         </div>
+    </div>
 
     <div id="nav_bar" class="nav-bar" style="display: none">
         <div class="list-nav">
@@ -417,17 +397,6 @@
                     icon.classList.remove("fa-eye-slash");
                     icon.classList.add("fa-eye");
                 }
-            });
-
-        // Empêcher l’envoi du formulaire si les champs sont invalides
-        document
-            .getElementById("registrationForm")
-            .addEventListener("submit", function (event) {
-                if (!this.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                this.classList.add("was-validated");
             });
 
         // Aperçu de la photo
