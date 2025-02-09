@@ -54,6 +54,7 @@ body {
 
 
 /* NAVBAR CSS */
+
 .nav-bar {
     position: fixed;
     bottom: 0;
@@ -79,6 +80,7 @@ body {
     align-items: center;
     justify-items: center;
     width: 20%;
+
     p {
         margin: .5vw 0px 0px 0px;
         font-size: 3vw;
@@ -89,6 +91,7 @@ body {
     .nav-item-img {
         background: #1C7D52;
     }
+
     p {
         color: white;
         font-size: 3.2vw;
@@ -101,7 +104,6 @@ body {
     display: grid;
     justify-content: center;
 }
-
 
 /* NAVBAR CSS */
 
@@ -149,6 +151,9 @@ body {
 
     }
 
+    .img-post {
+        width: 100vw;
+    }
 
 
     .description {
@@ -316,10 +321,14 @@ img.img-post {
         font-family: "Helvetica Neue", Arial, sans-serif;
     }
 
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
 
     /* Logo et titre */
     .logo-container {
@@ -352,39 +361,80 @@ img.img-post {
         transform: translateY(1px);
     }
 
-    /* Zone d'information */
-    #Info {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 12px rgba(91, 155, 115, 0.1);
-        margin: 1rem 0;
-    }
-    #Info p {
-        margin: 0.8rem 0;
-        color: var(--mapster-dark);
-    }
-    #Info p strong {
-        color: var(--mapster-green);
-        display: inline-block;
-        min-width: 120px;
-        font-weight: 600;
-    }
+/* Bouton retour */
+#backButton {
+  margin-bottom: 1rem;
+  background: transparent;
+  color: var(--mapster-dark);
+  border: 1px solid var(--mapster-dark);
+  transition: all 0.3s;
+}
+#backButton:hover {
+  background: var(--mapster-dark);
+  color: white;
+}
 
-    #imageContainer {
-        margin: 1.5rem 0;
-        padding: 1rem;
-        border: 2px solid var(--mapster-light);
-        border-radius: 12px;
-        background-color: white;
-    }
-    #imageContainer img {
-        max-width: 100%;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(91, 155, 115, 0.2);
-    }
+/* Formulaires */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-    /* Feedback et notifications */
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--mapster-green);
+  box-shadow: 0 0 5px rgba(91, 155, 115, 0.4);
+}
+
+/* Zone d'information */
+#Info {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(91, 155, 115, 0.1);
+  margin: 1rem 0;
+}
+#Info p {
+  margin: 0.8rem 0;
+  color: var(--mapster-dark);
+}
+#Info p strong {
+  color: var(--mapster-green);
+  display: inline-block;
+  min-width: 120px;
+  font-weight: 600;
+}
+
+/* Gestion des images */
+#imageContainer {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 2px solid var(--mapster-light);
+  border-radius: 12px;
+  background-color: white;
+  text-align: center;
+}
+
+#imageContainer img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(91, 155, 115, 0.2);
+  transition: transform 0.3s ease-in-out;
+}
+#imageContainer img:hover {
+  transform: scale(1.05);
+}
+
+/* Feedback et notifications */
     .alert {
         border-radius: 8px;
         border: none;
@@ -404,23 +454,37 @@ img.img-post {
         color: #721c24;
     }
 
-    /* Animations */
-    @keyframes pulse {
-        0% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.05);
-        }
-        100% {
-            transform: scale(1);
-        }
-    }
-    .location-active {
-        animation: pulse 2s infinite;
-    }/*# sourceMappingURL=main.css.map */
-
+/* Animation des erreurs */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
 }
+.invalid-feedback {
+  color: red;
+  font-size: 0.875rem;
+  animation: shake 0.3s ease-in-out;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.location-active {
+  animation: pulse 2s infinite;
+}
+
+
 
 /* inscription CSS */
 /* inscription CSS */
@@ -533,5 +597,22 @@ img.img-post {
         .Confirmation-content {
             width: 90%;
         }
+    }
+}
+
+
+/*########################################################################################################
+                                        Consulter son profil
+##########################################################################################################*/
+#profil {
+    font-family: 'Berkslund', Arial, sans-serif;
+
+    .centre {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #modifierProfil {
+        align-self: right;
     }
 }
