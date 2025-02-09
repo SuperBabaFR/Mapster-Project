@@ -306,10 +306,10 @@ function validerChamps() {
       return false;
   }
 
-  if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(password)) {
-      afficherMessage("Le mot de passe doit contenir au moins une majuscule, un chiffre et un caractère spécial", "danger");
-      return false;
-  }
+  // if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(password)) {
+  //     afficherMessage("Le mot de passe doit contenir au moins une majuscule, un chiffre et un caractère spécial", "danger");
+  //     return false;
+  // }
 
   return true;
 }
@@ -365,7 +365,7 @@ function envoyerRequete(formData) {
       if (json.success) {
           afficherMessage("Inscription réussie ! Vous allez être redirigé...", "success");
           setTimeout(() => {
-              window.location.href = "index.html"; // Redirection après 3s
+              window.location.href = "index.html"; 
           }, 3000);
       } else if (json.code === "6") {
           afficherMessage("Erreur : " + json.error, "danger");
