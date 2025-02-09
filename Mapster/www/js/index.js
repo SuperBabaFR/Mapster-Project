@@ -258,13 +258,16 @@ document.addEventListener("DOMContentLoaded", function () {
   if (photoInput) {
       photoInput.addEventListener("change", function (event) {
           const file = event.target.files[0];
-          if (file) {
+
+          if (file && file.type.startsWith("image/")) {
               const reader = new FileReader();
               reader.onload = function (e) {
                   userPhoto.src = e.target.result;
                   userPhoto.classList.remove("d-none");
               };
               reader.readAsDataURL(file);
+          } else {
+              afficherMessage("Veuillez sélectionner une image valide", "danger");
           }
       });
   }
@@ -284,25 +287,27 @@ function afficherMessage(message, type) {
 
 // Vérification des champs avant l'envoi des données
 function validerChamps() {
-  const nom = document.getElementById("nom").value.trim();
-  const prenom = document.getElementById("prenom").value.trim();
+  const pseudo = document.getElementById("pseudo").value.trim();
   const mail = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
-  const pseudo = document.getElementById("pseudo").value.trim();
-  const pays = document.getElementById("pays").value;
 
-  if (!nom || !prenom || !mail || !password || !pseudo || !pays) {
+  if (!pseudo || !mail || !password) {
       afficherMessage("Tous les champs doivent être remplis", "danger");
       return false;
   }
 
-  if (!mail.includes("@") || !mail.includes(".")) {
+  if (!/^[a-zA-Z0-9_]{3,20}$/.test(pseudo)) {
+      afficherMessage("Le pseudo doit contenir entre 3 et 20 caractères alphanumériques", "danger");
+      return false;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) {
       afficherMessage("Adresse email invalide", "danger");
       return false;
   }
 
-  if (password.length < 6) {
-      afficherMessage("Le mot de passe doit contenir au moins 6 caractères", "danger");
+  if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(password)) {
+      afficherMessage("Le mot de passe doit contenir au moins une majuscule, un chiffre et un caractère spécial", "danger");
       return false;
   }
 
@@ -320,34 +325,32 @@ function envoyerDonnees() {
   submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Inscription en cours...';
 
   let formData = new FormData();
-  formData.append("action", "create");
-  formData.append("nom", document.getElementById("nom").value.trim());
-  formData.append("prenom", document.getElementById("prenom").value.trim());
+  formData.append("pseudo", document.getElementById("pseudo").value.trim());
   formData.append("mail", document.getElementById("email").value.trim());
-  formData.append("pays", document.getElementById("pays").value);
   formData.append("mdp", document.getElementById("password").value);
-  formData.append("pseudo", document.getElementById("pseudo").value);
 
-  // Gestion de la photo
+  // Gestion de la photo (conversion en base64 avant envoi)
   const photoInput = document.getElementById("photoInput");
   if (photoInput.files.length > 0) {
-      formData.append("photo", photoInput.files[0]);
-  }
+      const file = photoInput.files[0];
+      const reader = new FileReader();
 
-  envoyerRequete(formData);
+      reader.onloadend = function () {
+          formData.append("photo", reader.result.split(',')[1]); // Enregistrer uniquement la partie base64
+          envoyerRequete(formData);
+      };
+      reader.readAsDataURL(file);
+  } else {
+      envoyerRequete(formData);
+  }
 }
 
 // Fonction pour envoyer la requête au serveur avec stockage de la réponse
 function envoyerRequete(formData) {
   fetch("http://www.miage-antilles.fr/mapper/s_inscrire.php", {
       method: "POST",
-      body: formData, 
+      body: formData,
       mode: "cors",
-      headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
-      },
       redirect: "follow",
   })
   .then((response) => {
@@ -357,17 +360,15 @@ function envoyerRequete(formData) {
       return response.json();
   })
   .then((json) => {
-      // Stocker le JSON dans une variable
-      let data = json;
-      console.log("Réponse du serveur :", data);
+      console.log("Réponse du serveur :", json);
 
-      if (data.success) {
+      if (json.success) {
           afficherMessage("Inscription réussie ! Vous allez être redirigé...", "success");
           setTimeout(() => {
               window.location.href = "index.html"; // Redirection après 3s
           }, 3000);
-      } else if (data.code === "6") {
-          afficherMessage("Erreur : " + data.error, "danger");
+      } else if (json.code === "6") {
+          afficherMessage("Erreur : " + json.error, "danger");
       } else {
           throw new Error("Problème lors de l'inscription.");
       }
