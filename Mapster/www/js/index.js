@@ -238,13 +238,12 @@ function onFail(message) {
 }
 
 function sendData() {
+    // alert("click partager OK")
     if (!imageBase64) {
         alert("Aucune image capturée");
         return;
     }
-
     let textValue = document.getElementById("textArea").value;
-
     let formData = new FormData();
     formData.append("idMapper", idMapper);
     formData.append("hashMdp", hashMdp);
@@ -252,18 +251,16 @@ function sendData() {
     formData.append("longitude", longitude);
     formData.append("latitude", latitude);
     formData.append("description", textValue);
-
     fetch(URL + "post_service.php", {
         method: "POST",
         body: formData
     })
-    .then(response => response.json()) // On attend une réponse JSON
-    .then(data => {
-        if (data.idPost) { // Si l'API retourne un idPost, le post a réussi
+    .then(response => {
+        if (response.status === 200) {
             alert("Post envoyé avec succès !");
-            document.getElementById("home").click(); // Simule un clic sur l'onglet "home"
+            document.getElementById("home").click();
         } else {
-            alert("Erreur lors de l'envoi du post : " + (data.message || "Réponse inattendue."));
+            throw new Error("Code retour non OK : " + response.status);
         }
     })
     .catch(error => {
@@ -272,7 +269,8 @@ function sendData() {
     });
 }
 
-// POSTER PHGOTO
+
+// POSTER PHOTO
 
 
 function consulterProfil() {
