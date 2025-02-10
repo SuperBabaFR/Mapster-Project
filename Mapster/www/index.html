@@ -156,26 +156,27 @@
     </div>
 
     <!-- Yohann et Kény -->
-    <div id="poster">
-        <h1 style="text-align: center; color: #4CAF50;">Nouvelle
-            Publication</h1>
-        <img id="monImage" src alt="Votre photo apparaîtra ici"
+    <div id="poster" style="background-color: #ffffff;padding-top: 15px;padding-bottom: 25px;height: auto;">
+        <div style="align-items: center;">
+            <h2 style="text-align: center; color: #3D7A56;margin-top: 5px;">Nouvelle Publication</h2>
+        </div>
+
+        <img id="capturedImage" src alt="Votre photo apparaîtra ici"
              class="img-fluid"
-             style="width: 100%; height: 55%"/>
+             style="width: 100%; height: auto;margin-bottom: 5px;" />
         <!-- Zone pour ajouter une description -->
-        <div style="margin: 10px;">
-                <textarea id="description"
-                          placeholder="Ajoutez une description..."
-                          style="width: 100%; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; resize: none; height: 100px;"></textarea>
+        <div style="margin: 2px;width: 96%;">
+                    <textarea id="textArea"
+                              placeholder="Ajoutez une description..."
+                              style="width: 96%; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;
+           resize: none; height: 55px; padding: 10px; background-color: #f8f8f8;
+           color: #333; font-family: Arial, sans-serif; outline: none;"></textarea>
         </div>
         <!-- Bouton pour partager la photo -->
-        <div
-                style="margin-bottom: 10px; margin-left: 70%; margin-right: 10px;">
-            <button id="btn-partager"
-                    style="display: block; width: 100%; padding: 5px; background-color: #2196F3; color: white; border: none; font-size: 16px; cursor: pointer;border-radius: 3px;">
+            <button id="sendBtn"
+                    style="display: block; width: 20%; padding: 5px; background-color: #3D7A56; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 3px; margin: 1vw">
                 Partager
             </button>
-        </div>
     </div>
 
     <!-- personne assigné -->

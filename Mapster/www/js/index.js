@@ -1,10 +1,12 @@
-document.addEventListener("deviceready", onDeviceReady);
 const URL = "http://miage-antilles.fr/mapper/";
+document.addEventListener("deviceready", onDeviceReady);
+document.getElementById("sendBtn").addEventListener("click", sendData);
 // let idMapper = 3;
 // let hashMdp = "$2y$10$.oFmMHPz.9wmJ26/N..rvuEI1vrGKfqzBIc.UvHpRfph056ulpfiG";
-let idMapper, pseudo, hashMdp, photo
 // const longitude = -61.52848293478748;
 // const latitude = 16.22395386679484;
+let idMapper, pseudo, hashMdp, photo, longitude, latitude
+let imageBase64 = "";
 
 var currentPosition = {}; // Stocke la position actuelle
 // Options pour activer la haute précision
@@ -15,7 +17,6 @@ var geoOptions = {
 };
 function onDeviceReady() {
     addNavInteractions();
-    // InscriptionInteract();
     inscriptionEvent();
 }
 
@@ -36,7 +37,9 @@ function onSuccessLoca(position) {
         speed: position.coords.speed,
         timestamp: position.timestamp
     };
-    showListPosts(position.coords.longitude, position.coords.latitude);
+    longitude = position.coords.longitude
+    latitude = position.coords.latitude
+    showListPosts(longitude, latitude);
 
     // Exemple : utiliser la position pour afficher une carte Google Maps
     // updateMap(currentPosition.latitude, currentPosition.longitude);
@@ -150,17 +153,17 @@ function addNavInteractions() {
         document.getElementById(i.div).style.display = "none";
       });
 
-      if (item.div === "poster") {
-        takePicture();
+      if (item.nav === "post") {
+        capturePhoto();
       }
 
       if (item.nav === "account") {
         consulterProfil();
       }
 
-      if (item.nav === "consulter") {
+      if (item.nav === "home") {
         document.getElementById("postsList").innerHTML = "";
-        showListPosts();
+        showListPosts(longitude, latitude);
       }
 
       navElement.classList.add("selected");
@@ -214,38 +217,57 @@ function timeAgo(date) {
   return `il y a ${years} an${years > 1 ? "s" : ""}`;
 }
 
-function takePicture() {
-  navigator.camera.getPicture(onSuccess, onFail, {
-    quality: 50,
-    destinationType: Camera.DestinationType.DATA_URL,
-    encodingType: Camera.EncodingType.JPEG,
-    correctOrientation: true,
-  });
+// POSTER PHGOTO
+
+function capturePhoto() {
+    navigator.camera.getPicture(onSuccess, onFail, {
+        quality: 25,
+        destinationType: Camera.DestinationType.DATA_URL,
+        encodingType: Camera.EncodingType.JPEG,
+        correctOrientation: true
+    });
 }
 
 function onSuccess(imageData) {
-  console.log("Image capturée !");
-
-  var image = document.getElementById("monImage");
-  image.style.display = "block";
-  image.src = `${imageData}`;
-  alert(imageData);
-
-  // Vérifier que l'image s'affiche bien
-  image.onload = function () {
-    console.log("Image chargée avec succès !");
-  };
-
-  image.onerror = function () {
-    console.error("Erreur lors du chargement de l'image");
-    alert("L'image ne s'est pas chargée correctement !");
-  };
+    imageBase64 = imageData;
+    document.getElementById("capturedImage").src = imageData;
 }
 
 function onFail(message) {
-  console.error("Erreur lors de la capture : " + message);
-  alert("Échec :" + message);
+    alert("Erreur: " + message);
 }
+
+function sendData() {
+    //alert("click partager OK")
+    if (!imageBase64) {
+        alert("Aucune image capturée");
+        return;
+    }
+    let textValue = document.getElementById("textArea").value;
+
+    let formData = new FormData();
+    formData.append("idMapper", idMapper);
+    formData.append("hashMdp", hashMdp);
+    formData.append("photo", imageBase64);
+    formData.append("longitude", longitude);
+    formData.append("latitude", latitude);
+    formData.append("description", textValue);
+
+    fetch(URL + "post_service.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(data => {
+
+    })
+    .catch(error => {
+        document.getElementById("apiResponse").style.display = "block";
+        document.getElementById("apiResponse").innerText = "Erreur lors de l'envoi des données : " + error;
+    });
+}
+
+// POSTER PHGOTO
+
 
 function consulterProfil() {
   fetch(URL + "consulterProfil.php", {
@@ -341,145 +363,3 @@ function inscriptionEvent() {
     });
 }
 
-//
-// function InscriptionInteract () {
-//     const form = document.getElementById("registrationForm");
-//     const photoInput = document.getElementById("photoInput");
-//     const userPhoto = document.getElementById("userPhoto");
-//
-//   if (form) {
-//       form.addEventListener("submit", function (e) {
-//           e.preventDefault();
-//           envoyerDonnees();
-//       });
-//   }
-//
-//   // Afficher l'aperçu de l'image avant l'envoi
-//   if (photoInput) {
-//       photoInput.addEventListener("change", function (event) {
-//           const file = event.target.files[0];
-//
-//           if (file && file.type.startsWith("image/")) {
-//               const reader = new FileReader();
-//               reader.onload = function (e) {
-//                   userPhoto.src = e.target.result;
-//                   userPhoto.classList.remove("d-none");
-//               };
-//               reader.readAsDataURL(file);
-//           } else {
-//               afficherMessage("Veuillez sélectionner une image valide", "danger");
-//           }
-//       });
-//   }
-// }
-//
-// // Fonction pour afficher les messages de succès ou d'erreur
-// function afficherMessage(message, type) {
-//   const feedback = document.getElementById("feedback");
-//   feedback.className = `alert alert-${type} text-center`;
-//   feedback.innerText = message;
-//   feedback.classList.remove("d-none");
-//
-//   setTimeout(() => {
-//       feedback.classList.add("d-none");
-//   }, 5000);
-// }
-//
-// // Vérification des champs avant l'envoi des données
-// function validerChamps() {
-//   const pseudo = document.getElementById("pseudo").value.trim();
-//   const mail = document.getElementById("email").value.trim();
-//   const password = document.getElementById("password").value;
-//
-//   if (!pseudo || !mail || !password) {
-//       afficherMessage("Tous les champs doivent être remplis", "danger");
-//       return false;
-//   }
-//
-//   if (!/^[a-zA-Z0-9_]{3,20}$/.test(pseudo)) {
-//       afficherMessage("Le pseudo doit contenir entre 3 et 20 caractères alphanumériques", "danger");
-//       return false;
-//   }
-//
-//   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) {
-//       afficherMessage("Adresse email invalide", "danger");
-//       return false;
-//   }
-//
-//   // if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(password)) {
-//   //     afficherMessage("Le mot de passe doit contenir au moins une majuscule, un chiffre et un caractère spécial", "danger");
-//   //     return false;
-//   // }
-//
-//   return true;
-// }
-//
-// // Fonction pour envoyer les données au serveur
-// function envoyerDonnees() {
-//   if (!validerChamps()) {
-//       return;
-//   }
-//
-//   const submitBtn = document.getElementById("submitBtn");
-//   submitBtn.disabled = true;
-//   submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Inscription en cours...';
-//
-//   let formData = new FormData();
-//   formData.append("pseudo", document.getElementById("pseudo").value.trim());
-//   formData.append("mail", document.getElementById("email").value.trim());
-//   formData.append("mdp", document.getElementById("password").value);
-//
-//   // Gestion de la photo (conversion en base64 avant envoi)
-//   const photoInput = document.getElementById("photoInput");
-//   if (photoInput.files.length > 0) {
-//       const file = photoInput.files[0];
-//       const reader = new FileReader();
-//
-//       reader.onloadend = function () {
-//           formData.append("photo", reader.result.split(',')[1]); // Enregistrer uniquement la partie base64
-//           envoyerRequete(formData);
-//       };
-//       reader.readAsDataURL(file);
-//   } else {
-//       envoyerRequete(formData);
-//   }
-// }
-//
-// // Fonction pour envoyer la requête au serveur avec stockage de la réponse
-// function envoyerRequete(formData) {
-//   fetch("http://www.miage-antilles.fr/mapper/s_inscrire.php", {
-//       method: "POST",
-//       body: formData,
-//       mode: "cors",
-//       redirect: "follow",
-//   })
-//   .then((response) => {
-//       if (!response.ok) {
-//           throw new Error(`Erreur HTTP: ${response.status}`);
-//       }
-//       return response.json();
-//   })
-//   .then((json) => {
-//       console.log("Réponse du serveur :", json);
-//
-//       if (json.success) {
-//           afficherMessage("Inscription réussie ! Vous allez être redirigé...", "success");
-//           setTimeout(() => {
-//               window.location.href = "index.html";
-//           }, 3000);
-//       } else if (json.code === "6") {
-//           afficherMessage("Erreur : " + json.error, "danger");
-//       } else {
-//           throw new Error("Problème lors de l'inscription.");
-//       }
-//   })
-//   .catch((error) => {
-//       console.error("Erreur :", error);
-//       afficherMessage(`Erreur : ${error.message}`, "danger");
-//   })
-//   .finally(() => {
-//       const submitBtn = document.getElementById("submitBtn");
-//       submitBtn.disabled = false;
-//       submitBtn.innerHTML = "S'inscrire";
-//   });
-// }
