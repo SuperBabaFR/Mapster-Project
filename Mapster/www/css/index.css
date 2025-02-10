@@ -47,7 +47,7 @@ body {
 }
 
 .MapsterApp {
-    height: calc(100% - 8vh);
+    height: 100vh;/*calc(100% - 8vh);*/
     overflow-y: auto;
 }
 

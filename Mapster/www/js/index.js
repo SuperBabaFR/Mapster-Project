@@ -282,15 +282,15 @@ function sendData() {
     })
     .then(response => {
         if (response.status === 200) {
-            alert("Post envoyé avec succès !");
             document.getElementById("home").click();
         } else {
             throw new Error("Code retour non OK : " + response.status);
         }
     })
     .catch(error => {
-        document.getElementById("apiResponse").style.display = "block";
-        document.getElementById("apiResponse").innerText = "Erreur lors de l'envoi des données : " + error;
+        alert("Erreur lors de l'envoi des données : " + error);
+        // document.getElementById("apiResponse").style.display = "block";
+        // document.getElementById("apiResponse").innerText = "Erreur lors de l'envoi des données : " + error;
     });
 }
 
