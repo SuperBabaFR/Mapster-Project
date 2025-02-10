@@ -280,8 +280,13 @@ function sendData() {
         method: "POST",
         body: formData
     })
-    .then(data => {
-        document.getElementById("home").click(); // Simule un clic sur l'onglet "home"
+    .then(response => {
+        if (response.status === 200) {
+            alert("Post envoyé avec succès !");
+            document.getElementById("home").click();
+        } else {
+            throw new Error("Code retour non OK : " + response.status);
+        }
     })
     .catch(error => {
         document.getElementById("apiResponse").style.display = "block";
@@ -289,7 +294,8 @@ function sendData() {
     });
 }
 
-// POSTER PHGOTO
+
+// POSTER PHOTO
 
 
 function consulterProfil() {
