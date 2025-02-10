@@ -3,10 +3,10 @@
 }
 
 :root {
-    --mapster-green: #5B9B73;
-    --mapster-light: #7AB892;
-    --mapster-dark: #3D7A56;
-    --mapster-bg: #F5F5F5;
+    --mapster-green: #1F8C5C;  /* Couleur principale (Base) */
+    --mapster-light: #48A378;  /* Version plus claire */
+    --mapster-dark: #166B45;   /* Version plus foncée */
+    --mapster-bg: #EAF5EE;     /* Fond doux et clair */
 }
 
 body {
@@ -123,6 +123,136 @@ body {
 /* POST CSS */
 /* POST CSS */
 /* POST CSS */
+
+/* Conteneur du slider */
+.slider-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: var(--mapster-green);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+/* Style du slider */
+#rangeSlider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: var(--mapster-light);
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Personnalisation des curseurs du slider */
+#rangeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--mapster-dark);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#rangeSlider::-webkit-slider-thumb:hover {
+    background: var(--mapster-bg);
+}
+
+/* Affichage de la valeur */
+#sliderValue {
+    margin-left: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Bouton d'actualisation */
+#refreshButton {
+    background: var(--mapster-dark);
+    border: none;
+    padding: 8px 12px;
+    margin-left: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#refreshButton:hover {
+    background: var(--mapster-light);
+}
+
+/* Icône du bouton */
+#refreshButton i {
+    color: white;
+    font-size: 18px;
+}
+
+/* Conteneur du loader */
+.loader-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Conteneur principal : Centrage parfait */
+.loader-container {
+    position: fixed; /* Reste en place même au scroll */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centre parfaitement */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.8); /* Optionnel : fond semi-transparent */
+}
+
+/* Cercle d'animation */
+.loader {
+    width: 80px; /* Taille ajustable */
+    height: 80px;
+    border-radius: 50%;
+    border: 10px solid var(--mapster-light);
+    border-top: 10px solid var(--mapster-dark); /* Couleur plus foncée pour effet dynamique */
+    animation: spin 1.5s linear infinite;
+}
+
+/* Texte au centre (Logo ou "Loading...") */
+.logo {
+    margin-top: 15px; /* Espacement entre le loader et le texte */
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--mapster-dark);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: fadeInOut 2s infinite alternate;
+}
+
+/* Animation de rotation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Effet de pulsation sur le texte */
+@keyframes fadeInOut {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
 
 .post {
     margin-top: 10px;
@@ -317,10 +447,7 @@ img.img-post {
 
 #Inscription {
 
-    body {
-        background-color: var(--mapster-bg);
-        font-family: "Helvetica Neue", Arial, sans-serif;
-    }
+    font-family: "Helvetica Neue", Arial, sans-serif;
 
     .container {
         max-width: 600px;
@@ -348,7 +475,7 @@ img.img-post {
     /* Boutons et contrôles */
 
     .btn {
-        background-color: #5B9B73;
+        background-color: var(--mapster-green);
         border: none;
         color: white;
         padding: 0.8rem 1.5rem;
@@ -383,7 +510,7 @@ img.img-post {
 
     /* Formulaires */
 
-    form {
+    .form {
         display: flex;
         flex-direction: column;
         gap: 1rem;

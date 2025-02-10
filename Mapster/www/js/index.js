@@ -15,13 +15,31 @@ var geoOptions = {
     timeout: 10000,           // ⏳ Temps max d'attente en millisecondes (10s)
     maximumAge: 0             // 🕒 Ne pas utiliser une position en cache
 };
+// Sélection des éléments
+const rangeSlider = document.getElementById("rangeSlider");
+const sliderValue = document.getElementById("sliderValue");
+const refreshButton = document.getElementById("refreshButton");
+
 function onDeviceReady() {
     addNavInteractions();
     inscriptionEvent();
+
+    // Mise à jour dynamique de la valeur affichée
+    rangeSlider.addEventListener("input", () => {
+        sliderValue.textContent = rangeSlider.value + 'm';
+    });
+
+    // Récupération de la valeur lorsque le bouton est cliqué
+    refreshButton.addEventListener("click", () => {
+        reload_post_list();
+    });
 }
 
 function loadConsulter() {
     navigator.geolocation.getCurrentPosition(onSuccessLoca, onError, geoOptions);
+
+    document.getElementById("home").classList.add("selected");
+    document.getElementById("consulter").style.display = "block";
 
     const nav_bar = document.getElementById("nav_bar");
     nav_bar.style.display = "grid";
@@ -39,7 +57,8 @@ function onSuccessLoca(position) {
     };
     longitude = position.coords.longitude
     latitude = position.coords.latitude
-    showListPosts(longitude, latitude);
+    rayon = rangeSlider.value
+    showListPosts(longitude, latitude, rayon);
 
     // Exemple : utiliser la position pour afficher une carte Google Maps
     // updateMap(currentPosition.latitude, currentPosition.longitude);
@@ -50,7 +69,6 @@ function onError(error) {
 }
 
 function showListPosts(longitude, latitude) {
-    const rayon = 100000;
     const formData = new FormData();
     formData.append("idMapper", idMapper);
     formData.append("hashMdp", hashMdp);
@@ -79,6 +97,7 @@ function showListPosts(longitude, latitude) {
             const allPosts = json.liste;
 
             const postList = document.getElementById("postsList");
+            postList.innerHTML = "";
 
             for (let i = 0; i < allPosts.length; i++) {
                 const postdata = allPosts[i];
@@ -134,6 +153,14 @@ function showListPosts(longitude, latitude) {
         .catch((error) => alert("Erreur :" + error));
 }
 
+function reload_post_list() {
+    document.getElementById("postsList").innerHTML = "<div class=\"loader-container\">\n" +
+        "    <div class=\"loader\"></div>\n" +
+        "    <div class=\"logo\">Chargement...</div>\n" +
+        "</div>\n";
+    navigator.geolocation.getCurrentPosition(onSuccessLoca, onError, geoOptions);
+}
+
 function addNavInteractions() {
   const navItems = [
     { nav: "home", div: "consulter" },
@@ -162,8 +189,7 @@ function addNavInteractions() {
       }
 
       if (item.nav === "home") {
-        document.getElementById("postsList").innerHTML = "";
-        showListPosts(longitude, latitude);
+        reload_post_list()
       }
 
       navElement.classList.add("selected");
@@ -175,9 +201,6 @@ function addNavInteractions() {
     document.getElementById(elem.nav).classList.remove("selected");
     document.getElementById(elem.div).style.display = "none";
   });
-
-  document.getElementById("home").classList.add("selected");
-  document.getElementById("consulter").style.display = "block";
 }
 function timeAgo(date) {
   const now = new Date();
@@ -258,12 +281,7 @@ function sendData() {
         body: formData
     })
     .then(data => {
-        if (data.idPost) { // Si l'API retourne un idPost, le post a réussi
-            alert("Post envoyé avec succès !");
-            document.getElementById("home").click(); // Simule un clic sur l'onglet "home"
-        } else {
-            alert("Erreur lors de l'envoi du post : " + (data.message || "Réponse inattendue."));
-        }
+        document.getElementById("home").click(); // Simule un clic sur l'onglet "home"
     })
     .catch(error => {
         document.getElementById("apiResponse").style.display = "block";

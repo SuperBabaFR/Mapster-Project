@@ -48,7 +48,8 @@
 
             <!-- Zone de feedback pour afficher des messages -->
             <div id="feedback" class="alert d-none"></div>
-            <!-- Pseudo -->
+            <div class="form">
+                <!-- Pseudo -->
             <div class="mb-3">
                 <label for="pseudo" class="form-label">Pseudo*</label>
                 <input
@@ -129,6 +130,8 @@
                     Réinitialiser
                 </button>
             </div>
+            </div>
+
         </div>
     </div>
 
@@ -144,7 +147,19 @@
 
     <!-- JULIO ET BABAS-->
     <div id="consulter">
+        <div class="slider-container">
+            <input type="range" id="rangeSlider" min="100" max="10000" value="1000" step="100">
+            <span id="sliderValue">1000m</span>
+            <button id="refreshButton">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+        </div>
+        <div style="padding: 3.2vh; width: 100%;"></div>
         <div id="postsList">
+            <div class="loader-container">
+                <div class="loader"></div>
+                <div class="logo">Chargement...</div>
+            </div>
         </div>
     </div>
 
