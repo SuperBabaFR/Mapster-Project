@@ -238,11 +238,11 @@ function onFail(message) {
 }
 
 function sendData() {
-    //alert("click partager OK")
     if (!imageBase64) {
         alert("Aucune image capturée");
         return;
     }
+
     let textValue = document.getElementById("textArea").value;
 
     let formData = new FormData();
@@ -257,8 +257,14 @@ function sendData() {
         method: "POST",
         body: formData
     })
+    .then(response => response.json()) // On attend une réponse JSON
     .then(data => {
-
+        if (data.idPost) { // Si l'API retourne un idPost, le post a réussi
+            alert("Post envoyé avec succès !");
+            document.getElementById("home").click(); // Simule un clic sur l'onglet "home"
+        } else {
+            alert("Erreur lors de l'envoi du post : " + (data.message || "Réponse inattendue."));
+        }
     })
     .catch(error => {
         document.getElementById("apiResponse").style.display = "block";
