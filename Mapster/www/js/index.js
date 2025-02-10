@@ -221,7 +221,7 @@ function timeAgo(date) {
 
 function capturePhoto() {
     navigator.camera.getPicture(onSuccess, onFail, {
-        quality: 25,
+        quality: 75,
         destinationType: Camera.DestinationType.DATA_URL,
         encodingType: Camera.EncodingType.JPEG,
         correctOrientation: true
@@ -257,7 +257,6 @@ function sendData() {
         method: "POST",
         body: formData
     })
-    .then(response => response.json()) // On attend une réponse JSON
     .then(data => {
         if (data.idPost) { // Si l'API retourne un idPost, le post a réussi
             alert("Post envoyé avec succès !");

@@ -128,23 +128,25 @@ body {
     margin-top: 10px;
 
     .pp {
-        width: 12vw;
-        height: 12vw;
-        padding: 1vw 2vw .25vw 2vw;
+        width: 15vw;
+        height: 15vw;
+        margin: 1vw 2vw .25vw 2vw;
         border-radius: 50%;
         aspect-ratio: 1 / 1;
         object-fit: cover;
+        object-position: center;
+        /*overflow: hidden;*/
     }
 
     .pseudo {
         font-family: "berkslund", system-ui;
-        font-size: 4.25vw;
+        font-size: 5vw;
         margin: 0px;
         font-weight: bold;
     }
 
     .distance {
-        font-size: 3vw;
+        font-size: 4vw;
         margin: 0px;
         font-weight: lighter;
 
@@ -156,7 +158,7 @@ body {
 
 
     .description {
-        font-size: 4vw;
+        font-size: 4.2vw;
         margin: 0px;
         padding-left: 1vw;
     }
