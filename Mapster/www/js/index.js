@@ -313,61 +313,61 @@ function sendData() {
 // CONSULTER PROFIL
 
 
-// function consulterProfil() {
-//     fetch(URL + "consulterProfil.php", {
-//       method: "POST",
-//       headers: {
-//         "Access-Control-Allow-Origin": "*",
-//         "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-//         "Access-Control-Allow-Headers":
-//           "Content-Type, Authorization, X-Requested-With",
-//       },
-//       mode: "cors",
-//     })
-//       .then((response) => response.json())
-//       .then((data) => {
-//         console.log("Données reçues :", data);
+function consulterProfil() {
+    fetch(URL + "consulterProfil.php", {
+      method: "POST",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers":
+          "Content-Type, Authorization, X-Requested-With",
+      },
+      mode: "cors",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Données reçues :", data);
   
-//         document.getElementById("pseudomapper").textContent = data.pseudo;
-//         document.getElementById("mail").textContent = data.mail;
-//         document.getElementById("publication").textContent =
-//           data.liste.length + " Publications";
-//         document.getElementById(
-//           "photo"
-//         ).innerHTML = `<img src="${data.photo}" alt="Profile Picture">`;
+        document.getElementById("pseudomapper").textContent = data.pseudo;
+        document.getElementById("mail").textContent = data.mail;
+        document.getElementById("publication").textContent =
+          data.liste.length + " Publications";
+        document.getElementById(
+          "photo"
+        ).innerHTML = `<img src="${data.photo}" alt="Profile Picture">`;
   
-//         const consultBody = document.getElementById("consultBody");
-//         consultBody.innerHTML = "";
+        const consultBody = document.getElementById("consultBody");
+        consultBody.innerHTML = "";
   
-//         data.liste.forEach((post) => {
-//           const postDiv = document.createElement("div");
-//           postDiv.className = "post";
-//           postDiv.id = "photo" + post.id;
+        data.liste.forEach((post) => {
+          const postDiv = document.createElement("div");
+          postDiv.className = "post";
+          postDiv.id = "photo" + post.id;
   
-//           const image_post = document.createElement("img");
-//           image_post.className = "img-post";
-//           image_post.src = post.photo;
-//           image_post.alt = "Post Image";
+          const image_post = document.createElement("img");
+          image_post.className = "img-post";
+          image_post.src = post.photo;
+          image_post.alt = "Post Image";
   
-//           const description = document.createElement("p");
-//           description.className = "description";
-//           description.textContent = post.description;
+          const description = document.createElement("p");
+          description.className = "description";
+          description.textContent = post.description;
   
-//           const date = document.createElement("p");
-//           date.className = "date";
-//           date.textContent = new Date(post.date).toLocaleDateString();
+          const date = document.createElement("p");
+          date.className = "date";
+          date.textContent = new Date(post.date).toLocaleDateString();
   
-//           postDiv.appendChild(image_post);
-//           postDiv.appendChild(description);
-//           postDiv.appendChild(date);
+          postDiv.appendChild(image_post);
+          postDiv.appendChild(description);
+          postDiv.appendChild(date);
   
-//           consultBody.appendChild(postDiv);
-//         });
+          consultBody.appendChild(postDiv);
+        });
   
-//         ajouterEvenementsSuppression();
-//       })
-//       .catch((error) => console.error("Erreur lors de la requête :", error));
-//   }
+        ajouterEvenementsSuppression();
+      })
+      .catch((error) => console.error("Erreur lors de la requête :", error));
+  }
 
 
 /***************************************************************/
