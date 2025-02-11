@@ -7,6 +7,8 @@
     --mapster-light: #48A378;  /* Version plus claire */
     --mapster-dark: #166B45;   /* Version plus foncée */
     --mapster-bg: #EAF5EE;     /* Fond doux et clair */
+    --mapster-text: #333;      /* Texte principal */
+    --mapster-border: #ccc;    /* Bordures subtiles */
 }
 
 body {
@@ -31,7 +33,7 @@ html, body {
 }
 
 body {
-    background-color: #ffffff;
+    background-color: var(--mapster-bg);
     color: #000000;
 }
 
@@ -287,11 +289,6 @@ body {
     }
 
 
-    .description {
-        font-size: 4.2vw;
-        margin: 0px;
-        padding-left: 1vw;
-    }
 
     .date {
         color: grey;
@@ -304,6 +301,12 @@ body {
 div.head-post {
     display: inline-flex;
     align-items: center;
+}
+
+div.description {
+    font-size: 4.5vw;
+    margin: 0px;
+    padding-left: 1vw;
 }
 
 img.img-post {
@@ -451,11 +454,11 @@ img.img-post {
 
     .container {
         max-width: 600px;
-        margin: 0 auto;
-        background: white;
+        background: var(--mapster-bg);
         padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 0 !important;
+        /*border-radius: 12px;*/
+        /*box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);*/
     }
 
     /* Logo et titre */
@@ -639,122 +642,302 @@ img.img-post {
     .location-active {
         animation: pulse 2s infinite;
     }
+}
+
+/* inscription CSS */
+/* inscription CSS */
+/* inscription CSS */
+/* inscription CSS */
+/* inscription CSS */
+/* inscription CSS */
+/* inscription CSS */
+/* inscription CSS */
+/* inscription CSS */
+/* inscription CSS */
+/* inscription CSS */
+/* inscription CSS */
+/* inscription CSS */
+/* inscription CSS */
+
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
 
 
-    /* inscription CSS */
-    /* inscription CSS */
-    /* inscription CSS */
-    /* inscription CSS */
-    /* inscription CSS */
-    /* inscription CSS */
-    /* inscription CSS */
-    /* inscription CSS */
-    /* inscription CSS */
-    /* inscription CSS */
-    /* inscription CSS */
-    /* inscription CSS */
-    /* inscription CSS */
-    /* inscription CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
 
-    /* ___________________________________________________________________________________________________*/
-    /* ___________________________________________________________________________________________________*/
-    /*supprimer photo*/
+#connexion {
 
-    #supprimerPhoto {
-        /* Styles de la pop-up */
+    position: fixed;
+    margin-block: 20vh;
 
-        .Confirmation {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
+    /* Réinitialisation et styles globaux */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+    }
 
-        .Confirmation.show {
-            display: flex;
-            opacity: 1;
-            visibility: visible;
-        }
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: var(--mapster-bg);
+        color: var(--mapster-text);
+    }
 
+    /* Conteneur principal */
+    .container {
+        width: 100%;
+        max-width: 400px;
+        background-color: var(--mapster-bg);
+        /*border-radius: 10px;*/
+        /*box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);*/
+        padding: 30px;
+        text-align: center;
+        /*border: 1px solid var(--mapster-border);*/
+    }
+
+    /* Logo */
+    .logo2 {
+        margin-bottom: 20px;
+    }
+
+    .logo2 img {
+        max-width: 100%;
+        height: auto;
+        width: 150px;
+        border-radius: 8px;
+    }
+
+    /* Titres */
+    h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: var(--mapster-dark);
+    }
+
+    /* Champs de saisie */
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid var(--mapster-light);
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: white;
+        color: var(--mapster-text);
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+        border-color: var(--mapster-green);
+        outline: none;
+        box-shadow: 0 0 5px rgba(31, 140, 92, 0.3);
+    }
+
+    /* Bouton principal */
+    input[type="button"] {
+        background-color: var(--mapster-green);
+        color: white;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s ease, transform 0.1s;
+    }
+
+    input[type="button"]:hover {
+        background-color: var(--mapster-dark);
+    }
+
+    input[type="button"]:active {
+        transform: scale(0.98);
+    }
+
+    /* Connexion via réseaux sociaux */
+    .social-login {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 15px 0;
+    }
+
+    .social-login img {
+        width: 36px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .social-login img:hover {
+        transform: scale(1.1);
+    }
+
+    /* Lien "mot de passe oublié" */
+    .forgot-password {
+        margin-top: 15px;
+        font-size: 14px;
+        color: var(--mapster-dark);
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .forgot-password:hover {
+        color: var(--mapster-green);
+        text-decoration: underline;
+    }
+
+}
+
+
+
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+/* connexion CSS */
+
+
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+
+
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+/* ___________________________________________________________________________________________________*/
+
+
+
+/*supprimer photo*/
+
+#supprimerPhoto {
+    /* Styles de la pop-up */
+
+    .Confirmation {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .Confirmation.show {
+        display: flex;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .Confirmation-content {
+        background-color: rgba(255, 255, 255, 0.9); /* Blanc légèrement translucide */
+        padding: 20px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        max-width: 90%;
+        width: 320px;
+        transition: transform 0.3s cubic-bezier(0.25, 1.25, 0.5, 1);
+        transform: scale(0.95);
+    }
+
+    .Confirmation.show .Confirmation-content {
+        transform: scale(1);
+    }
+
+    .Confirmation-content h2 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 10px;
+    }
+
+    .Confirmation-content p {
+        font-size: 15px;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .Confirmation-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Boutons façon iOS */
+
+    .Confirmation-content button {
+        padding: 14px;
+        width: 100%;
+        font-size: 16px;
+        font-weight: 500;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    #confirmAction {
+        background-color: #ff3b30; /* Rouge iOS */
+        color: white;
+    }
+
+    #confirmAction:hover {
+        background-color: #d32f2f;
+    }
+
+    #cancelConfirmation {
+        background-color: white;
+        color: #007AFF; /* Bleu iOS */
+        border: 1px solid #ddd;
+    }
+
+    #cancelConfirmation:hover {
+        background-color: #f2f2f7; /* Gris iOS */
+    }
+
+    @media (max-width: 600px) {
         .Confirmation-content {
-            background-color: rgba(255, 255, 255, 0.9); /* Blanc légèrement translucide */
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            max-width: 90%;
-            width: 320px;
-            transition: transform 0.3s cubic-bezier(0.25, 1.25, 0.5, 1);
-            transform: scale(0.95);
-        }
-
-        .Confirmation.show .Confirmation-content {
-            transform: scale(1);
-        }
-
-        .Confirmation-content h2 {
-            font-size: 20px;
-            font-weight: 600;
-            color: #222;
-            margin-bottom: 10px;
-        }
-
-        .Confirmation-content p {
-            font-size: 15px;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .Confirmation-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        /* Boutons façon iOS */
-
-        .Confirmation-content button {
-            padding: 14px;
-            width: 100%;
-            font-size: 16px;
-            font-weight: 500;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-        }
-
-        #confirmAction {
-            background-color: #ff3b30; /* Rouge iOS */
-            color: white;
-        }
-
-        #confirmAction:hover {
-            background-color: #d32f2f;
-        }
-
-        #cancelConfirmation {
-            background-color: white;
-            color: #007AFF; /* Bleu iOS */
-            border: 1px solid #ddd;
-        }
-
-        #cancelConfirmation:hover {
-            background-color: #f2f2f7; /* Gris iOS */
-        }
-
-        @media (max-width: 600px) {
-            .Confirmation-content {
-                width: 90%;
-            }
+            width: 90%;
         }
     }
 }

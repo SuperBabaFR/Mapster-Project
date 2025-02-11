@@ -33,6 +33,17 @@ function onDeviceReady() {
     refreshButton.addEventListener("click", () => {
         reload_post_list();
     });
+
+    // Connexion
+    const btnConnecter = document.getElementById("btnConnecter");
+    btnConnecter.addEventListener("click",Connexion);
+    // Passer à inscription
+    const sinscire = document.getElementById("sinscrire");
+    sinscire.addEventListener("click",switchToInscription);
+    // Repasser à connexion
+    const backButton = document.getElementById("backButton");
+    backButton.addEventListener("click",switchToConnexion);
+
 }
 
 function loadConsulter() {
@@ -295,7 +306,7 @@ function sendData() {
 }
 
 
-// POSTER PHOTO
+// CONSULTER PROFIL
 
 
 function consulterProfil() {
@@ -319,6 +330,104 @@ function consulterProfil() {
     })
     .catch((error) => console.error("Erreur lors de la requête :", error));
 }
+
+// CONNEXION
+// CONNEXION
+// CONNEXION
+// CONNEXION
+// CONNEXION
+// CONNEXION
+// CONNEXION
+
+function Connexion() {
+    // event.preventDefault(); // Empêche le rechargement de la page
+
+    // Sélection des éléments du DOM
+    const mailInput = document.getElementById("emailconnexion");
+    const mdpInput = document.getElementById("passwordconnexion");
+
+    if (!mailInput || !mdpInput) {
+        console.error("Erreur : Les champs email ou mot de passe sont introuvables !");
+        return false;
+    }
+
+    // Récupération des valeurs des champs
+    const mail = mailInput.value.trim();
+    const mdp = mdpInput.value.trim();
+
+    // Vérification que les champs ne sont pas vides
+    if (mail === "" || mdp === "") {
+        alert("Veuillez remplir tous les champs !");
+        return false;
+    }
+
+    let user = {
+        "mail": mail,
+        "mdp": mdp
+    };
+
+    console.log("Données envoyées :", user); // Debugging
+
+    // Requête vers l'API connection.php
+    fetch(URL + "connection.php", { // Correction du chemin
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json;charset=utf-8"
+        },
+        body: JSON.stringify(user)
+    })
+        .then(response => {
+            console.log("Réponse brute :", response);
+            if (!response.ok) {
+                throw new Error("Erreur serveur : " + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Données reçues :", data);
+            if (data.status === "success") {
+                document.getElementById("message").innerHTML="Connexion réussie !";
+                idMapper = data.ID;
+                hashMdp = data.MDP;
+
+                // CACHE La connexion
+                const CONNEXION = document.getElementById("connexion");
+                CONNEXION.style.display = "none"
+                // CHARGE LA page accueil
+                loadConsulter();
+
+            } else {
+                document.getElementById("message").innerHTML="Erreur : " + data.message;
+            }
+        })
+        .catch(error => {
+            console.error("Erreur lors de la requête :", error);
+            alert("Une erreur est survenue. Veuillez réessayer.");
+        });
+}
+
+
+function switchToInscription() {
+    // CACHE La connexion
+    const CONNEXION = document.getElementById("connexion");
+    CONNEXION.style.display = "none"
+
+    // AFFICHE inscription
+    const inscription = document.getElementById("Inscription");
+    inscription.style.display = "block"
+}
+
+function switchToConnexion() {
+    // CACHE inscription
+    const inscription = document.getElementById("Inscription");
+    inscription.style.display = "none"
+
+    // AFFICHE connexion
+    const CONNEXION = document.getElementById("connexion");
+    CONNEXION.style.display = "block"
+}
+
+
 // INSCRIPTION
 // INSCRIPTION
 // INSCRIPTION

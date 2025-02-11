@@ -35,7 +35,7 @@
 <div class="MapsterApp">
 
         <!-- LETIN et BLOU-->
-    <div id="Inscription">
+    <div id="Inscription" style="display: none;">
         <div class="container mt-5">
             <!-- Bouton retour vers la page de connexion -->
             <div class="d-flex justify-content-start mb-3">
@@ -137,12 +137,18 @@
 
 
     <!-- HALIAR et LEVI-->
-    <div id="connexion" style="display: none;">
-        se connecter
-        pseudo
-        mdp
-        connexion
-        HALIAR et LEVI
+    <div id="connexion">
+        <div class="container">
+            <div class="logo2">
+                <img src="img/logo mapster.jpg" alt="Logo Mapster">
+            </div>
+            <h1>Connexion</h1>
+            <input id="emailconnexion" type="email" placeholder="Entrez votre adresse e-mail" required>
+            <input id="passwordconnexion" type="password" placeholder="Entrez votre mot de passe" required>
+            <input type="button" id="btnConnecter" value="SE CONNECTER" >
+            <div id="sinscrire" class="forgot-password">S'inscrire ?</div>
+            <div id="message"></div>
+        </div>
     </div>
 
     <!-- JULIO ET BABAS-->
