@@ -1,30 +1,20 @@
 * {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
 }
 
 :root {
-    --mapster-green: #1F8C5C;
-    /* Couleur principale (Base) */
-    --mapster-light: #48A378;
-    /* Version plus claire */
-    --mapster-dark: #166B45;
-    /* Version plus foncée */
-    --mapster-bg: #EAF5EE;
-    /* Fond doux et clair */
-    --mapster-text: #333;
-    /* Texte principal */
-    --mapster-border: #ccc;
-    /* Bordures subtiles */
+    --mapster-green: #1F8C5C;  /* Couleur principale (Base) */
+    --mapster-light: #48A378;  /* Version plus claire */
+    --mapster-dark: #166B45;   /* Version plus foncée */
+    --mapster-bg: #EAF5EE;     /* Fond doux et clair */
+    --mapster-text: #333;      /* Texte principal */
+    --mapster-border: #ccc;    /* Bordures subtiles */
 }
 
 body {
-    -webkit-touch-callout: none;
-    /* prevent callout to copy image, etc when tap to hold */
-    -webkit-text-size-adjust: none;
-    /* prevent webkit from resizing text to fit */
-    -webkit-user-select: none;
-    /* prevent copy paste, to allow, change 'none' to 'text' */
+    -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
     font-size: 12px;
     /* Padding to avoid the "unsafe" areas behind notches in the screen */
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
@@ -32,13 +22,10 @@ body {
     font-family: "celebrisans", system-ui;
 }
 
-html,
-body {
-    height: 100%;
-    /* Assure que le corps prend toute la hauteur de la fenêtre */
+html, body {
+    height: 100%; /* Assure que le corps prend toute la hauteur de la fenêtre */
     width: 100%;
-    margin: 0;
-    /* Supprime les marges par défaut */
+    margin: 0; /* Supprime les marges par défaut */
 
     p {
         font-size: 3.2vw;
@@ -62,10 +49,16 @@ body {
 }
 
 .MapsterApp {
-    height: 100vh;
-    /*calc(100% - 8vh);*/
+    height: 100vh;/*calc(100% - 8vh);*/
     overflow-y: auto;
 }
+
+/* MAP */
+#carte {
+    width: 100%;
+    height: 100%;
+}
+
 
 
 /* NAVBAR CSS */
@@ -223,38 +216,32 @@ body {
 
 /* Conteneur principal : Centrage parfait */
 .loader-container {
-    position: fixed;
-    /* Reste en place même au scroll */
+    position: fixed; /* Reste en place même au scroll */
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    /* Centre parfaitement */
+    transform: translate(-50%, -50%); /* Centre parfaitement */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100vw;
     height: 100vh;
-    background: rgba(255, 255, 255, 0.8);
-    /* Optionnel : fond semi-transparent */
+    background: rgba(255, 255, 255, 0.8); /* Optionnel : fond semi-transparent */
 }
 
 /* Cercle d'animation */
 .loader {
-    width: 80px;
-    /* Taille ajustable */
+    width: 80px; /* Taille ajustable */
     height: 80px;
     border-radius: 50%;
     border: 10px solid var(--mapster-light);
-    border-top: 10px solid var(--mapster-dark);
-    /* Couleur plus foncée pour effet dynamique */
+    border-top: 10px solid var(--mapster-dark); /* Couleur plus foncée pour effet dynamique */
     animation: spin 1.5s linear infinite;
 }
 
 /* Texte au centre (Logo ou "Loading...") */
 .logo {
-    margin-top: 15px;
-    /* Espacement entre le loader et le texte */
+    margin-top: 15px; /* Espacement entre le loader et le texte */
     font-size: 20px;
     font-weight: bold;
     color: var(--mapster-dark);
@@ -265,24 +252,14 @@ body {
 
 /* Animation de rotation */
 @keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Effet de pulsation sur le texte */
 @keyframes fadeInOut {
-    0% {
-        opacity: 0.3;
-    }
-
-    100% {
-        opacity: 1;
-    }
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
 }
 
 
@@ -333,7 +310,7 @@ div.head-post {
     align-items: center;
 }
 
-div.description {
+p.descriptions {
     font-size: 4.5vw;
     margin: 0px;
     padding-left: 1vw;
@@ -387,6 +364,7 @@ img.img-post {
         background-color: #1f8e5c;
         color: white;
     }
+
 
 
     /* Ajout d'une ombre légère pour délimiter visuellement la carte */
@@ -549,9 +527,7 @@ img.img-post {
         gap: 1rem;
     }
 
-    input,
-    select,
-    textarea {
+    input, select, textarea {
         width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
@@ -559,9 +535,7 @@ img.img-post {
         transition: all 0.3s ease;
     }
 
-    input:focus,
-    select:focus,
-    textarea:focus {
+    input:focus, select:focus, textarea:focus {
         outline: none;
         border-color: var(--mapster-green);
         box-shadow: 0 0 5px rgba(91, 155, 115, 0.4);
@@ -640,19 +614,15 @@ img.img-post {
         0% {
             transform: translateX(0);
         }
-
         25% {
             transform: translateX(-5px);
         }
-
         50% {
             transform: translateX(5px);
         }
-
         75% {
             transform: translateX(-5px);
         }
-
         100% {
             transform: translateX(0);
         }
@@ -669,11 +639,9 @@ img.img-post {
         0% {
             transform: scale(1);
         }
-
         50% {
             transform: scale(1.05);
         }
-
         100% {
             transform: scale(1);
         }
@@ -909,8 +877,7 @@ img.img-post {
     }
 
     .Confirmation-content {
-        background-color: rgba(255, 255, 255, 0.9);
-        /* Blanc légèrement translucide */
+        background-color: rgba(255, 255, 255, 0.9); /* Blanc légèrement translucide */
         padding: 20px;
         border-radius: 16px;
         text-align: center;
@@ -958,8 +925,7 @@ img.img-post {
     }
 
     #confirmAction {
-        background-color: #ff3b30;
-        /* Rouge iOS */
+        background-color: #ff3b30; /* Rouge iOS */
         color: white;
     }
 
@@ -969,14 +935,12 @@ img.img-post {
 
     #cancelConfirmation {
         background-color: white;
-        color: #007AFF;
-        /* Bleu iOS */
+        color: #007AFF; /* Bleu iOS */
         border: 1px solid #ddd;
     }
 
     #cancelConfirmation:hover {
-        background-color: #f2f2f7;
-        /* Gris iOS */
+        background-color: #f2f2f7; /* Gris iOS */
     }
 
     @media (max-width: 600px) {
@@ -1207,7 +1171,7 @@ img.img-post {
 }
 
 /* ✅ STYLE DES POSTS */
-.post {
+.post2 {
     width: 100%;
     height: auto;
     aspect-ratio: 1/1;

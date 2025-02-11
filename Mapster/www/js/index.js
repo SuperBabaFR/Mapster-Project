@@ -207,6 +207,11 @@ function addNavInteractions() {
         reload_post_list()
       }
 
+        if (item.nav === "map") {
+            LoadMap()
+        }
+
+
       navElement.classList.add("selected");
       divElement.style.display = "block"; // Affiche le div correspondant
     });
@@ -254,6 +259,63 @@ function timeAgo(date) {
   const years = Math.floor(secondsPast / 31536000);
   return `il y a ${years} an${years > 1 ? "s" : ""}`;
 }
+
+// MAP
+// MAP
+// MAP
+// MAP
+// MAP
+// MAP
+
+function LoadMap() {
+    navigator.geolocation.getCurrentPosition(function(position) {
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+
+            let formData = new FormData();
+            formData.append("idMapper", idMapper);
+            formData.append("hashMdp", hashMdp);
+            formData.append("rayon", rangeSlider.value);
+            formData.append("longitude", longitude);
+            formData.append("latitude", latitude);
+
+            fetch(URL + "carte_service.php", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                    "Access-Control-Allow-Headers":
+                        "Content-Type, Authorization, X-Requested-With",
+                },
+                mode: "cors",
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.mappers) {
+                        data.mappers.forEach(mapper => {
+                            mapper.posts.forEach(point => {
+                                let popupContent = `
+                                <div>
+                                    <img src="${mapper.photoProfil}" alt="Photo de ${mapper.pseudo}" width="50" height="50" style="border-radius: 50%;">
+                                    <p><strong>${mapper.pseudo}</strong></p>
+                                    <p>${point.tempsEcoule}</p>
+                                </div>
+                            `;
+
+                                L.marker([parseFloat(point.latitude), parseFloat(point.longitude)]).addTo(map)
+                                    .bindPopup(popupContent);
+                            });
+                        });
+                    }
+                })
+                .catch(error => console.error("Erreur lors de la récupération des points:", error));
+    },function(error) {
+        console.error("Erreur de géolocalisation :", error);
+    });
+}
+
+
 
 // POSTER PHGOTO
 
@@ -323,6 +385,10 @@ function consulterProfil() {
           "Content-Type, Authorization, X-Requested-With",
       },
       mode: "cors",
+        body: JSON.stringify({
+            idMapper: idMapper,
+            hashMdp: hashMdp
+        })
     })
       .then((response) => response.json())
       .then((data) => {
@@ -341,7 +407,7 @@ function consulterProfil() {
   
         data.liste.forEach((post) => {
           const postDiv = document.createElement("div");
-          postDiv.className = "post";
+          postDiv.className = "post2";
           postDiv.id = "photo" + post.id;
   
           const image_post = document.createElement("img");
@@ -526,6 +592,7 @@ function Connexion() {
     // Récupération des valeurs des champs
     const mail = mailInput.value.trim();
     const mdp = mdpInput.value.trim();
+    document.getElementById("mail").value = mail;
 
     // Vérification que les champs ne sont pas vides
     if (mail === "" || mdp === "") {
@@ -613,6 +680,10 @@ async function inscription() {
     const mail = document.getElementById("email").value.trim();
     const mdp = document.getElementById("password").value.trim();
     const photo = document.getElementById("userPhoto").src;
+
+    document.getElementById("mail").value = mail;
+    document.getElementById("pseudomapper").value = mail;
+
 
     if (!pseudo || !mail || !mdp) {
         alert("Veuillez remplir tous les champs obligatoires.");
