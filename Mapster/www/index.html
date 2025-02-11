@@ -207,31 +207,32 @@
         <p>Je suis la carte je suis la carte ....</p>
     </div>
 
-    <div id="profil">
+    <div id="profil" class="profile-container">
         <div class="consulterProfil">
-            <div id="photo" class="centre"></div>
-            <div id="pseudomapper" class="centre"></div>
-            <div id="publication" class="centre"></div>
-            <div>
-                <button id="modifierProfil" type="button" class="btn btn-dark bi bi-pencil-square"></button>
-            </div>
+          <div id="photo" class="profile-picture"></div>
+          <div id="pseudomapper" class="user-info"></div>
+          <div id="publication" class="publication"></div>
+          <div>
+            <div id="modifierProfil"></div>
+          </div>
         </div>
-        <div id="infoMapper">
-            <div>
-                <div id="logoMail"></div>
-                <div id="mail"></div>
-            </div>
-            <div>
-                <div id="logomdp"></div>
-                <div id="mdp"></div>
-            </div>
+        <div id="infoMapper" class="details">
+          <i class="fa-solid fa-pen-to-square edit-profile"></i>
+          <div class="email-container">
+            <i class="fa-solid fa-envelope"></i>
+            <div id="mail"></div>
+          </div>
+  
+          <div>
+            <div id="logomdp"></div>
+            <div id="mdp"></div>
+          </div>
         </div>
-        <div>
-            <div id="post-onglet">Mes Posts</div>
-            <div id="map-onget">La Map</div>
+        <div class="post-section">
+          <h3>Mes Posts</h3>
+          <div id="consultBody" class="posts-container"></div>
         </div>
-        <div id="consultBody"></div>
-    </div>
+      </div>
 
         <!-- William et Benjamin -->
         <!--        <div class="modifierProfil container mt-4" style="display: none;">-->

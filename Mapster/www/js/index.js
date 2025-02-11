@@ -310,26 +310,60 @@ function sendData() {
 
 
 function consulterProfil() {
-  fetch(URL + "consulterProfil.php", {
-    method: "POST",
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers":
-        "Content-Type, Authorization, X-Requested-With",
-    },
-    mode: "cors",
-  })
-    .then((response) => response.json())
-    .then((json) => {
-      data = json;
-
-      // Mettre à jour le DOM avec les informations du profil
-      document.getElementById("pseudomapper").textContent = data.pseudo;
-      document.getElementById("mail").textContent = data.mail;
+    fetch("http://10.0.2.2/consulterProfil.php", {
+      method: "POST",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers":
+          "Content-Type, Authorization, X-Requested-With",
+      },
+      mode: "cors",
     })
-    .catch((error) => console.error("Erreur lors de la requête :", error));
-}
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Données reçues :", data);
+  
+        document.getElementById("pseudomapper").textContent = data.pseudo;
+        document.getElementById("mail").textContent = data.mail;
+        document.getElementById("publication").textContent =
+          data.liste.length + " Publications";
+        document.getElementById(
+          "photo"
+        ).innerHTML = `<img src="${data.photo}" alt="Profile Picture">`;
+  
+        const consultBody = document.getElementById("consultBody");
+        consultBody.innerHTML = "";
+  
+        data.liste.forEach((post) => {
+          const postDiv = document.createElement("div");
+          postDiv.className = "post";
+          postDiv.id = "photo" + post.id;
+  
+          const image_post = document.createElement("img");
+          image_post.className = "img-post";
+          image_post.src = post.photo;
+          image_post.alt = "Post Image";
+  
+          const description = document.createElement("p");
+          description.className = "description";
+          description.textContent = post.description;
+  
+          const date = document.createElement("p");
+          date.className = "date";
+          date.textContent = new Date(post.date).toLocaleDateString();
+  
+          postDiv.appendChild(image_post);
+          postDiv.appendChild(description);
+          postDiv.appendChild(date);
+  
+          consultBody.appendChild(postDiv);
+        });
+  
+        ajouterEvenementsSuppression();
+      })
+      .catch((error) => console.error("Erreur lors de la requête :", error));
+  }
 
 // CONNEXION
 // CONNEXION
