@@ -365,6 +365,140 @@ function consulterProfil() {
       .catch((error) => console.error("Erreur lors de la requête :", error));
   }
 
+
+/***************************************************************/
+/* Fonction utilitaire pour encoder un objet en x-www-form-urlencoded */
+/***************************************************************/
+function objectToUrlEncoded(obj) {
+    const params = [];
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            params.push(
+                encodeURIComponent(key) + '=' + encodeURIComponent(obj[key])
+            );
+        }
+    }
+    return params.join('&');
+}
+
+
+// ======================== Remplir le formulaire ========================
+// =====================================================================
+
+function remplirFormulaire(data) {
+    // Retrait des champs prénom et nom
+    // document.getElementById('prenom').value = data.prenom || '';
+    // document.getElementById('nom').value = data.nom || '';
+
+    // On suppose que "pseudo" et "email" existent dans le HTML
+    document.getElementById('pseudo').value = data.pseudo || '';
+    document.getElementById('email').value = data.mail || '';
+
+    const photoPreview = document.getElementById('photoPreview');
+    const defaultPhoto = 'img/default.png';
+
+    // data.photo (ou data.photoProfil) selon ta base
+    if (data.photo) {
+        photoPreview.src = data.photo;
+    } else {
+        photoPreview.src = defaultPhoto;
+    }
+
+    // Sécurise l'affichage si la photo n'existe pas
+    photoPreview.onerror = () => {
+        photoPreview.onerror = null;
+        photoPreview.src = defaultPhoto;
+    };
+
+    console.log('Formulaire profil rempli avec succès.');
+}
+
+// ======================== Mise à jour du profil ========================
+// =====================================================================
+
+async function saveProfile() {
+    // Supprime la récupération de nom/prénom
+    // const prenom = document.getElementById('prenom').value.trim();
+    // const nom = document.getElementById('nom').value.trim();
+
+    const pseudo = document.getElementById('pseudo').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+    // Vérification basique : on exige pseudo + email
+    if (!pseudo || !email) {
+        alert('Le pseudo et l’email sont requis.');
+        return;
+    }
+
+    if (password && password !== confirmPassword) {
+        alert('Les mots de passe ne correspondent pas.');
+        return;
+    }
+
+    // On prépare l'objet à envoyer
+    // On part du principe que "utilisateurConnecte" existe dans ton code,
+    // sinon adapte avec tes variables globales (idMapper, hashMdp, etc.)
+    const data = {
+        action: 'updateProfile',
+        idMapper: utilisateurConnecte.idMapper,    // ex. id actuel
+        pseudo: pseudo,
+        mail: email,
+        mdp: password || '',
+        photoProfil: utilisateurConnecte.photo || ''
+    };
+
+    try {
+        console.log('Envoi des données au serveur :', data);
+
+        const response = await fetch(URL + 'updateProfile.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: objectToUrlEncoded(data)
+        });
+
+        if (!response.ok) {
+            console.error('Erreur HTTP :', response.status, response.statusText);
+            alert('Une erreur est survenue : ' + response.statusText);
+            return;
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert('Profil mis à jour avec succès.');
+            console.log('Réponse serveur :', result);
+
+            // Mise à jour locale de l'objet utilisateurConnecte
+            utilisateurConnecte = { ...utilisateurConnecte, ...data };
+
+            // On recharge le formulaire avec les nouvelles infos
+            remplirFormulaire(utilisateurConnecte);
+        } else {
+            console.error('Erreur serveur :', result.error);
+            alert('Erreur : ' + (result.error || 'Une erreur inconnue s\'est produite.'));
+        }
+    } catch (error) {
+        console.error('Erreur réseau ou serveur :', error);
+        alert('Impossible de mettre à jour le profil.');
+    }
+}
+
+// ========================================
+// Lien du bouton pour sauvegarder le profil
+// ========================================
+const saveButton = document.getElementById('saveProfile');
+if (saveButton) {
+    saveButton.addEventListener('click', saveProfile);
+}
+
+/***************************************************************/
+/* Fin du code                                                 */
+/***************************************************************/
+
 // CONNEXION
 // CONNEXION
 // CONNEXION
