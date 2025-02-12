@@ -1,16 +1,13 @@
 const URL = "http://miage-antilles.fr/mapper/";
-// document.addEventListener("deviceready", onDeviceReady);
 document.addEventListener("deviceready", () => {
     console.log("✅ Cordova est prêt !");
     onDeviceReady();
 });
 document.getElementById("sendBtn").addEventListener("click", sendData);
-// let idMapper = 3;
-// let hashMdp = "$2y$10$.oFmMHPz.9wmJ26/N..rvuEI1vrGKfqzBIc.UvHpRfph056ulpfiG";
-// const longitude = -61.52848293478748;
-// const latitude = 16.22395386679484;
+
 let idMapper, pseudo, hashMdp, photo, longitude, latitude
 let imageBase64 = "";
+let map = null;
 
 var currentPosition = {}; // Stocke la position actuelle
 // Options pour activer la haute précision
@@ -267,49 +264,130 @@ function timeAgo(date) {
 // MAP
 // MAP
 
+
+
+// Fonction pour ajouter un marqueur
+function addMarker(longitude, latitude, pseudo, photoProfil, tempsEcoule) {
+    if (isNaN(longitude) || isNaN(latitude)) {
+        console.error(`Coordonnées invalides pour ${pseudo}: ${longitude}, ${latitude}`);
+        return;
+    }
+
+    console.log(`Ajout du marqueur : ${pseudo}, lat: ${latitude}, lon: ${longitude}`);
+
+    let marker = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude]))
+    });
+
+    marker.setStyle(new ol.style.Style({
+        image: new ol.style.Icon({
+            src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg",
+            scale: 0.05
+        }),
+        text: new ol.style.Text({
+            text: pseudo,
+            offsetY: -25,
+            scale: 1.2,
+            fill: new ol.style.Fill({ color: '#000' }),
+            backgroundFill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.7)' })
+        })
+    }));
+
+    vectorSource.addFeature(marker);
+
+}
+
+// Source des marqueurs
+let vectorSource = new ol.source.Vector();
+
+// Calque contenant les marqueurs
+let markerLayer = new ol.layer.Vector({
+    source: vectorSource
+});
+
+
 function LoadMap() {
+
+    document.getElementById("carte").innerHTML = "<div class=\"loader-container\">\n" +
+        "    <div class=\"loader\"></div>\n" +
+        "    <div class=\"logo\">Chargement...</div>\n" +
+        "</div>\n";
+
     navigator.geolocation.getCurrentPosition(function(position) {
-            latitude = position.coords.latitude;
-            longitude = position.coords.longitude;
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
 
-            let formData = new FormData();
-            formData.append("idMapper", idMapper);
-            formData.append("hashMdp", hashMdp);
-            formData.append("rayon", rangeSlider.value);
-            formData.append("longitude", longitude);
-            formData.append("latitude", latitude);
+        document.getElementById("carte").innerHTML = "";
 
-            fetch(URL + "carte_service.php", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-                    "Access-Control-Allow-Headers":
-                        "Content-Type, Authorization, X-Requested-With",
-                },
-                mode: "cors",
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.mappers) {
-                        data.mappers.forEach(mapper => {
-                            mapper.posts.forEach(point => {
-                                let popupContent = `
-                                <div>
-                                    <img src="${mapper.photoProfil}" alt="Photo de ${mapper.pseudo}" width="50" height="50" style="border-radius: 50%;">
-                                    <p><strong>${mapper.pseudo}</strong></p>
-                                    <p>${point.tempsEcoule}</p>
-                                </div>
-                            `;
 
-                                L.marker([parseFloat(point.latitude), parseFloat(point.longitude)]).addTo(map)
-                                    .bindPopup(popupContent);
-                            });
-                        });
-                    }
+        map = new ol.Map({
+            target: 'carte',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
                 })
-                .catch(error => console.error("Erreur lors de la récupération des points:", error));
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([2.3522, 48.8566]), // Centre par défaut sur Paris
+                zoom: 5
+            })
+        });
+
+        map.addLayer(markerLayer);
+
+        map.getView().setCenter(ol.proj.fromLonLat([longitude, latitude ]));
+        map.getView().setZoom(10);
+
+        vectorSource.clear(); // Supprime les anciens marqueurs avant d'ajouter les nouveaux
+
+
+        addMarker(longitude, latitude, "Vous êtes ici", "", "");
+
+
+        let formData = new FormData();
+        formData.append("idMapper", idMapper);
+        formData.append("hashMdp", hashMdp);
+        formData.append("rayon", rangeSlider.value);
+        formData.append("longitude", longitude);
+        formData.append("latitude", latitude);
+
+        fetch(URL + "carte_service.php", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                "Access-Control-Allow-Headers":
+                    "Content-Type, Authorization, X-Requested-With",
+            },
+            mode: "cors",
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.mappers) {
+                    data.mappers.forEach(mapper => {
+                        mapper.posts.forEach(point => {
+                            //     let popupContent = `
+                            //     <div>
+                            //         <img src="${mapper.photoProfil}" alt="Photo de ${mapper.pseudo}" width="50" height="50" style="border-radius: 50%;">
+                            //         <p><strong>${mapper.pseudo}</strong></p>
+                            //         <p>${point.tempsEcoule}</p>
+                            //     </div>
+                            // `;
+                            addMarker(
+                                parseFloat(point.longitude),
+                                parseFloat(point.latitude),
+                                mapper.pseudo,
+                                mapper.photoProfil,
+                                point.tempsEcoule
+                            );
+                            console.log(`Ajout du marqueur : ${mapper.pseudo}, lat: ${point.latitude}, lon: ${point.longitude}`);
+
+                        });
+                    });
+                }
+            })
+            .catch(error => console.error("Erreur lors de la récupération des points:", error));
     },function(error) {
         console.error("Erreur de géolocalisation :", error);
     });
