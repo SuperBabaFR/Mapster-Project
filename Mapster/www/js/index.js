@@ -455,63 +455,63 @@ function sendData() {
 
 function consulterProfil() {
     fetch(URL + "consulterProfil.php", {
-      method: "POST",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers":
-          "Content-Type, Authorization, X-Requested-With",
-      },
-      mode: "cors",
+        method: "POST",
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers":
+                "Content-Type, Authorization, X-Requested-With",
+        },
+        mode: "cors",
         body: JSON.stringify({
             idMapper: idMapper,
             hashMdp: hashMdp
         })
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Données reçues :", data);
-  
-        document.getElementById("pseudomapper").textContent = data.pseudo;
-        document.getElementById("mail").textContent = data.mail;
-        document.getElementById("publication").textContent =
-          data.liste.length + " Publications";
-        document.getElementById(
-          "photo"
-        ).innerHTML = `<img src="${data.photo}" alt="Profile Picture">`;
-  
-        const consultBody = document.getElementById("consultBody");
-        consultBody.innerHTML = "";
-  
-        data.liste.forEach((post) => {
-          const postDiv = document.createElement("div");
-          postDiv.className = "post2";
-          postDiv.id = "photo" + post.id;
-  
-          const image_post = document.createElement("img");
-          image_post.className = "img-post";
-          image_post.src = post.photo;
-          image_post.alt = "Post Image";
-  
-          const description = document.createElement("p");
-          description.className = "description";
-          description.textContent = post.description;
-  
-          const date = document.createElement("p");
-          date.className = "date";
-          date.textContent = new Date(post.date).toLocaleDateString();
-  
-          postDiv.appendChild(image_post);
-          postDiv.appendChild(description);
-          postDiv.appendChild(date);
-  
-          consultBody.appendChild(postDiv);
-        });
-  
-        ajouterEvenementsSuppression();
-      })
-      .catch((error) => console.error("Erreur lors de la requête :", error));
-  }
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Données reçues :", data);
+
+            document.getElementById("pseudomapper").textContent = data.pseudo;
+            document.getElementById("mail").textContent = data.mail;
+            document.getElementById("publication").textContent =
+                data.liste.length + " Publications";
+            document.getElementById(
+                "photo"
+            ).innerHTML = `<img src="${data.photo}" alt="Profile Picture">`;
+
+            const consultBody = document.getElementById("consultBody");
+            consultBody.innerHTML = "";
+
+            data.liste.forEach((post) => {
+                const postDiv = document.createElement("div");
+                postDiv.className = "post2";
+                postDiv.id = "photo" + post.id;
+
+                const image_post = document.createElement("img");
+                image_post.className = "img-post";
+                image_post.src = post.photo;
+                image_post.alt = "Post Image";
+
+                const description = document.createElement("p");
+                description.className = "description";
+                description.textContent = post.description;
+
+                const date = document.createElement("p");
+                date.className = "date";
+                date.textContent = new Date(post.date).toLocaleDateString();
+
+                postDiv.appendChild(image_post);
+                postDiv.appendChild(description);
+                postDiv.appendChild(date);
+
+                consultBody.appendChild(postDiv);
+            });
+
+            ajouterEvenementsSuppression();
+        })
+        .catch((error) => console.error("Erreur lors de la requête :", error));
+}
 
 
 /***************************************************************/
@@ -821,4 +821,86 @@ function inscriptionEvent() {
         }
     });
 }
+
+/**##############################################################################################
+ *                                    Supprimer une photo
+ * ##############################################################################################
+ */
+
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("Script chargé !");
+    let selectedPhotoId = null;
+    let longPressTimeout = null;
+
+    document.querySelectorAll(".photo").forEach(photo => {
+        // Ajout de l'événement "touchstart" pour mobiles et "contextmenu" pour desktop
+        photo.addEventListener("touchstart", function (event) {
+            console.log("Touchstart detected");
+            event.preventDefault();
+            let currentPhoto = this;
+            longPressTimeout = setTimeout(() => {
+                selectedPhotoId = currentPhoto.id.replace("photo", "");
+                document.getElementById("confirmationModal").style.display = "flex";
+            }, 2000); // 2000ms pour déclencher l'appui long
+        });
+
+        photo.addEventListener("touchend", function () {
+            console.log("Touchstart detected");
+            clearTimeout(longPressTimeout);
+        });
+
+
+        photo.addEventListener("contextmenu", function (event) {
+            event.preventDefault();
+            selectedPhotoId = this.id.replace("photo", "");
+            document.getElementById("confirmationModal").style.display = "flex";
+        });
+    });
+
+
+    // Attendre que Cordova soit prêt pour les fonctionnalités natives.
+    document.addEventListener("deviceready", function () {
+        console.log("Cordova est prêt !");
+        // Afficher le message dans l'interface utilisateur
+        var cordovaReadyMessage = document.getElementById("cordovaReadyMessage");
+        cordovaReadyMessage.style.display = "block"; // Afficher le message
+
+        // Optionnel : Masquer le message après quelques secondes
+        setTimeout(function () {
+            cordovaReadyMessage.style.display = "none";
+        }, 3000); // Masquer après 3 secondes
+    }, false);
+    // Confirmation de suppression
+    document.getElementById("confirmYes").addEventListener("click", function () {
+        if (selectedPhotoId) {
+            fetch("http://miage-antilles.fr/mapper/supprimer.php", {
+                method: "POST",
+                body: JSON.stringify({ id: selectedPhotoId }),
+                headers: { "Content-Type": "application/json" }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Photo supprimée !");
+                        document.getElementById("photo" + selectedPhotoId).remove();
+                    } else {
+                        alert("Erreur : " + data.error);
+                    }
+                    document.getElementById("confirmationModal").style.display = "none";
+                })
+                .catch(error => {
+                    console.error("Erreur :", error);
+                    document.getElementById("confirmationModal").style.display = "none";
+                });
+        }
+    });
+
+    // Annuler la suppression
+    document.getElementById("confirmNo").addEventListener("click", function () {
+        document.getElementById("confirmationModal").style.display = "none";
+    });
+
+});
+
+
 

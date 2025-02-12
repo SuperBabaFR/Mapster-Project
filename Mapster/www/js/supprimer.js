@@ -14,7 +14,7 @@ console.log("Script chargé !");
             longPressTimeout = setTimeout(() => {
                 selectedPhotoId = currentPhoto.id.replace("photo", "");
                 document.getElementById("confirmationModal").style.display = "flex";
-            },2000); // 500ms pour déclencher l'appui long
+            },2000); // 2000ms pour déclencher l'appui long
         });
 
         photo.addEventListener("touchend", function () {
