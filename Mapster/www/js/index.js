@@ -5,9 +5,6 @@ document.addEventListener("deviceready", () => {
 });
 document.getElementById("sendBtn").addEventListener("click", sendData);
 
-let selectedPhotoId = null;
-let longPressTimeout = null;
-
 let idMapper, pseudo, hashMdp, photo, longitude, latitude
 let imageBase64 = "";
 let map = null;
@@ -276,49 +273,25 @@ function addMarker(longitude, latitude, pseudo, photoProfil, tempsEcoule) {
         return;
     }
 
+    console.log(`Ajout du marqueur : ${pseudo}, lat: ${latitude}, lon: ${longitude}`);
 
     let marker = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude]))
     });
 
-    marker.setStyle([
-        new ol.style.Style({
-            image: new ol.style.Circle({
-                radius: 15,
-                fill: new ol.style.Fill({ color: "#1F8C5C" }),
-                stroke: new ol.style.Stroke({ color: "#166B45", width: 3 })
-            }),
-            text: new ol.style.Text({
-                text: pseudo,
-                offsetY: -30,
-                font: "bold 14px sans-serif",
-                fill: new ol.style.Fill({ color: "#333" }),
-                backgroundFill: new ol.style.Fill({ color: "#EAF5EE" }),
-                padding: [2, 5, 2, 5],
-                textAlign: "center"
-            })
+    marker.setStyle(new ol.style.Style({
+        image: new ol.style.Icon({
+            src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg",
+            scale: 0.05
         }),
-        new ol.style.Style({
-            text: new ol.style.Text({
-                text: tempsEcoule,
-                offsetY: -15,
-                font: "12px sans-serif",
-                fill: new ol.style.Fill({ color: "#333" }),
-                backgroundFill: new ol.style.Fill({ color: "#EAF5EE" }),
-                padding: [2, 5, 2, 5],
-                textAlign: "center"
-            })
-        }),
-        new ol.style.Style({
-            image: new ol.style.Icon({
-                src: photoProfil,
-                scale: 1.0,
-                anchor: [0.5, 1],
-                crossOrigin: "anonymous",
-                imgSize: [50, 50]
-            })
+        text: new ol.style.Text({
+            text: pseudo,
+            offsetY: -25,
+            scale: 1.2,
+            fill: new ol.style.Fill({ color: '#000' }),
+            backgroundFill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.7)' })
         })
-    ]);
+    }));
 
     vectorSource.addFeature(marker);
 
@@ -365,6 +338,7 @@ function LoadMap() {
             })
         });
 
+        map.addLayer(markerLayer);
 
         map.getView().setCenter(ol.proj.fromLonLat([longitude, latitude ]));
         map.getView().setZoom(10);
@@ -395,7 +369,6 @@ function LoadMap() {
         })
             .then((response) => response.json())
             .then((data) => {
-                alert(`j'ai des données : ${data.mappers.length} mappers`)
                 if (data.mappers) {
                     data.mappers.forEach(mapper => {
                         mapper.posts.forEach(point => {
@@ -482,11 +455,13 @@ function sendData() {
 }
 
 
-// CONSULTER PROFIL
+/**##########################################################################################
+ *                                  CONSULTER SON PROFIL
+ * ##########################################################################################
+ */
 
 
 function consulterProfil() {
-
     fetch(URL + "consulterProfil.php", {
       method: "POST",
       headers: {
@@ -859,7 +834,10 @@ function inscriptionEvent() {
     });
 }
 
-// SUPPRIMER
+/**##############################################################################################
+ *                                    Supprimer une photo
+ * ##############################################################################################
+ */
 function ajouterEvenementsSuppression() {
 
     document
