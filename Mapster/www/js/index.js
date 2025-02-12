@@ -450,7 +450,10 @@ function sendData() {
 }
 
 
-// CONSULTER PROFIL
+/**##########################################################################################
+ *                                  CONSULTER SON PROFIL
+ * ##########################################################################################
+ */
 
 
 function consulterProfil() {
@@ -474,11 +477,8 @@ function consulterProfil() {
 
             document.getElementById("pseudomapper").textContent = data.pseudo;
             document.getElementById("mail").textContent = data.mail;
-            document.getElementById("publication").textContent =
-                data.liste.length + " Publications";
-            document.getElementById(
-                "photo"
-            ).innerHTML = `<img src="${data.photo}" alt="Profile Picture">`;
+            document.getElementById("publication").textContent = data.liste.length + " Publications";
+            document.getElementById("photo").innerHTML = `<img src="${data.photo}" alt="Profile Picture">`;
 
             const consultBody = document.getElementById("consultBody");
             consultBody.innerHTML = "";
@@ -508,7 +508,6 @@ function consulterProfil() {
                 consultBody.appendChild(postDiv);
             });
 
-            ajouterEvenementsSuppression();
         })
         .catch((error) => console.error("Erreur lors de la requête :", error));
 }
