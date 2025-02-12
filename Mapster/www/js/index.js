@@ -5,6 +5,9 @@ document.addEventListener("deviceready", () => {
 });
 document.getElementById("sendBtn").addEventListener("click", sendData);
 
+let selectedPhotoId = null;
+let longPressTimeout = null;
+
 let idMapper, pseudo, hashMdp, photo, longitude, latitude
 let imageBase64 = "";
 let map = null;
@@ -273,27 +276,56 @@ function addMarker(longitude, latitude, pseudo, photoProfil, tempsEcoule) {
         return;
     }
 
-    console.log(`Ajout du marqueur : ${pseudo}, lat: ${latitude}, lon: ${longitude}`);
 
     let marker = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude]))
     });
 
-    marker.setStyle(new ol.style.Style({
-        image: new ol.style.Icon({
-            src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg",
-            scale: 0.05
+    marker.setStyle([
+        new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 15,
+                fill: new ol.style.Fill({ color: "#1F8C5C" }),
+                stroke: new ol.style.Stroke({ color: "#166B45", width: 3 })
+            }),
+            text: new ol.style.Text({
+                text: pseudo,
+                offsetY: -30,
+                font: "bold 14px sans-serif",
+                fill: new ol.style.Fill({ color: "#333" }),
+                backgroundFill: new ol.style.Fill({ color: "#EAF5EE" }),
+                padding: [2, 5, 2, 5],
+                textAlign: "center"
+            })
         }),
-        text: new ol.style.Text({
-            text: pseudo,
-            offsetY: -25,
-            scale: 1.2,
-            fill: new ol.style.Fill({ color: '#000' }),
-            backgroundFill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.7)' })
+        new ol.style.Style({
+            text: new ol.style.Text({
+                text: tempsEcoule,
+                offsetY: -15,
+                font: "12px sans-serif",
+                fill: new ol.style.Fill({ color: "#333" }),
+                backgroundFill: new ol.style.Fill({ color: "#EAF5EE" }),
+                padding: [2, 5, 2, 5],
+                textAlign: "center"
+            })
+        }),
+        new ol.style.Style({
+            image: new ol.style.Icon({
+                src: photoProfil,
+                scale: 1.0,
+                anchor: [0.5, 1],
+                crossOrigin: "anonymous",
+                imgSize: [50, 50]
+            })
         })
-    }));
+    ]);
 
     vectorSource.addFeature(marker);
+
+    // Vérifie si markerLayer existe déjà, sinon l'ajouter
+    if (!map.getLayers().getArray().includes(markerLayer)) {
+        map.addLayer(markerLayer);
+    }
 
 }
 
@@ -333,7 +365,6 @@ function LoadMap() {
             })
         });
 
-        map.addLayer(markerLayer);
 
         map.getView().setCenter(ol.proj.fromLonLat([longitude, latitude ]));
         map.getView().setZoom(10);
@@ -364,6 +395,7 @@ function LoadMap() {
         })
             .then((response) => response.json())
             .then((data) => {
+                alert(`j'ai des données : ${data.mappers.length} mappers`)
                 if (data.mappers) {
                     data.mappers.forEach(mapper => {
                         mapper.posts.forEach(point => {
@@ -454,6 +486,7 @@ function sendData() {
 
 
 function consulterProfil() {
+
     fetch(URL + "consulterProfil.php", {
       method: "POST",
       headers: {
@@ -474,8 +507,7 @@ function consulterProfil() {
   
         document.getElementById("pseudomapper").textContent = data.pseudo;
         document.getElementById("mail").textContent = data.mail;
-        document.getElementById("publication").textContent =
-          data.liste.length + " Publications";
+        document.getElementById("publication").textContent = data.liste.length + " Publications";
         document.getElementById(
           "photo"
         ).innerHTML = `<img src="${data.photo}" alt="Profile Picture">`;
@@ -689,9 +721,14 @@ function Connexion() {
     fetch(URL + "connection.php", { // Correction du chemin
         method: "POST",
         headers: {
-            "Content-Type": "application/json;charset=utf-8"
+            "Content-Type": "application/json;charset=utf-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers":
+            "Content-Type, Authorization, X-Requested-With",
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify(user),
+        mode: "no-cors"
     })
         .then(response => {
             console.log("Réponse brute :", response);
@@ -822,3 +859,87 @@ function inscriptionEvent() {
     });
 }
 
+// SUPPRIMER
+function ajouterEvenementsSuppression() {
+
+    document
+        .getElementById("confirmYes")
+        .addEventListener("click", supprimerPhoto);
+
+    document
+        .getElementById("confirmNo")
+        .addEventListener("click", fermerModalSuppression);
+
+    document.querySelectorAll(".post2").forEach((photo) => {
+        if (!photo.dataset.listenerAdded) {
+            photo.dataset.listenerAdded = "true";
+
+            photo.addEventListener("touchstart", function (event) {
+                event.preventDefault();
+                selectedPhotoId = this.id.replace("photo", "");
+
+                longPressTimeout = setTimeout(() => {
+                    afficherModalSuppression();
+                }, 1000);
+            });
+
+            photo.addEventListener("touchend", function () {
+                clearTimeout(longPressTimeout);
+            });
+
+            photo.addEventListener("contextmenu", function (event) {
+                event.preventDefault();
+                selectedPhotoId = this.id.replace("photo", "");
+                afficherModalSuppression();
+            });
+        }
+    });
+}
+
+function afficherModalSuppression() {
+    let modal = document.getElementById("confirmationModal");
+    if (!modal) {
+        console.log("Erreur : confirmationModal introuvable !");
+        return;
+    }
+
+    modal.classList.add("show");
+    modal.style.opacity = "1";
+    modal.style.visibility = "visible";
+}
+
+function supprimerPhoto() {
+    if (selectedPhotoId) {
+        fetch(URL + "supprimer.php", {
+            method: "POST",
+            body: JSON.stringify({ id: selectedPhotoId }),
+            headers: { "Content-Type": "application/json" },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    console.log("Photo supprimée !");
+                    document.getElementById("photo" + selectedPhotoId).remove();
+                    fermerModalSuppression();
+                } else {
+                    alert("Erreur : " + data.error);
+                }
+            })
+            .catch((error) => {
+                console.error("Erreur :", error);
+            });
+    }
+}
+
+function fermerModalSuppression() {
+    let modal = document.getElementById("confirmationModal");
+    if (modal) {
+        modal.classList.remove("show");
+        modal.style.opacity = "0";
+        modal.style.visibility = "hidden";
+
+        setTimeout(() => {
+            modal.style.display = "none";
+        }, 300);
+    }
+}
