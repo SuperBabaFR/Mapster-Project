@@ -286,7 +286,7 @@ function addMarker(longitude, latitude, pseudo, photoProfil, tempsEcoule) {
             scale: 1
         }),
         text: new ol.style.Text({
-            text: tempsEcoule? `${pseudo}\n${tempsEcoule}` : `${pseudo}`,
+            text: tempsEcoule ? `${pseudo}\n${tempsEcoule}` : `${pseudo}`,
             offsetY: -25,
             scale: 1.2,
             fill: new ol.style.Fill({ color: '#000' }),
@@ -525,149 +525,188 @@ function consulterProfil() {
 /* Fonction utilitaire pour encoder un objet en x-www-form-urlencoded */
 /***************************************************************/
 function objectToUrlEncoded(obj) {
-    const params = [];
-    for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            params.push(
-                encodeURIComponent(key) + '=' + encodeURIComponent(obj[key])
-            );
-        }
-    }
-    return params.join('&');
+    if (!obj || typeof obj !== "object") return "";
+    return Object.keys(obj)
+        .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(obj[key]))
+        .join("&");
 }
 
-
+// =====================================================================
 // ======================== Remplir le formulaire ========================
 // =====================================================================
 
-function remplirFormulaire(data) {
-    // Retrait des champs prénom et nom
-    // document.getElementById('prenom').value = data.prenom || '';
-    // document.getElementById('nom').value = data.nom || '';
+function remplirFormulaire(pseudo, mail, photo) {
+    if (!pseudo || !mail) {
+        console.error("Données invalides pour remplir le formulaire.");
+        return;
+    }
 
-    // On suppose que "pseudo" et "email" existent dans le HTML
-    document.getElementById('pseudo').value = data.pseudo || '';
-    document.getElementById('email').value = data.mail || '';
+    document.getElementById("pseudo").value = pseudo || "";
+    document.getElementById("email").value = mail || "";
 
-    const photoPreview = document.getElementById('photoPreview');
-    const defaultPhoto = 'img/default.png';
+    const photoPreview = document.getElementById("photoPreview");
+    const defaultPhoto = "img/default.png";
 
-    // data.photo (ou data.photoProfil) selon ta base
-    if (data.photo) {
-        photoPreview.src = data.photo;
+    if (photo && photo !== "null") {
+        photoPreview.src = photo;
     } else {
         photoPreview.src = defaultPhoto;
     }
 
-    // Sécurise l'affichage si la photo n'existe pas
+    // Sécurise l'affichage si la photo est invalide
     photoPreview.onerror = () => {
         photoPreview.onerror = null;
         photoPreview.src = defaultPhoto;
     };
 
-    console.log('Formulaire profil rempli avec succès.');
+    console.log("Formulaire profil rempli avec succès.");
 }
 
 // ======================== Mise à jour du profil ========================
 // =====================================================================
 
 async function saveProfile() {
-    // Supprime la récupération de nom/prénom
-    // const prenom = document.getElementById('prenom').value.trim();
-    // const nom = document.getElementById('nom').value.trim();
+    const pseudo = document.getElementById("pseudo").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-    const pseudo = document.getElementById('pseudo').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
-    const confirmPassword = document.getElementById('confirmPassword').value.trim();
-
-    // Vérification basique : on exige pseudo + email
     if (!pseudo || !email) {
-        alert('Le pseudo et l’email sont requis.');
+        alert("Le pseudo et l’email sont requis.");
         return;
     }
 
     if (password && password !== confirmPassword) {
-        alert('Les mots de passe ne correspondent pas.');
+        alert("Les mots de passe ne correspondent pas.");
         return;
     }
 
-    // On prépare l'objet à envoyer
-    // On part du principe que "utilisateurConnecte" existe dans ton code,
-    // sinon adapte avec tes variables globales (idMapper, hashMdp, etc.)
     const data = {
-        action: 'updateProfile',
-        idMapper: utilisateurConnecte.idMapper,    
+        action: "updateProfile",
+        idMapper: idMapper,
         pseudo: pseudo,
         mail: email,
-        mdp: password || '',
-        photoProfil: utilisateurConnecte.photo || ''
+        mdp: password || "",
+        photoProfil: photo || "",
     };
 
     try {
-        console.log('Envoi des données au serveur :', data);
+        console.log("Envoi des données au serveur :", data);
 
-        const response = await fetch(URL + 'updateProfile.php', {
-            method: 'POST',
+        const response = await fetch(URL + "updateProfile.php", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                "Content-Type": "application/x-www-form-urlencoded",
             },
-            body: objectToUrlEncoded(data)
+            body: objectToUrlEncoded(data),
         });
 
         if (!response.ok) {
-            console.error('Erreur HTTP :', response.status, response.statusText);
-            alert('Une erreur est survenue : ' + response.statusText);
+            console.error("Erreur HTTP :", response.status, response.statusText);
+            alert("Une erreur est survenue : " + response.statusText);
             return;
         }
 
         const result = await response.json();
 
         if (result.success) {
-            alert('Profil mis à jour avec succès.');
-            console.log('Réponse serveur :', result);
+            alert("Profil mis à jour avec succès.");
+            console.log("Réponse serveur :", result);
 
-            // Mise à jour locale de l'objet utilisateurConnecte
-            utilisateurConnecte = { ...utilisateurConnecte, ...data };
+            // Mise à jour des variables globales uniquement si la modification réussit
+            idMapper = result.idMapper || idMapper;
+            pseudo = result.pseudo || pseudo;
+            email = result.mail || email;
+            photo = result.photoProfil || photo;
 
-            // On recharge le formulaire avec les nouvelles infos
-            remplirFormulaire(utilisateurConnecte);
+            // Mise à jour du formulaire et retour à la page profil
+            remplirFormulaire(pseudo, email, photo);
+            document.getElementById("modifierProfilPage").style.display = "none";
+            document.getElementById("profil").style.display = "block";
         } else {
-            console.error('Erreur serveur :', result.error);
-            alert('Erreur : ' + (result.error || 'Une erreur inconnue s\'est produite.'));
+            console.error("Erreur serveur :", result.error);
+            alert("Erreur : " + (result.error || "Une erreur inconnue s'est produite."));
         }
     } catch (error) {
-        console.error('Erreur réseau ou serveur :', error);
-        alert('Impossible de mettre à jour le profil.');
+        console.error("Erreur réseau ou serveur :", error);
+        alert("Impossible de mettre à jour le profil.");
     }
 }
 
-// ========================================
-// Lien du bouton pour sauvegarder le profil
-// ========================================
-const saveButton = document.getElementById('saveProfile');
-if (saveButton) {
-    saveButton.addEventListener('click', saveProfile);
-}
+// ======================== Gestion de l'affichage ========================
+// =====================================================================
 document.addEventListener("DOMContentLoaded", function () {
     const profilePage = document.getElementById("profil");
     const editProfilePage = document.getElementById("modifierProfilPage");
-    const editProfileIcon = document.getElementById("editProfileIcon"); // Icône du stylo
+    const editProfileIcon = document.getElementById("editProfileIcon");
     const backToProfileBtn = document.getElementById("backToProfileBtn");
+    const saveButton = document.getElementById("saveProfile");
+    const navBar = document.getElementById("nav_bar");
+    const navItems = document.querySelectorAll(".nav-item");
 
-    // 🔹 Afficher la page de modification de profil lorsqu'on clique sur l'icône
+    if (saveButton) {
+        saveButton.addEventListener("click", saveProfile);
+    }
+
+    // 📌 Quand on clique sur l'icône pour modifier le profil
     editProfileIcon.addEventListener("click", function () {
-        profilePage.style.display = "none";  // Cacher la page profil
-        editProfilePage.style.display = "block";  // Afficher la page de modification
+        cacherToutesLesPages();
+        editProfilePage.style.display = "block"; // Afficher la page de modification
         backToProfileBtn.style.display = "block"; // Afficher le bouton retour
     });
 
-    // 🔙 Revenir à la page profil
+    // 🔙 Quand on clique sur le bouton retour
     backToProfileBtn.addEventListener("click", function () {
+        cacherToutesLesPages();
         profilePage.style.display = "block"; // Réafficher la page profil
-        editProfilePage.style.display = "none"; // Cacher la page modification
-        backToProfileBtn.style.display = "none"; // Cacher le bouton retour
     });
+
+    // 📌 Gestion de la navbar : cacher `modifierProfilPage` si un élément est cliqué
+    navItems.forEach((navItem) => {
+        navItem.addEventListener("click", function () {
+            const sectionId = this.id;
+
+            // Avant d'afficher une section, on masque tout pour éviter les conflits
+            cacherToutesLesPages();
+
+            // Gestion des sections visibles
+            afficherSection(sectionId);
+        });
+    });
+
+    function cacherToutesLesPages() {
+        document.querySelectorAll("#profil, #modifierProfilPage, .nav-section").forEach((section) => {
+            section.style.display = "none";
+        });
+
+        // 🔹 Vérification et correction de la hauteur pour éviter l'espace vide
+        // navBar.style.marginBottom = "0";
+    }
+
+    function afficherSection(sectionId) {
+        // On commence par tout cacher proprement
+        cacherToutesLesPages();
+
+        // Sélection de la section à afficher
+        const section = document.getElementById(sectionId);
+
+        if (section) {
+            section.style.visibility = "visible";
+            section.style.position = "relative";
+            section.style.top = "0";
+        } else if (sectionId === "account") {
+            profilePage.style.visibility = "visible";
+            profilePage.style.position = "relative";
+            profilePage.style.top = "0";
+        }
+    }
+
+    // ✅ Empêcher l'accumulation de marges (correction sans toucher le CSS)
+    document.body.style.overflow = "hidden"; // Empêche l'expansion involontaire
+    document.documentElement.style.overflow = "hidden";
+
+    // Charger le profil au démarrage
+    consulterProfil();
 });
 
 /***************************************************************/
@@ -919,7 +958,7 @@ function supprimerPhoto() {
                     console.log("Photo supprimée !");
                     document.getElementById("photo" + selectedPhotoId).remove();
                     nbpubli = Number(document.getElementById("publication").textContent.split(" ")[0])
-                    document.getElementById("publication").textContent = (nbpubli-1).toString() + " Publications";
+                    document.getElementById("publication").textContent = (nbpubli - 1).toString() + " Publications";
                     fermerModalSuppression();
                 } else {
                     alert("Erreur : " + data.error);
