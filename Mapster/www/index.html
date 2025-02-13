@@ -1,420 +1,339 @@
 <!DOCTYPE html>
 <html lang="fr">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-    <meta name="color-scheme" content="light dark">
-
-    <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-    />
-
-    <title>Mapster</title>
-
-    <!-- Bootstrap CSS (local) v5.3.3 -->
-    <link href="lib/bootstrap.min.css" rel="stylesheet" />
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="lib/http_cdnjs.cloudflare.com_ajax_libs_font-awesome_6.7.1_css_all.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Berkslund:wght@700&family=Caveat:wght@400&display=swap"
-        rel="stylesheet" />
-    <!--  OL CSS (MAP)  -->
-    <link rel="stylesheet" href="lib/http_cdn.jsdelivr.net_npm_ol@latest_ol.css">
-    <script src="lib/http_cdn.jsdelivr.net_npm_ol@latest_dist_ol.js"></script>
-
-    <script src="lib/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Styles personnalisés -->
-    <link href="css/index.css" rel="stylesheet"/>
-</head>
-<body>
-<div class="MapsterApp">
-
-        <!-- LETIN et BLOU-->
-    <div id="Inscription" style="display: none;">
-        <div class="container mt-5">
-            <!-- Bouton retour vers la page de connexion -->
-            <div class="d-flex justify-content-start mb-3">
-                <button type="button" class="btn btn-outline-secondary" id="backButton">
-                    <i class="fa-solid fa-arrow-left"></i> Retour
-                </button>
-            </div>
-
-            <h2 class="text-center mb-4">Inscription</h2>
-
-            <!-- Zone de feedback pour afficher des messages -->
-            <div id="feedback" class="alert d-none"></div>
-            <div class="form">
-                <!-- Pseudo -->
-            <div class="mb-3">
-                <label for="pseudo" class="form-label">Pseudo*</label>
-                <input
+   <head>
+      <meta charset="utf-8">
+      <meta name="format-detection" content="telephone=no">
+      <meta name="msapplication-tap-highlight" content="no">
+      <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+      <meta name="color-scheme" content="light dark">
+      <meta
+         name="viewport"
+         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+         />
+      <title>Mapster</title>
+      <!-- Bootstrap CSS (local) v5.3.3 -->
+      <link href="lib/bootstrap.min.css" rel="stylesheet" />
+      <!-- Font Awesome -->
+      <link rel="stylesheet" href="lib/http_cdnjs.cloudflare.com_ajax_libs_font-awesome_6.7.1_css_all.css" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+      <!-- Google Fonts -->
+      <link href="https://fonts.googleapis.com/css2?family=Berkslund:wght@700&family=Caveat:wght@400&display=swap"
+         rel="stylesheet" />
+      <!--  OL CSS (MAP)  -->
+      <link rel="stylesheet" href="lib/http_cdn.jsdelivr.net_npm_ol@latest_ol.css">
+      <script src="lib/http_cdn.jsdelivr.net_npm_ol@latest_dist_ol.js"></script>
+      <script src="lib/bootstrap.bundle.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      <!-- Styles personnalisés -->
+      <link href="css/index.css" rel="stylesheet"/>
+   </head>
+   <body>
+      <div class="MapsterApp">
+         <!-- LETIN et BLOU-->
+         <div id="Inscription" style="display: none;">
+            <div class="container mt-5">
+               <!-- Bouton retour vers la page de connexion -->
+               <div class="d-flex justify-content-start mb-3">
+                  <button type="button" class="btn btn-outline-secondary" id="backButton">
+                  <i class="fa-solid fa-arrow-left"></i> Retour
+                  </button>
+               </div>
+               <h2 class="text-center mb-4">Inscription</h2>
+               <!-- Zone de feedback pour afficher des messages -->
+               <div id="feedback" class="alert d-none"></div>
+               <div class="form">
+                  <!-- Pseudo -->
+                  <div class="mb-3">
+                     <label for="pseudo" class="form-label">Pseudo*</label>
+                     <input
                         type="text"
                         class="form-control"
                         id="pseudo"
                         required
                         minlength="3"
                         maxlength="20"
-                />
-                <div class="invalid-feedback">
-                    Veuillez choisir un pseudo entre 3 et 20 caractères.
-                </div>
-            </div>
-
-            <!-- Email -->
-            <div class="mb-3">
-                <label for="email" class="form-label">Email*</label>
-                <input type="email" class="form-control" id="email" required />
-                <div class="invalid-feedback">
-                    Veuillez entrer une adresse email valide.
-                </div>
-            </div>
-
-            <!-- Mot de passe -->
-            <div class="mb-3">
-                <label for="password" class="form-label">Mot de passe*</label>
-                <div class="input-group">
-                    <input
-                            type="password"
-                            class="form-control"
-                            id="password"
-                            required
-                            minlength="6"
-                    />
-                    <button
-                            class="btn btn-outline-secondary"
-                            type="button"
-                            id="togglePassword"
-                    >
+                        />
+                     <div class="invalid-feedback">
+                        Veuillez choisir un pseudo entre 3 et 20 caractères.
+                     </div>
+                  </div>
+                  <!-- Email -->
+                  <div class="mb-3">
+                     <label for="email" class="form-label">Email*</label>
+                     <input type="email" class="form-control" id="email" required />
+                     <div class="invalid-feedback">
+                        Veuillez entrer une adresse email valide.
+                     </div>
+                  </div>
+                  <!-- Mot de passe -->
+                  <div class="mb-3">
+                     <label for="password" class="form-label">Mot de passe*</label>
+                     <div class="input-group">
+                        <input
+                           type="password"
+                           class="form-control"
+                           id="password"
+                           required
+                           minlength="6"
+                           />
+                        <button
+                           class="btn btn-outline-secondary"
+                           type="button"
+                           id="togglePassword"
+                           >
                         <i class="fa-solid fa-eye"></i>
-                    </button>
-                </div>
-                <div class="invalid-feedback">
-                    Le mot de passe doit contenir au moins 6 caractères.
-                </div>
-            </div>
-
-            <!-- Zone pour afficher l'image de profil -->
-            <div class="mb-3 text-center">
-                <label class="form-label">Photo de profil</label>
-                <div>
-                    <img
-                            id="userPhoto"
-                            class="img-fluid rounded d-none border shadow"
-                            style="max-width: 150px"
-                            alt="Photo de profil"
-                    />
-                </div>
-            </div>
-
-            <!-- Bouton pour choisir une photo -->
-            <div class="mb-3">
-                <input
+                        </button>
+                     </div>
+                     <div class="invalid-feedback">
+                        Le mot de passe doit contenir au moins 6 caractères.
+                     </div>
+                  </div>
+                  <!-- Zone pour afficher l'image de profil -->
+                  <div class="mb-3 text-center">
+                     <label class="form-label">Photo de profil</label>
+                     <div>
+                        <img
+                           id="userPhoto"
+                           class="img-fluid rounded d-none border shadow"
+                           style="max-width: 150px"
+                           alt="Photo de profil"
+                           />
+                     </div>
+                  </div>
+                  <!-- Bouton pour choisir une photo -->
+                  <div class="mb-3">
+                     <input
                         type="file"
                         class="form-control"
                         id="photoInput"
                         accept="image/*"
-                />
+                        />
+                  </div>
+                  <!-- Boutons d'action -->
+                  <div class="d-grid gap-2 mt-4">
+                     <button type="submit" class="btn btn-success" id="registerBtn">
+                     S'inscrire
+                     </button>
+                     <button type="reset" class="btn btn-outline-secondary">
+                     Réinitialiser
+                     </button>
+                  </div>
+               </div>
             </div>
-
-            <!-- Boutons d'action -->
-            <div class="d-grid gap-2 mt-4">
-                <button type="submit" class="btn btn-success" id="registerBtn">
-                    S'inscrire
-                </button>
-                <button type="reset" class="btn btn-outline-secondary">
-                    Réinitialiser
-                </button>
+         </div>
+         <!-- HALIAR et LEVI-->
+         <div id="connexion">
+            <div class="container">
+               <div class="logo2">
+                  <img src="img/logo mapster.jpg" alt="Logo Mapster">
+               </div>
+               <h1>Connexion</h1>
+               <input id="emailconnexion" type="email" placeholder="Entrez votre adresse e-mail" required>
+               <input id="passwordconnexion" type="password" placeholder="Entrez votre mot de passe" required>
+               <input type="button" id="btnConnecter" value="SE CONNECTER" >
+               <div id="sinscrire" class="forgot-password">S'inscrire ?</div>
+               <div id="message"></div>
             </div>
+         </div>
+         <!-- JULIO ET BABAS-->
+         <div id="consulter">
+            <div class="slider-container">
+               <input type="range" id="rangeSlider" min="100" max="10000" value="1000" step="100">
+               <span id="sliderValue">1000m</span>
+               <button id="refreshButton">
+               <i class="fas fa-sync-alt"></i>
+               </button>
             </div>
-
-        </div>
-    </div>
-
-
-    <!-- HALIAR et LEVI-->
-    <div id="connexion">
-        <div class="container">
-            <div class="logo2">
-                <img src="img/logo mapster.jpg" alt="Logo Mapster">
+            <div style="padding: 3.2vh; width: 100%;"></div>
+            <div id="postsList">
+               <div class="loader-container">
+                  <div class="loader"></div>
+                  <div class="logo">Chargement...</div>
+               </div>
             </div>
-            <h1>Connexion</h1>
-            <input id="emailconnexion" type="email" placeholder="Entrez votre adresse e-mail" required>
-            <input id="passwordconnexion" type="password" placeholder="Entrez votre mot de passe" required>
-            <input type="button" id="btnConnecter" value="SE CONNECTER" >
-            <div id="sinscrire" class="forgot-password">S'inscrire ?</div>
-            <div id="message"></div>
-        </div>
-    </div>
-
-    <!-- JULIO ET BABAS-->
-    <div id="consulter">
-        <div class="slider-container">
-            <input type="range" id="rangeSlider" min="100" max="10000" value="1000" step="100">
-            <span id="sliderValue">1000m</span>
-            <button id="refreshButton">
-                <i class="fas fa-sync-alt"></i>
-            </button>
-        </div>
-        <div style="padding: 3.2vh; width: 100%;"></div>
-        <div id="postsList">
-            <div class="loader-container">
-                <div class="loader"></div>
-                <div class="logo">Chargement...</div>
+            <div style="padding: 8vh; width: 100%;"></div>
+         </div>
+         <!-- personne assigné -->
+         <div id="recherche">
+            <p>barre de recherche</p>
+            <p>filtres</p>
+            <p>personne assigné</p>
+         </div>
+         <!-- Yohann et Kény -->
+         <div id="poster" style="background-color: #ffffff;padding-top: 15px;padding-bottom: 25px;height: auto;">
+            <div style="align-items: center;">
+               <h2 style="text-align: center; color: #3D7A56;margin-top: 5px;">Nouvelle Publication</h2>
             </div>
-        </div>
-        <div style="padding: 8vh; width: 100%;"></div>
-    </div>
-
-    <!-- personne assigné -->
-    <div id="recherche">
-        <p>barre de recherche</p>
-        <p>filtres</p>
-        <p>personne assigné</p>
-    </div>
-
-    <!-- Yohann et Kény -->
-    <div id="poster" style="background-color: #ffffff;padding-top: 15px;padding-bottom: 25px;height: auto;">
-        <div style="align-items: center;">
-            <h2 style="text-align: center; color: #3D7A56;margin-top: 5px;">Nouvelle Publication</h2>
-        </div>
-
-        <img id="capturedImage" src alt="Votre photo apparaîtra ici"
-             class="img-fluid"
-             style="width: 100%; height: auto;margin-bottom: 5px;" />
-        <!-- Zone pour ajouter une description -->
-        <div style="margin: 2px;width: 96%;">
-                    <textarea id="textArea"
-                              placeholder="Ajoutez une description..."
-                              style="width: 96%; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;
-           resize: none; height: 55px; padding: 10px; background-color: #f8f8f8;
-           color: #333; font-family: Arial, sans-serif; outline: none;"></textarea>
-        </div>
-        <!-- Bouton pour partager la photo -->
+            <img id="capturedImage" src alt="Votre photo apparaîtra ici"
+               class="img-fluid"
+               style="width: 100%; height: auto;margin-bottom: 5px;" />
+            <!-- Zone pour ajouter une description -->
+            <div style="margin: 2px;width: 96%;">
+               <textarea id="textArea"
+                  placeholder="Ajoutez une description..."
+                  style="width: 96%; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;
+                  resize: none; height: 55px; padding: 10px; background-color: #f8f8f8;
+                  color: #333; font-family: Arial, sans-serif; outline: none;"></textarea>
+            </div>
+            <!-- Bouton pour partager la photo -->
             <button id="sendBtn"
-                    style="display: block; width: 20%; padding: 5px; background-color: #3D7A56; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 3px; margin: 1vw">
-                Partager
+               style="display: block; width: 20%; padding: 5px; background-color: #3D7A56; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 3px; margin: 1vw">
+            Partager
             </button>
-    </div>
-
-    <!-- personne assigné -->
-    <div id="carte">
-    </div>
-
-    <!-- PAGE PROFIL UTILISATEUR -->
-    <div id="profil" class="profile-container">
+         </div>
+         <!-- personne assigné -->
+         <div id="carte">
+         </div>
+         <!-- PAGE PROFIL UTILISATEUR -->
+         <div id="profil" class="profile-container">
             <div class="consulterProfil">
-            <div id="photo" class="profile-picture"></div>
-            <div id="pseudomapper" class="user-info"></div>
-            <div id="publication" class="publication"></div>
-            <div>
-                <div id="modifierProfil"></div>
-            </div>
+               <div id="photo" class="profile-picture"></div>
+               <div id="pseudomapper" class="user-info"></div>
+               <div id="publication" class="publication"></div>
+               <div>
+                  <div id="modifierProfil"></div>
+               </div>
             </div>
             <div id="infoMapper" class="details">
-            <i id="editProfileIcon" class="fa-solid fa-pen-to-square edit-profile"></i>
-            <div class="email-container">
-                <i class="fa-solid fa-envelope"></i>
-                <div id="mail"></div>
-            </div>
-    
-            <div>
-                <div id="logomdp"></div>
-                <div id="mdp"></div>
-            </div>
+               <i  id="editProfileIcon" class="fa-solid fa-pen-to-square edit-profile"></i>
+               <div class="email-container">
+                  <i class="fa-solid fa-envelope"></i>
+                  <div id="mail"></div>
+               </div>
+               <div>
+                  <div id="logomdp"></div>
+                  <div id="mdp"></div>
+               </div>
             </div>
             <div class="post-section">
-            <h3>Mes Posts</h3>
-            <div id="consultBody" class="posts-container"></div>
+               <h3>Mes Posts</h3>
+               <div id="consultBody" class="posts-container"></div>
             </div>
-    </div>
-
-
-        <!-- ✅ PAGE MODIFIER LE PROFIL (CACHÉE AU DÉPART) -->
-    <div id="modifierProfilPage" class="modifierProfil container mt-4" style="display: none;">
-        <div class="card shadow scrollable-card">
-            <div class="card-header text-center">
-                <h3>Modifier le profil utilisateur</h3>
+         </div>
+         <!-- ✅ PAGE MODIFIER LE PROFIL (CACHÉE AU DÉPART) -->
+         <div id="modifierProfilPage" class="modifierProfil container mt-4" style="display: none;">
+            <h3 class="text-center">Modifier le profil utilisateur</h3>
+            <!-- 🔙 Bouton Retour -->
+            <button id="backToProfileBtn" class="btn btn-secondary">Retour</button>
+            <!-- 📸 Photo de profil -->
+            <div class="profile-photo-container text-center">
+               <img id="photoPreview" src="img/default.png" alt="Photo de profil" class="profile-photo"
+                  onerror="this.onerror=null;this.src='img/default.png';" />
+               <div class="edit-icon" id="editPhoto">
+                  <i class="fas fa-camera"></i>
+               </div>
             </div>
-            <div class="card-body">
-                
-                <!-- 📸 Photo de profil -->
-                <div class="profile-photo-container text-center">
-                    <img id="photoPreview" src="img/default.png" alt="Photo de profil" class="profile-photo"
-                        onerror="this.onerror=null;this.src='img/default.png';" />
-                    <div class="edit-icon" id="editPhoto">
-                        <i class="fas fa-camera"></i>
-                    </div>
-                </div>
-
-                <!-- 🔹 Formulaire -->
-                <form id="userForm">
-
-                    <div class="mb-3">
-                        <label for="pseudo" class="form-label">Pseudo</label>
-                        <input type="text" class="form-control" id="pseudo" placeholder="Votre pseudo" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Adresse e-mail</label>
-                        <input type="email" class="form-control" id="email" placeholder="Votre email" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Nouveau mot de passe</label>
-                        <input type="password" class="form-control" id="password" placeholder="Nouveau mot de passe" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
-                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirmer le mot de passe" />
-                    </div>
-
-                    <!-- 🔹 Bouton Sauvegarde -->
-                    <div class="text-center">
-                        <button type="button" id="saveProfile" class="btn btn-success">
-                            Enregistrer les modifications
-                        </button>
-                    </div>
-                </form>
+            <!-- 🔹 Formulaire -->
+            <form id="userForm">
+               <div class="mb-3">
+                  <label for="pseudo" class="form-label">Pseudo</label>
+                  <input type="text" class="form-control" id="pseudo" placeholder="Votre pseudo" required />
+               </div>
+               <div class="mb-3">
+                  <label for="email" class="form-label">Adresse e-mail</label>
+                  <input type="email" class="form-control" id="email" placeholder="Votre email" required />
+               </div>
+               <div class="mb-3">
+                  <label for="password" class="form-label">Nouveau mot de passe</label>
+                  <input type="password" class="form-control" id="password" placeholder="Nouveau mot de passe" />
+               </div>
+               <div class="mb-3">
+                  <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
+                  <input type="password" class="form-control" id="confirmPassword" placeholder="Confirmer le mot de passe" />
+               </div>
+               <!-- 🔹 Bouton Sauvegarde -->
+               <div class="text-center">
+                  <button type="button" id="saveProfile" class="btn btn-success">
+                  Enregistrer les modifications
+                  </button>
+               </div>
+            </form>
+         </div>
+         <!-- Enora et Oryane -->
+         <div id="confirmationModal" class="Confirmation">
+            <div class="Confirmation-content">
+               <p>Voulez-vous supprimer cette photo ?</p>
+               <button id="confirmYes">Oui</button>
+               <button id="confirmNo">Non</button>
             </div>
-        </div>
-
-        <!-- 🔙 Bouton Retour -->
-        <button id="backToProfileBtn" class="btn btn-secondary" style="display: none;">Retour</button>
-    </div>
-
-    <!-- Enora et Oryane -->
-
-    <div id="confirmationModal" class="Confirmation">
-        <div class="Confirmation-content">
-            <p>Voulez-vous supprimer cette photo ?</p>
-            <button id="confirmYes">Oui</button>
-            <button id="confirmNo">Non</button>
-        </div>
-    </div>
-
-
-<!--    <div id="supprimerPhoto" style="display: none;">-->
-
-<!--    </div>-->
-
-    <div id="nav_bar" class="nav-bar" style="display: none">
-        <div class="list-nav">
-            <div id="home" class="nav-item">
-                <div class="nav-item-img">
-                    <img src="img/icons/home.svg" alt="">
-                </div>
-
-                <p>Acceuil</p>
+         </div>
+         <!--    <div id="supprimerPhoto" style="display: none;">-->
+         <!--    </div>-->
+         <div id="nav_bar" class="nav-bar" style="display: none">
+            <div class="list-nav">
+               <div id="home" class="nav-item">
+                  <div class="nav-item-img">
+                     <img src="img/icons/home.svg" alt="">
+                  </div>
+                  <p>Acceuil</p>
+               </div>
+               <div id="search" class="nav-item">
+                  <div class="nav-item-img">
+                     <img src="img/icons/search.svg" alt="">
+                  </div>
+                  <p>Rechercher</p>
+               </div>
+               <div id="post" class="nav-item">
+                  <div class="nav-item-img">
+                     <img src="img/icons/publish.svg" alt="">
+                  </div>
+                  <p>Poster</p>
+               </div>
+               <div id="map" class="nav-item">
+                  <div class="nav-item-img">
+                     <img src="img/icons/explore.svg" alt="">
+                  </div>
+                  <p>Carte</p>
+               </div>
+               <div id="account" class="nav-item">
+                  <div class="nav-item-img">
+                     <img src="img/icons/account.svg" alt="">
+                  </div>
+                  <p>Profil</p>
+               </div>
             </div>
-            <div id="search" class="nav-item">
-                <div class="nav-item-img">
-                    <img src="img/icons/search.svg" alt="">
-                </div>
-
-                <p>Rechercher</p>
-            </div>
-            <div id="post" class="nav-item">
-                <div class="nav-item-img">
-                    <img src="img/icons/publish.svg" alt="">
-                </div>
-
-                <p>Poster</p>
-            </div>
-            <div id="map" class="nav-item">
-                <div class="nav-item-img">
-                    <img src="img/icons/explore.svg" alt="">
-                </div>
-
-                <p>Carte</p>
-            </div>
-            <div id="account" class="nav-item">
-                <div class="nav-item-img">
-                    <img src="img/icons/account.svg" alt="">
-                </div>
-
-                <p>Profil</p>
-            </div>
-        </div>
-    </div>
-
-</div>
-<script src="cordova.js"></script>
-<script src="js/index.js"></script>
-<script>
-    // Fonction pour afficher/masquer le mot de passe
-    document
-        .getElementById("togglePassword")
-        .addEventListener("click", function () {
-            const passwordInput = document.getElementById("password");
-            const icon = this.querySelector("i");
-
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                icon.classList.remove("fa-eye");
-                icon.classList.add("fa-eye-slash");
-            } else {
-                passwordInput.type = "password";
-                icon.classList.remove("fa-eye-slash");
-                icon.classList.add("fa-eye");
-            }
-        });
-
-    // Aperçu de la photo
-    document
-        .getElementById("photoInput")
-        .addEventListener("change", function (event) {
-            const file = event.target.files[0];
-            const userPhoto = document.getElementById("userPhoto");
-
-            if (file && file.type.startsWith("image/")) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    userPhoto.src = e.target.result;
-                    userPhoto.classList.remove("d-none");
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert("Veuillez sélectionner une image valide.");
-            }
-        });
-
-
-
-        // test
-
-document.addEventListener("DOMContentLoaded", function () {
-    const profilePage = document.getElementById("profil");
-    const editProfilePage = document.getElementById("modifierProfilPage");
-    const editProfileIcon = document.getElementById("editProfileIcon");
-    const backToProfileBtn = document.getElementById("backToProfileBtn");
-
-    // 📌 Quand on clique sur l'icône pour modifier le profil
-    editProfileIcon.addEventListener("click", function () {
-        profilePage.style.display = "none";  // Cacher la page profil
-        editProfilePage.style.display = "block";  // Afficher la page de modification
-        backToProfileBtn.style.display = "block"; // Afficher le bouton retour
-    });
-
-    // 🔙 Quand on clique sur le bouton retour
-    backToProfileBtn.addEventListener("click", function () {
-        profilePage.style.display = "block"; // Réafficher la page profil
-        editProfilePage.style.display = "none"; // Cacher la page modification
-        backToProfileBtn.style.display = "none"; // Cacher le bouton retour
-    });
-
-    // 📌 Charger le profil au démarrage
-    consulterProfil();
-});
-</script>
-</body>
+         </div>
+      </div>
+      <script src="cordova.js"></script>
+      <script src="js/index.js"></script>
+      <script>
+         // Fonction pour afficher/masquer le mot de passe
+         document
+             .getElementById("togglePassword")
+             .addEventListener("click", function () {
+                 const passwordInput = document.getElementById("password");
+                 const icon = this.querySelector("i");
+         
+                 if (passwordInput.type === "password") {
+                     passwordInput.type = "text";
+                     icon.classList.remove("fa-eye");
+                     icon.classList.add("fa-eye-slash");
+                 } else {
+                     passwordInput.type = "password";
+                     icon.classList.remove("fa-eye-slash");
+                     icon.classList.add("fa-eye");
+                 }
+             });
+         
+         // Aperçu de la photo
+         document
+             .getElementById("photoInput")
+             .addEventListener("change", function (event) {
+                 const file = event.target.files[0];
+                 const userPhoto = document.getElementById("userPhoto");
+         
+                 if (file && file.type.startsWith("image/")) {
+                     const reader = new FileReader();
+                     reader.onload = function (e) {
+                         userPhoto.src = e.target.result;
+                         userPhoto.classList.remove("d-none");
+                     };
+                     reader.readAsDataURL(file);
+                 } else {
+                     alert("Veuillez sélectionner une image valide.");
+                 }
+             });
+         
+      </script>
+   </body>
 </html>
