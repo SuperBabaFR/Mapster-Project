@@ -1,48 +1,116 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="master.miage.mapster" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="master.miage.mapster" version="1.0.0"
+    xmlns="http://www.w3.org/ns/widgets"
+    xmlns:cdv="http://cordova.apache.org/ns/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
     <name>Mapster</name>
     <description>L'application Mapster de la M2 MIAGE Antilles</description>
     <author email="bastien.sini@gmail.com" href="https://cordova.apache.org">
         Master2 MIAGE Antilles Team
     </author>
+
+    <!-- Définition du fichier HTML de lancement -->
     <content src="index.html" />
+
+    <!-- Autorisations globales -->
     <allow-navigation href="*" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="geo:*" />
 
+    <!-- === CONFIGURATION ANDROID === -->
     <platform name="android">
         <allow-intent href="market:*" />
-        <preference name="SplashMaintainAspectRatio" value="true"/>
-        <preference name="SplashShowOnlyFirstTime" value="true"/>
 
-        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/screen/android/splash-square.png"/>
-        <preference name="AndroidWindowSplashScreenBackground" value="#1F8C5CFF"/>
+        <!-- Préférences Cordova -->
+        <preference name="SplashMaintainAspectRatio" value="true" />
+        <preference name="SplashShowOnlyFirstTime" value="true" />
+        <preference name="AndroidWindowSplashScreenAnimatedIcon"
+            value="res/screen/android/splash-square.png" />
+        <preference name="AndroidWindowSplashScreenBackground" value="#1F8C5CFF" />
 
-        <!-- ICON -->
-        <icon density="ldpi" src="res/icon/android/ldpi.png"/>
-        <icon density="mdpi" src="res/icon/android/mdpi.png"/>
-        <icon density="hdpi" src="res/icon/android/hdpi.png"/>
-        <icon density="xhdpi" src="res/icon/android/xhdpi.png"/>
-        <icon density="xxhdpi" src="res/icon/android/xxhdpi.png"/>
-        <icon density="xxxhdpi" src="res/icon/android/xxxhdpi.png"/>
-
-        <!-- SPLASH SCREEN -->
-        <splash density="port-ldpi" src="res/screen/android/splash-port-ldpi.png"/>
-        <splash density="port-mdpi" src="res/screen/android/splash-port-mdpi.png"/>
-        <splash density="port-hdpi" src="res/screen/android/splash-port-hdpi.png"/>
-        <splash density="port-xhdpi" src="res/screen/android/splash-port-xhdpi.png"/>
-        <splash density="port-xxhdpi" src="res/screen/android/splash-port-xxhdpi.png"/>
-        <splash density="port-xxxhdpi" src="res/screen/android/splash-port-xxxhdpi.png"/>
-
+        <!-- Support Android SDK 33 -->
         <preference name="android-targetSdkVersion" value="33" />
+
+        <!-- Autoriser l'accès HTTP non sécurisé -->
         <preference name="AndroidInsecureFileModeEnabled" value="true" />
 
-        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application"  xmlns:android="http://schemas.android.com/apk/res/android">
-            <application android:usesCleartextTraffic="true" />
-            <application android:theme="@style/Theme.AppCompat.DayNight" />
+        <!-- Augmenter le délai de chargement (si nécessaire) -->
+        <preference name="LoadUrlTimeoutValue" value="70000" />
+
+        <!-- Configuration réseau pour autoriser certains domaines HTTP -->
+        <resource-file src="src/android/xml/network_security_config.xml"
+            target="res/xml/network_security_config.xml" />
+
+        <!-- Autorisations requises -->
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        </edit-config>
+
+        <!-- Application Manifest Configuration -->
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge"
+            target="/manifest/application">
+            <application android:usesCleartextTraffic="true"
+                android:theme="@style/Theme.AppCompat.DayNight" />
         </edit-config>
     </platform>
+    <!-- === CONFIGURATION iOS === -->
+    <platform name="ios">
+        <!-- Définition du déploiement minimal iOS -->
+        <preference name="deployment-target" value="13.0" />
 
+        <!-- Correction du problème de sandbox -->
+        <edit-config file="*-Info.plist" mode="merge" target="UIFileSharingEnabled">
+            <true />
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="LSSupportsOpeningDocumentsInPlace">
+            <true />
+        </edit-config>
+
+        <!-- Autorisation du trafic HTTP non sécurisé -->
+        <edit-config file="*-Info.plist" mode="merge" target="NSAppTransportSecurity">
+            <dict>
+                <key>NSAllowsArbitraryLoads</key>
+                <true />
+                <key>NSAllowsArbitraryLoadsInWebContent</key>
+                <true />
+            </dict>
+        </edit-config>
+
+        
+
+        <!-- Configuration de la géolocalisation -->
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+            <string>Cette application nécessite votre localisation pour vous fournir des services de
+                cartographie.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysUsageDescription">
+            <string>Cette application requiert un accès permanent à votre position.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge"
+            target="NSLocationAlwaysAndWhenInUseUsageDescription">
+            <string>Cette application utilise votre position pour améliorer votre expérience
+                utilisateur.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationUsageDescription">
+            <string>L'application a besoin d'accéder à votre position pour un fonctionnement
+                optimal.</string>
+        </edit-config>
+
+        <!-- Autorisation de la caméra si besoin -->
+        <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
+            <string>Cette application a besoin d'accéder à votre caméra.</string>
+        </edit-config>
+
+        <!-- Correction des contraintes UI -->
+        <preference name="KeyboardDisplayRequiresUserAction" value="false" />
+        <preference name="UseLegacyBuildSystem" value="false" />
+        <preference name="cordova-ios-version" value="7.1.2" />
+    </platform>
 
 </widget>
