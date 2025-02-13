@@ -209,143 +209,88 @@
     <div id="carte">
     </div>
 
+    <!-- PAGE PROFIL UTILISATEUR -->
     <div id="profil" class="profile-container">
-        <div class="consulterProfil">
-          <div id="photo" class="profile-picture"></div>
-          <div id="pseudomapper" class="user-info"></div>
-          <div id="publication" class="publication"></div>
-          <div>
-            <div id="modifierProfil"></div>
-          </div>
+            <div class="consulterProfil">
+            <div id="photo" class="profile-picture"></div>
+            <div id="pseudomapper" class="user-info"></div>
+            <div id="publication" class="publication"></div>
+            <div>
+                <div id="modifierProfil"></div>
+            </div>
+            </div>
+            <div id="infoMapper" class="details">
+            <i id="editProfileIcon" class="fa-solid fa-pen-to-square edit-profile"></i>
+            <div class="email-container">
+                <i class="fa-solid fa-envelope"></i>
+                <div id="mail"></div>
+            </div>
+    
+            <div>
+                <div id="logomdp"></div>
+                <div id="mdp"></div>
+            </div>
+            </div>
+            <div class="post-section">
+            <h3>Mes Posts</h3>
+            <div id="consultBody" class="posts-container"></div>
+            </div>
+    </div>
+
+
+        <!-- ✅ PAGE MODIFIER LE PROFIL (CACHÉE AU DÉPART) -->
+    <div id="modifierProfilPage" class="modifierProfil container mt-4" style="display: none;">
+        <div class="card shadow scrollable-card">
+            <div class="card-header text-center">
+                <h3>Modifier le profil utilisateur</h3>
+            </div>
+            <div class="card-body">
+                
+                <!-- 📸 Photo de profil -->
+                <div class="profile-photo-container text-center">
+                    <img id="photoPreview" src="img/default.png" alt="Photo de profil" class="profile-photo"
+                        onerror="this.onerror=null;this.src='img/default.png';" />
+                    <div class="edit-icon" id="editPhoto">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+
+                <!-- 🔹 Formulaire -->
+                <form id="userForm">
+
+                    <div class="mb-3">
+                        <label for="pseudo" class="form-label">Pseudo</label>
+                        <input type="text" class="form-control" id="pseudo" placeholder="Votre pseudo" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Adresse e-mail</label>
+                        <input type="email" class="form-control" id="email" placeholder="Votre email" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Nouveau mot de passe</label>
+                        <input type="password" class="form-control" id="password" placeholder="Nouveau mot de passe" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirmer le mot de passe" />
+                    </div>
+
+                    <!-- 🔹 Bouton Sauvegarde -->
+                    <div class="text-center">
+                        <button type="button" id="saveProfile" class="btn btn-success">
+                            Enregistrer les modifications
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div id="infoMapper" class="details">
-          <i class="fa-solid fa-pen-to-square edit-profile"></i>
-          <div class="email-container">
-            <i class="fa-solid fa-envelope"></i>
-            <div id="mail"></div>
-          </div>
-  
-          <div>
-            <div id="logomdp"></div>
-            <div id="mdp"></div>
-          </div>
-        </div>
-        <div class="post-section">
-          <h3>Mes Posts</h3>
-          <div id="consultBody" class="posts-container"></div>
-        </div>
-      </div>
 
-        <!-- William et Benjamin -->
-        <!--        <div class="modifierProfil container mt-4" style="display: none;">-->
-        <!--            <div class="card shadow scrollable-card">-->
-        <!--                <div class="card-header text-center">-->
-        <!--                    <h3>Modifier le profil utilisateur</h3>-->
-        <!--                </div>-->
-        <!--                <div class="card-body">-->
-        <!--                    &lt;!&ndash; Conteneur pour la photo de profil &ndash;&gt;-->
-        <!--                    <div class="profile-photo-container text-center">-->
-        <!--                        <img-->
-        <!--                                id="photoPreview"-->
-        <!--                                src="img/default.png"-->
-        <!--                                alt="Photo de profil"-->
-        <!--                                class="profile-photo"-->
-        <!--                                onerror="this.onerror=null;this.src='img/default.png';"-->
-        <!--                        />-->
-        <!--                        <div class="edit-icon" id="editPhoto">-->
-        <!--                            <i class="fas fa-camera"></i>-->
-        <!--                        </div>-->
-        <!--                    </div>-->
-
-        <!--                    &lt;!&ndash; Formulaire &ndash;&gt;-->
-        <!--                    <form id="userForm">-->
-        <!--                        &lt;!&ndash; Champ Prénom &ndash;&gt;-->
-        <!--                        <div class="mb-3">-->
-        <!--                            <label for="prenom" class="form-label">Prénom</label>-->
-        <!--                            <input-->
-        <!--                                    type="text"-->
-        <!--                                    class="form-control"-->
-        <!--                                    id="prenom"-->
-        <!--                                    placeholder="Chargement..."-->
-        <!--                                    required-->
-        <!--                            />-->
-        <!--                        </div>-->
-
-        <!--                        &lt;!&ndash; Champ Nom &ndash;&gt;-->
-        <!--                        <div class="mb-3">-->
-        <!--                            <label for="nom" class="form-label">Nom</label>-->
-        <!--                            <input-->
-        <!--                                    type="text"-->
-        <!--                                    class="form-control"-->
-        <!--                                    id="nom"-->
-        <!--                                    placeholder="Chargement..."-->
-        <!--                                    required-->
-        <!--                            />-->
-        <!--                        </div>-->
-
-        <!--                        &lt;!&ndash; Champ Pseudo &ndash;&gt;-->
-        <!--                        <div class="mb-3">-->
-        <!--                            <label for="pseudo" class="form-label">Pseudo</label>-->
-        <!--                            <input-->
-        <!--                                    type="text"-->
-        <!--                                    class="form-control"-->
-        <!--                                    id="pseudo"-->
-        <!--                                    placeholder="Chargement..."-->
-        <!--                                    required-->
-        <!--                            />-->
-        <!--                        </div>-->
-
-        <!--                        &lt;!&ndash; Champ Email &ndash;&gt;-->
-        <!--                        <div class="mb-3">-->
-        <!--                            <label for="email" class="form-label">Adresse e-mail</label>-->
-        <!--                            <input-->
-        <!--                                    type="email"-->
-        <!--                                    class="form-control"-->
-        <!--                                    id="email"-->
-        <!--                                    placeholder="Chargement..."-->
-        <!--                                    required-->
-        <!--                            />-->
-        <!--                        </div>-->
-
-        <!--                        &lt;!&ndash; Champ Mot de Passe &ndash;&gt;-->
-        <!--                        <div class="mb-3">-->
-        <!--                            <label for="password" class="form-label">Mot de passe</label>-->
-        <!--                            <input-->
-        <!--                                    type="password"-->
-        <!--                                    class="form-control"-->
-        <!--                                    id="password"-->
-        <!--                                    placeholder="Nouveau mot de passe"-->
-        <!--                            />-->
-        <!--                        </div>-->
-
-        <!--                        &lt;!&ndash; Champ Confirmation Mot de Passe &ndash;&gt;-->
-        <!--                        <div class="mb-3">-->
-        <!--                            <label for="confirmPassword" class="form-label"-->
-        <!--                            >Confirmer le mot de passe</label-->
-        <!--                            >-->
-        <!--                            <input-->
-        <!--                                    type="password"-->
-        <!--                                    class="form-control"-->
-        <!--                                    id="confirmPassword"-->
-        <!--                                    placeholder="Confirmer le mot de passe"-->
-        <!--                            />-->
-        <!--                        </div>-->
-
-        <!--                        &lt;!&ndash; Bouton Sauvegarde &ndash;&gt;-->
-        <!--                        <div class="text-center">-->
-        <!--                            <button-->
-        <!--                                    type="button"-->
-        <!--                                    id="saveProfile"-->
-        <!--                                    class="btn btn-primary"-->
-        <!--                            >-->
-        <!--                                Enregistrer les modifications-->
-        <!--                            </button>-->
-        <!--                        </div>-->
-        <!--                    </form>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--        </div>-->
-
+        <!-- 🔙 Bouton Retour -->
+        <button id="backToProfileBtn" class="btn btn-secondary" style="display: none;">Retour</button>
+    </div>
 
     <!-- Enora et Oryane -->
 
@@ -442,6 +387,34 @@
                 alert("Veuillez sélectionner une image valide.");
             }
         });
+
+
+
+        // test
+
+document.addEventListener("DOMContentLoaded", function () {
+    const profilePage = document.getElementById("profil");
+    const editProfilePage = document.getElementById("modifierProfilPage");
+    const editProfileIcon = document.getElementById("editProfileIcon");
+    const backToProfileBtn = document.getElementById("backToProfileBtn");
+
+    // 📌 Quand on clique sur l'icône pour modifier le profil
+    editProfileIcon.addEventListener("click", function () {
+        profilePage.style.display = "none";  // Cacher la page profil
+        editProfilePage.style.display = "block";  // Afficher la page de modification
+        backToProfileBtn.style.display = "block"; // Afficher le bouton retour
+    });
+
+    // 🔙 Quand on clique sur le bouton retour
+    backToProfileBtn.addEventListener("click", function () {
+        profilePage.style.display = "block"; // Réafficher la page profil
+        editProfilePage.style.display = "none"; // Cacher la page modification
+        backToProfileBtn.style.display = "none"; // Cacher le bouton retour
+    });
+
+    // 📌 Charger le profil au démarrage
+    consulterProfil();
+});
 </script>
 </body>
 </html>

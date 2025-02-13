@@ -9,9 +9,9 @@ let idMapper, pseudo, hashMdp, photo, longitude, latitude
 let imageBase64 = "";
 let map = null;
 
-var currentPosition = {}; // Stocke la position actuelle
+let currentPosition = {}; // Stocke la position actuelle
 // Options pour activer la haute précision
-var geoOptions = {
+let geoOptions = {
     enableHighAccuracy: true, // 🔥 Active le mode GPS pour une position plus précise
     timeout: 10000,           // ⏳ Temps max d'attente en millisecondes (10s)
     maximumAge: 0             // 🕒 Ne pas utiliser une position en cache
@@ -37,13 +37,13 @@ function onDeviceReady() {
 
     // Connexion
     const btnConnecter = document.getElementById("btnConnecter");
-    btnConnecter.addEventListener("click",Connexion);
+    btnConnecter.addEventListener("click", Connexion);
     // Passer à inscription
     const sinscire = document.getElementById("sinscrire");
-    sinscire.addEventListener("click",switchToInscription);
+    sinscire.addEventListener("click", switchToInscription);
     // Repasser à connexion
     const backButton = document.getElementById("backButton");
-    backButton.addEventListener("click",switchToConnexion);
+    backButton.addEventListener("click", switchToConnexion);
 
 }
 
@@ -56,6 +56,7 @@ function loadConsulter() {
     const nav_bar = document.getElementById("nav_bar");
     nav_bar.style.display = "grid";
 }
+
 function onSuccessLoca(position) {
     currentPosition = {
         latitude: position.coords.latitude,
@@ -174,87 +175,87 @@ function reload_post_list() {
 }
 
 function addNavInteractions() {
-  const navItems = [
-    { nav: "home", div: "consulter" },
-    { nav: "search", div: "recherche" },
-    { nav: "post", div: "poster" },
-    { nav: "map", div: "carte" },
-    { nav: "account", div: "profil" },
-  ];
+    const navItems = [
+        { nav: "home", div: "consulter" },
+        { nav: "search", div: "recherche" },
+        { nav: "post", div: "poster" },
+        { nav: "map", div: "carte" },
+        { nav: "account", div: "profil" },
+    ];
 
-  navItems.forEach((item) => {
-    const navElement = document.getElementById(item.nav);
-    const divElement = document.getElementById(item.div);
+    navItems.forEach((item) => {
+        const navElement = document.getElementById(item.nav);
+        const divElement = document.getElementById(item.div);
 
-    navElement.addEventListener("click", () => {
-      navItems.forEach((i) => {
-        document.getElementById(i.nav).classList.remove("selected");
-        document.getElementById(i.div).style.display = "none";
-      });
+        navElement.addEventListener("click", () => {
+            navItems.forEach((i) => {
+                document.getElementById(i.nav).classList.remove("selected");
+                document.getElementById(i.div).style.display = "none";
+            });
 
-      if (item.nav === "post") {
-        capturePhoto();
-      }
+            if (item.nav === "post") {
+                capturePhoto();
+            }
 
-      if (item.nav === "account") {
-        consulterProfil();
-      }
+            if (item.nav === "account") {
+                consulterProfil();
+            }
 
-      if (item.nav === "home") {
-        reload_post_list()
-      }
+            if (item.nav === "home") {
+                reload_post_list()
+            }
 
-        if (item.nav === "map") {
-            LoadMap()
-        }
+            if (item.nav === "map") {
+                LoadMap()
+            }
 
 
-      navElement.classList.add("selected");
-      divElement.style.display = "block"; // Affiche le div correspondant
+            navElement.classList.add("selected");
+            divElement.style.display = "block"; // Affiche le div correspondant
+        });
     });
-  });
 
-  navItems.forEach((elem) => {
-    document.getElementById(elem.nav).classList.remove("selected");
-    document.getElementById(elem.div).style.display = "none";
-  });
+    navItems.forEach((elem) => {
+        document.getElementById(elem.nav).classList.remove("selected");
+        document.getElementById(elem.div).style.display = "none";
+    });
 }
 function timeAgo(date) {
-  const now = new Date();
-  const secondsPast = Math.floor((now - date) / 1000);
+    const now = new Date();
+    const secondsPast = Math.floor((now - date) / 1000);
 
-  if (secondsPast < 60) {
-    return `il y a ${secondsPast} sec`;
-  }
-  if (secondsPast < 3600) {
-    const minutes = Math.floor(secondsPast / 60);
-    return `il y a ${minutes} min`;
-  }
-  if (secondsPast < 86400) {
-    const hours = Math.floor(secondsPast / 3600);
-    return `il y a ${hours} heure${hours > 1 ? "s" : ""}`;
-  }
-  if (secondsPast < 172800) {
-    // moins de 2 jours
-    return `hier`;
-  }
-  if (secondsPast < 604800) {
-    // moins de 7 jours
-    const days = Math.floor(secondsPast / 86400);
-    return `il y a ${days} jour${days > 1 ? "s" : ""}`;
-  }
-  if (secondsPast < 2592000) {
-    // moins d'un mois
-    const weeks = Math.floor(secondsPast / 604800);
-    return `il y a ${weeks} semaine${weeks > 1 ? "s" : ""}`;
-  }
-  if (secondsPast < 31536000) {
-    // moins d'un an
-    const months = Math.floor(secondsPast / 2592000);
-    return `il y a ${months} mois`;
-  }
-  const years = Math.floor(secondsPast / 31536000);
-  return `il y a ${years} an${years > 1 ? "s" : ""}`;
+    if (secondsPast < 60) {
+        return `il y a ${secondsPast} sec`;
+    }
+    if (secondsPast < 3600) {
+        const minutes = Math.floor(secondsPast / 60);
+        return `il y a ${minutes} min`;
+    }
+    if (secondsPast < 86400) {
+        const hours = Math.floor(secondsPast / 3600);
+        return `il y a ${hours} heure${hours > 1 ? "s" : ""}`;
+    }
+    if (secondsPast < 172800) {
+        // moins de 2 jours
+        return `hier`;
+    }
+    if (secondsPast < 604800) {
+        // moins de 7 jours
+        const days = Math.floor(secondsPast / 86400);
+        return `il y a ${days} jour${days > 1 ? "s" : ""}`;
+    }
+    if (secondsPast < 2592000) {
+        // moins d'un mois
+        const weeks = Math.floor(secondsPast / 604800);
+        return `il y a ${weeks} semaine${weeks > 1 ? "s" : ""}`;
+    }
+    if (secondsPast < 31536000) {
+        // moins d'un an
+        const months = Math.floor(secondsPast / 2592000);
+        return `il y a ${months} mois`;
+    }
+    const years = Math.floor(secondsPast / 31536000);
+    return `il y a ${years} an${years > 1 ? "s" : ""}`;
 }
 
 // MAP
@@ -318,7 +319,7 @@ function LoadMap() {
         "    <div class=\"logo\">Chargement...</div>\n" +
         "</div>\n";
 
-    navigator.geolocation.getCurrentPosition(function(position) {
+    navigator.geolocation.getCurrentPosition(function (position) {
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
 
@@ -340,7 +341,7 @@ function LoadMap() {
 
         map.addLayer(markerLayer);
 
-        map.getView().setCenter(ol.proj.fromLonLat([longitude, latitude ]));
+        map.getView().setCenter(ol.proj.fromLonLat([longitude, latitude]));
         map.getView().setZoom(10);
 
         vectorSource.clear(); // Supprime les anciens marqueurs avant d'ajouter les nouveaux
@@ -393,7 +394,7 @@ function LoadMap() {
                 }
             })
             .catch(error => console.error("Erreur lors de la récupération des points:", error));
-    },function(error) {
+    }, function (error) {
         console.error("Erreur de géolocalisation :", error);
     });
 }
@@ -440,18 +441,18 @@ function sendData() {
         method: "POST",
         body: formData
     })
-    .then(response => {
-        if (response.status === 200) {
-            document.getElementById("home").click();
-        } else {
-            throw new Error("Code retour non OK : " + response.status);
-        }
-    })
-    .catch(error => {
-        alert("Erreur lors de l'envoi des données : " + error);
-        // document.getElementById("apiResponse").style.display = "block";
-        // document.getElementById("apiResponse").innerText = "Erreur lors de l'envoi des données : " + error;
-    });
+        .then(response => {
+            if (response.status === 200) {
+                document.getElementById("home").click();
+            } else {
+                throw new Error("Code retour non OK : " + response.status);
+            }
+        })
+        .catch(error => {
+            alert("Erreur lors de l'envoi des données : " + error);
+            // document.getElementById("apiResponse").style.display = "block";
+            // document.getElementById("apiResponse").innerText = "Erreur lors de l'envoi des données : " + error;
+        });
 }
 
 
@@ -463,62 +464,60 @@ function sendData() {
 
 function consulterProfil() {
     fetch(URL + "consulterProfil.php", {
-      method: "POST",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers":
-          "Content-Type, Authorization, X-Requested-With",
-      },
-      mode: "cors",
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
         body: JSON.stringify({
             idMapper: idMapper,
             hashMdp: hashMdp
         })
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Données reçues :", data);
-  
-        document.getElementById("pseudomapper").textContent = data.pseudo;
-        document.getElementById("mail").textContent = data.mail;
-        document.getElementById("publication").textContent = data.liste.length + " Publications";
-        document.getElementById(
-          "photo"
-        ).innerHTML = `<img src="${data.photo}" alt="Profile Picture">`;
-  
-        const consultBody = document.getElementById("consultBody");
-        consultBody.innerHTML = "";
-  
-        data.liste.forEach((post) => {
-          const postDiv = document.createElement("div");
-          postDiv.className = "post2";
-          postDiv.id = "photo" + post.id;
-  
-          const image_post = document.createElement("img");
-          image_post.className = "img-post";
-          image_post.src = post.photo;
-          image_post.alt = "Post Image";
-  
-          const description = document.createElement("p");
-          description.className = "description";
-          description.textContent = post.description;
-  
-          const date = document.createElement("p");
-          date.className = "date";
-          date.textContent = new Date(post.date).toLocaleDateString();
-  
-          postDiv.appendChild(image_post);
-          postDiv.appendChild(description);
-          postDiv.appendChild(date);
-  
-          consultBody.appendChild(postDiv);
-        });
-  
-        ajouterEvenementsSuppression();
-      })
-      .catch((error) => console.error("Erreur lors de la requête :", error));
-  }
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Données reçues :", data);
+
+            // Remplissage des infos du profil
+            document.getElementById("pseudomapper").textContent = data.pseudo;
+            document.getElementById("mail").textContent = data.mail;
+            document.getElementById("publication").textContent = data.liste.length + " Publications";
+            document.getElementById("photo").innerHTML = `<img src="${data.photo}" alt="Profile Picture">`;
+
+            // Remplissage de la liste des posts
+            const consultBody = document.getElementById("consultBody");
+            consultBody.innerHTML = "";
+
+            data.liste.forEach((post) => {
+                const postDiv = document.createElement("div");
+                postDiv.className = "post2";
+                postDiv.id = "photo" + post.id;
+
+                const image_post = document.createElement("img");
+                image_post.className = "img-post";
+                image_post.src = post.photo;
+                image_post.alt = "Post Image";
+
+                const description = document.createElement("p");
+                description.className = "description";
+                description.textContent = post.description;
+
+                const date = document.createElement("p");
+                date.className = "date";
+                date.textContent = new Date(post.date).toLocaleDateString();
+
+                postDiv.appendChild(image_post);
+                postDiv.appendChild(description);
+                postDiv.appendChild(date);
+
+                consultBody.appendChild(postDiv);
+            });
+
+            // 📌 Remplir le formulaire de modification avec les données reçues
+            remplirFormulaire(data);
+
+        })
+        .catch((error) => console.error("Erreur lors de la requête :", error));
+}
 
 
 /***************************************************************/
@@ -597,7 +596,7 @@ async function saveProfile() {
     // sinon adapte avec tes variables globales (idMapper, hashMdp, etc.)
     const data = {
         action: 'updateProfile',
-        idMapper: utilisateurConnecte.idMapper,    // ex. id actuel
+        idMapper: utilisateurConnecte.idMapper,    
         pseudo: pseudo,
         mail: email,
         mdp: password || '',
@@ -649,6 +648,26 @@ const saveButton = document.getElementById('saveProfile');
 if (saveButton) {
     saveButton.addEventListener('click', saveProfile);
 }
+document.addEventListener("DOMContentLoaded", function () {
+    const profilePage = document.getElementById("profil");
+    const editProfilePage = document.getElementById("modifierProfilPage");
+    const editProfileIcon = document.getElementById("editProfileIcon"); // Icône du stylo
+    const backToProfileBtn = document.getElementById("backToProfileBtn");
+
+    // 🔹 Afficher la page de modification de profil lorsqu'on clique sur l'icône
+    editProfileIcon.addEventListener("click", function () {
+        profilePage.style.display = "none";  // Cacher la page profil
+        editProfilePage.style.display = "block";  // Afficher la page de modification
+        backToProfileBtn.style.display = "block"; // Afficher le bouton retour
+    });
+
+    // 🔙 Revenir à la page profil
+    backToProfileBtn.addEventListener("click", function () {
+        profilePage.style.display = "block"; // Réafficher la page profil
+        editProfilePage.style.display = "none"; // Cacher la page modification
+        backToProfileBtn.style.display = "none"; // Cacher le bouton retour
+    });
+});
 
 /***************************************************************/
 /* Fin du code                                                 */
@@ -700,7 +719,7 @@ function Connexion() {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
             "Access-Control-Allow-Headers":
-            "Content-Type, Authorization, X-Requested-With",
+                "Content-Type, Authorization, X-Requested-With",
         },
         body: JSON.stringify(user),
         mode: "no-cors"
@@ -715,7 +734,7 @@ function Connexion() {
         .then(data => {
             console.log("Données reçues :", data);
             if (data.status === "success") {
-                document.getElementById("message").innerHTML="Connexion réussie !";
+                document.getElementById("message").innerHTML = "Connexion réussie !";
                 idMapper = data.ID;
                 hashMdp = data.MDP;
 
@@ -726,7 +745,7 @@ function Connexion() {
                 loadConsulter();
 
             } else {
-                document.getElementById("message").innerHTML="Erreur : " + data.message;
+                document.getElementById("message").innerHTML = "Erreur : " + data.message;
             }
         })
         .catch(error => {
@@ -790,7 +809,7 @@ async function inscription() {
                 "Content-Type, Authorization, X-Requested-With",
         },
         mode: "cors",
-        body: JSON.stringify({pseudo, mail, mdp, photo})
+        body: JSON.stringify({ pseudo, mail, mdp, photo })
     });
 
     const result = await response.json();
@@ -799,7 +818,7 @@ async function inscription() {
 
     if (result.code === 400 || result.code === 500) {
         feedback.classList.add("alert-danger");
-        feedback.textContent = JSON.stringify(result,null, 4) || "Une erreur s'est produite.";
+        feedback.textContent = JSON.stringify(result, null, 4) || "Une erreur s'est produite.";
         return;
     }
     feedback.classList.add("alert-success");
