@@ -462,6 +462,8 @@ function sendData() {
  */
 
 
+let profilData = {}; // Variable globale pour stocker le profil
+
 function consulterProfil() {
     fetch(URL + "consulterProfil.php", {
         method: "POST",
@@ -475,15 +477,30 @@ function consulterProfil() {
     })
         .then((response) => response.json())
         .then((data) => {
-            console.log("Données reçues :", data);
+            console.log("📌 Données reçues :", data);
 
-            // Remplissage des infos du profil
+            if (!data.pseudo || !data.mail) {
+                console.error("Erreur : Données du profil invalides ou incomplètes.");
+                return;
+            }
+
+            // Stocker les données pour les utiliser plus tard
+            profilData = {
+                pseudo: data.pseudo,
+                mail: data.mail,
+                photo: data.photo || "img/default.png", // Valeur par défaut si pas de photo
+                liste: data.liste || []
+            };
+
+            console.log("📌 Données stockées dans profilData :", profilData);
+
+            // Mise à jour des éléments du profil
             document.getElementById("pseudomapper").textContent = data.pseudo;
             document.getElementById("mail").textContent = data.mail;
             document.getElementById("publication").textContent = data.liste.length + " Publications";
             document.getElementById("photo").innerHTML = `<img src="${data.photo}" alt="Profile Picture">`;
 
-            // Remplissage de la liste des posts
+            // Mise à jour de la liste des posts
             const consultBody = document.getElementById("consultBody");
             consultBody.innerHTML = "";
 
@@ -513,13 +530,13 @@ function consulterProfil() {
             });
 
             ajouterEvenementsSuppression();
-            // 📌 Remplir le formulaire de modification avec les données reçues
-            remplirFormulaire(data);
 
+            // Vérification que `remplirFormulaire()` est bien appelée avec des données valides
+            console.log("Appel de remplirFormulaire()");
+            remplirFormulaire();
         })
         .catch((error) => console.error("Erreur lors de la requête :", error));
 }
-
 
 /***************************************************************/
 /* Fonction utilitaire pour encoder un objet en x-www-form-urlencoded */
@@ -535,41 +552,39 @@ function objectToUrlEncoded(obj) {
 // ======================== Remplir le formulaire ========================
 // =====================================================================
 
-function remplirFormulaire(pseudo, mail, photo) {
-    if (!pseudo || !mail) {
-        console.error("Données invalides pour remplir le formulaire.");
+function remplirFormulaire() {
+    console.log("📌 Remplissage du formulaire avec :", profilData);
+
+    if (!profilData.pseudo || !profilData.mail) {
+        console.warn("⚠️ Données du profil manquantes. Impossible de remplir le formulaire.");
         return;
     }
 
-    document.getElementById("pseudo").value = pseudo || "";
-    document.getElementById("email").value = mail || "";
+    document.getElementById("pseudoForm").value = profilData.pseudo;
+    document.getElementById("emailForm").value = profilData.mail;
 
+    // Mise à jour de la photo dans le formulaire
     const photoPreview = document.getElementById("photoPreview");
     const defaultPhoto = "img/default.png";
 
-    if (photo && photo !== "null") {
-        photoPreview.src = photo;
-    } else {
-        photoPreview.src = defaultPhoto;
-    }
+    photoPreview.src = profilData.photo !== "null" ? profilData.photo : defaultPhoto;
 
-    // Sécurise l'affichage si la photo est invalide
     photoPreview.onerror = () => {
         photoPreview.onerror = null;
         photoPreview.src = defaultPhoto;
     };
 
-    console.log("Formulaire profil rempli avec succès.");
+    console.log("Formulaire mis à jour avec succès !");
 }
 
 // ======================== Mise à jour du profil ========================
 // =====================================================================
 
 async function saveProfile() {
-    const pseudo = document.getElementById("pseudo").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const confirmPassword = document.getElementById("confirmPassword").value.trim();
+    const pseudo = document.getElementById("pseudoForm").value.trim();
+    const email = document.getElementById("emailForm").value.trim();
+    const password = document.getElementById("passwordForm").value.trim();
+    const confirmPassword = document.getElementById("confirmPasswordForm").value.trim();
 
     if (!pseudo || !email) {
         alert("Le pseudo et l’email sont requis.");
@@ -587,48 +602,42 @@ async function saveProfile() {
         pseudo: pseudo,
         mail: email,
         mdp: password || "",
-        photoProfil: photo || "",
+        photoProfil: profilData.photo || "",
     };
 
     try {
-        console.log("Envoi des données au serveur :", data);
+        console.log("📤 Envoi des données au serveur :", data);
 
         const response = await fetch(URL + "updateProfile.php", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: objectToUrlEncoded(data),
         });
 
         if (!response.ok) {
-            console.error("Erreur HTTP :", response.status, response.statusText);
-            alert("Une erreur est survenue : " + response.statusText);
-            return;
+            throw new Error("Erreur HTTP " + response.status);
         }
 
         const result = await response.json();
 
         if (result.success) {
-            alert("Profil mis à jour avec succès.");
-            console.log("Réponse serveur :", result);
+            alert("Profil mis à jour avec succès !");
+            console.log("✅ Réponse serveur :", result);
 
             // Mise à jour des variables globales uniquement si la modification réussit
-            idMapper = result.idMapper || idMapper;
-            pseudo = result.pseudo || pseudo;
-            email = result.mail || email;
-            photo = result.photoProfil || photo;
+            profilData.pseudo = result.pseudo || profilData.pseudo;
+            profilData.mail = result.mail || profilData.mail;
+            profilData.photo = result.photoProfil || profilData.photo;
 
-            // Mise à jour du formulaire et retour à la page profil
-            remplirFormulaire(pseudo, email, photo);
-            document.getElementById("modifierProfilPage").style.display = "none";
+            // Mise à jour de l'affichage et retour à la page profil
+            consulterProfil();
+            cacherToutesLesPages();
             document.getElementById("profil").style.display = "block";
         } else {
-            console.error("Erreur serveur :", result.error);
-            alert("Erreur : " + (result.error || "Une erreur inconnue s'est produite."));
+            throw new Error(result.error || "Une erreur inconnue s'est produite.");
         }
     } catch (error) {
-        console.error("Erreur réseau ou serveur :", error);
+        console.error("⛔ Erreur réseau ou serveur :", error);
         alert("Impossible de mettre à jour le profil.");
     }
 }
@@ -636,6 +645,8 @@ async function saveProfile() {
 // ======================== Gestion de l'affichage ========================
 // =====================================================================
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("📌 Chargement de la page...");
+
     const profilePage = document.getElementById("profil");
     const editProfilePage = document.getElementById("modifierProfilPage");
     const editProfileIcon = document.getElementById("editProfileIcon");
@@ -650,27 +661,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 📌 Quand on clique sur l'icône pour modifier le profil
     editProfileIcon.addEventListener("click", function () {
+        console.log("📌 Ouverture du formulaire de modification");
+        remplirFormulaire(); // Appel ici pour s'assurer que les données sont mises à jour avant affichage
+
         cacherToutesLesPages();
-        editProfilePage.style.display = "block"; // Afficher la page de modification
-        backToProfileBtn.style.display = "block"; // Afficher le bouton retour
+        editProfilePage.style.display = "block";
+        backToProfileBtn.style.display = "block";
     });
 
     // 🔙 Quand on clique sur le bouton retour
     backToProfileBtn.addEventListener("click", function () {
         cacherToutesLesPages();
-        profilePage.style.display = "block"; // Réafficher la page profil
+        profilePage.style.display = "block";
     });
 
     // 📌 Gestion de la navbar : cacher `modifierProfilPage` si un élément est cliqué
     navItems.forEach((navItem) => {
         navItem.addEventListener("click", function () {
-            const sectionId = this.id;
-
-            // Avant d'afficher une section, on masque tout pour éviter les conflits
             cacherToutesLesPages();
-
-            // Gestion des sections visibles
-            afficherSection(sectionId);
+            afficherSection(this.id);
         });
     });
 
@@ -678,34 +687,21 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll("#profil, #modifierProfilPage, .nav-section").forEach((section) => {
             section.style.display = "none";
         });
-
-        // 🔹 Vérification et correction de la hauteur pour éviter l'espace vide
-        // navBar.style.marginBottom = "0";
     }
 
     function afficherSection(sectionId) {
-        // On commence par tout cacher proprement
         cacherToutesLesPages();
-
-        // Sélection de la section à afficher
         const section = document.getElementById(sectionId);
-
         if (section) {
-            section.style.visibility = "visible";
-            section.style.position = "relative";
-            section.style.top = "0";
+            section.style.display = "block";
         } else if (sectionId === "account") {
-            profilePage.style.visibility = "visible";
-            profilePage.style.position = "relative";
-            profilePage.style.top = "0";
+            profilePage.style.display = "block";
         }
     }
 
-    // ✅ Empêcher l'accumulation de marges (correction sans toucher le CSS)
-    document.body.style.overflow = "hidden"; // Empêche l'expansion involontaire
+    document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
 
-    // Charger le profil au démarrage
     consulterProfil();
 });
 
