@@ -435,6 +435,132 @@ img.img-post {
 /* MODIFIER PROFIL CSS */
 /* MODIFIER PROFIL CSS */
 
+/* 🟢 Conteneur général */
+#modifierProfilPage {
+    width: 90%;
+    max-width: 500px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+
+/* 🟢 Photo de profil (avec effet) */
+.profile-photo-container {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    margin: 10px auto;
+}
+
+.profile-photo {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--mapster-light);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-photo:hover {
+    transform: scale(1.05);
+}
+
+/* 🟢 Bouton Modifier Photo */
+.edit-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 35px;
+    height: 35px;
+    background-color: var(--mapster-green);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease-in-out;
+}
+
+.edit-icon:hover {
+    background: var(--mapster-dark);
+}
+
+/* 🟢 Champs de formulaire */
+.form-group {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: var(--mapster-text);
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--mapster-border);
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    border-color: var(--mapster-green);
+    box-shadow: 0px 0px 5px rgba(31, 140, 92, 0.3);
+    outline: none;
+}
+
+/* 🟢 Boutons d'action */
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border: none;
+}
+
+.btn-save {
+    background-color: var(--mapster-green);
+    color: white;
+}
+
+.btn-save:hover {
+    background-color: var(--mapster-dark);
+}
+
+.btn-cancel {
+    background-color: var(--mapster-bg);
+    color: var(--mapster-text);
+    margin-left: 10px;
+}
+
+.btn-cancel:hover {
+    background-color: var(--mapster-border);
+}
+
 
 /* ___________________________________________________________________________________________________*/
 /* ___________________________________________________________________________________________________*/
