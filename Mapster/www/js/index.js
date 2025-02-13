@@ -282,15 +282,15 @@ function addMarker(longitude, latitude, pseudo, photoProfil, tempsEcoule) {
 
     marker.setStyle(new ol.style.Style({
         image: new ol.style.Icon({
-            src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg",
-            scale: 0.05
+            src: photoProfil,
+            scale: 1
         }),
         text: new ol.style.Text({
-            text: pseudo,
+            text: tempsEcoule? `${pseudo}\n${tempsEcoule}` : `${pseudo}`,
             offsetY: -25,
             scale: 1.2,
             fill: new ol.style.Fill({ color: '#000' }),
-            backgroundFill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.7)' })
+            backgroundFill: new ol.style.Fill({ color: '#EAF5EE' })
         })
     }));
 
@@ -512,6 +512,7 @@ function consulterProfil() {
                 consultBody.appendChild(postDiv);
             });
 
+            ajouterEvenementsSuppression();
             // 📌 Remplir le formulaire de modification avec les données reçues
             remplirFormulaire(data);
 
@@ -917,6 +918,8 @@ function supprimerPhoto() {
                 if (data.success) {
                     console.log("Photo supprimée !");
                     document.getElementById("photo" + selectedPhotoId).remove();
+                    nbpubli = Number(document.getElementById("publication").textContent.split(" ")[0])
+                    document.getElementById("publication").textContent = (nbpubli-1).toString() + " Publications";
                     fermerModalSuppression();
                 } else {
                     alert("Erreur : " + data.error);
