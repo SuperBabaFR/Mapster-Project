@@ -62,3 +62,4 @@ node_modules/prettier/plugins/typescript.mjs
 node_modules/prettier/plugins/yaml.d.ts
 node_modules/prettier/plugins/yaml.js
 node_modules/prettier/plugins/yaml.mjs
+/.idea/jsLibraryMappings.xml
