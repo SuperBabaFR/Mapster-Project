@@ -739,64 +739,21 @@ function convertirFichierEnBase64(file) {
 // ======================== Envoi des données ============================
 // =======================================================================
 
-// async function envoyerProfil(formData) {
-//     try {
-//         console.log("Envoi des données au serveur :", formData);
-
-//         const response = await fetch(URL + "updateProfile.php", {
-//             method: "POST",
-//             body: formData
-//         });
-
-//         console.log("Réponse brute :", response);
-//         const result = await response.json();
-//         console.log("Réponse JSON :", result);
-
-//         if (response.ok && result.id && result.pseudo && result.mail) {
-//             console.log("Mise à jour réussie :", result);
-
-//             await new Promise(resolve => setTimeout(resolve, 1000));
-
-//             await consulterProfil();
-
-//             profilData.pseudo = result.pseudo || profilData.pseudo;
-//             profilData.mail = result.mail || profilData.mail;
-
-//             // Vérification et correction de l'URL complète de la photo
-//             profilData.photo = result.photo.startsWith("http")
-//                 ? result.photo
-//                 : `http://miage-antilles.fr/mapper/${result.photo}`;
-
-//             cacherLeProfil();
-//             document.getElementById("profil").style.display = "block";
-
-//             alert(result.message || "Profil mis à jour avec succès !");
-//         } else {
-//             throw new Error(result.message || "Une erreur inconnue s'est produite.");
-//         }
-//     } catch (error) {
-//         console.error("Erreur réseau ou serveur :", error);
-//         alert("Impossible de mettre à jour le profil.");
-//     } finally {
-//         afficherLoader(false);
-//     }
-// }
-
 async function envoyerProfil(formData) {
     try {
-        console.log("📤 Envoi des données au serveur :", formData);
+        console.log("Envoi des données au serveur :", formData);
 
         const response = await fetch(URL + "updateProfile.php", {
             method: "POST",
             body: formData
         });
 
-        console.log("📩 Réponse brute :", response);
+        console.log("Réponse brute :", response);
         const result = await response.json();
-        console.log("✅ Réponse JSON :", result);
+        console.log("Réponse JSON :", result);
 
         if (response.ok && result.id && result.pseudo && result.mail) {
-            console.log("🎉 Mise à jour réussie :", result);
+            console.log("Mise à jour réussie :", result);
 
             await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -805,7 +762,7 @@ async function envoyerProfil(formData) {
             profilData.pseudo = result.pseudo || profilData.pseudo;
             profilData.mail = result.mail || profilData.mail;
 
-            // ✅ Correction de l'URL de la photo récupérée
+            // Correction de l'URL de la photo récupérée
             if (result.photo.startsWith("http")) {
                 profilData.photo = result.photo;
             } else {
@@ -815,12 +772,12 @@ async function envoyerProfil(formData) {
             cacherLeProfil();
             document.getElementById("profil").style.display = "block";
 
-            alert(result.message || "✅ Profil mis à jour avec succès !");
+            // alert(result.message || "Profil mis à jour avec succès !");
         } else {
             throw new Error(result.message || "Une erreur inconnue s'est produite.");
         }
     } catch (error) {
-        console.error("❌ Erreur réseau ou serveur :", error);
+        console.error("Erreur réseau ou serveur :", error);
         alert("Impossible de mettre à jour le profil.");
     } finally {
         afficherLoader(false);
