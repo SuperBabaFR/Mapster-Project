@@ -621,7 +621,7 @@ function remplirFormulaire() {
     console.log("Remplissage du formulaire avec :", profilData);
 
     if (!profilData.pseudo || !profilData.mail) {
-        console.warn("Données du profil manquantes. Impossible de remplir le formulaire.");
+        console.warn("⚠️ Données du profil manquantes. Impossible de remplir le formulaire.");
         return;
     }
 
@@ -632,7 +632,7 @@ function remplirFormulaire() {
     const photoPreview = document.getElementById("photoPreview");
     const defaultPhoto = "img/default.png";
 
-    photoPreview.src = profilData.photo !== "null" ? profilData.photo : defaultPhoto;
+    photoPreview.src = profilData.photo && profilData.photo !== "null" ? profilData.photo : defaultPhoto;
 
     photoPreview.onerror = () => {
         photoPreview.onerror = null;
@@ -674,18 +674,38 @@ async function saveProfile() {
         formData.append("mdp", password);
     }
 
-    if (photoFile) {
-        const reader = new FileReader();
-        reader.readAsDataURL(photoFile);
-        reader.onload = async function () {
-            formData.append("photoProfilBase64", reader.result);
-            await envoyerProfil(formData);
-        };
-    } else {
-        formData.append("photoProfilBase64", profilData.photo);
+    try {
+        if (photoFile) {
+            // Conversion de l'image en base64 AVANT l'envoi
+            const base64Image = await convertirFichierEnBase64(photoFile);
+            formData.append("photoProfilBase64", base64Image);
+        } else {
+            formData.append("photoProfilBase64", profilData.photo);
+        }
+
+        // Une fois la conversion terminée, on envoie la requête
         await envoyerProfil(formData);
+
+    } catch (error) {
+        console.error("Erreur lors de la conversion de l'image :", error);
+        alert("Impossible de traiter l'image.");
+        afficherLoader(false);
     }
 }
+
+// Fonction pour convertir un fichier en base64 de manière ASYNCHRONE
+function convertirFichierEnBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+
+// =======================================================================
+// ======================== Envoi des données ============================
+// =======================================================================
 
 async function envoyerProfil(formData) {
     try {
@@ -710,7 +730,7 @@ async function envoyerProfil(formData) {
             profilData.pseudo = result.pseudo || profilData.pseudo;
             profilData.mail = result.mail || profilData.mail;
 
-            // Vérification et correction de l'URL complète
+            // Vérification et correction de l'URL complète de la photo
             profilData.photo = result.photo.startsWith("http")
                 ? result.photo
                 : `http://miage-antilles.fr/mapper/${result.photo}`;
@@ -718,7 +738,7 @@ async function envoyerProfil(formData) {
             cacherLeProfil();
             document.getElementById("profil").style.display = "block";
 
-            alert(result.message || "Profil mis à jour avec succès !");
+            alert(result.message || "✅ Profil mis à jour avec succès !");
         } else {
             throw new Error(result.message || "Une erreur inconnue s'est produite.");
         }
@@ -729,6 +749,18 @@ async function envoyerProfil(formData) {
         afficherLoader(false);
     }
 }
+
+// =======================================================================
+// ======================== Gestion du loader ============================
+// =======================================================================
+
+function afficherLoader(etat) {
+    const loader = document.querySelector(".loader-container");
+    if (loader) {
+        loader.style.display = etat ? "flex" : "none";
+    }
+}
+
 
 /**
  * Fonction pour afficher ou masquer le loader
