@@ -25,6 +25,8 @@ function onDeviceReady() {
     addNavInteractions();
     inscriptionEvent();
 
+    InteractModifProfil();
+
     // Mise à jour dynamique de la valeur affichée
     rangeSlider.addEventListener("input", () => {
         sliderValue.textContent = rangeSlider.value + 'm';
@@ -193,6 +195,8 @@ function addNavInteractions() {
                 document.getElementById(i.div).style.display = "none";
             });
 
+            cacherLeProfil();
+
             if (item.nav === "post") {
                 capturePhoto();
             }
@@ -220,9 +224,12 @@ function addNavInteractions() {
         document.getElementById(elem.div).style.display = "none";
     });
 }
+
+
 function timeAgo(date) {
     const now = new Date();
-    const secondsPast = Math.floor((now - date) / 1000);
+    const nowUTC = new Date(now.getTime() + (now.getTimezoneOffset() * 60 * 1000)); // Convertir le temps actuel en UTC
+    const secondsPast = Math.floor((nowUTC - date) / 1000);
 
     if (secondsPast < 60) {
         return `il y a ${secondsPast} sec`;
@@ -236,21 +243,17 @@ function timeAgo(date) {
         return `il y a ${hours} heure${hours > 1 ? "s" : ""}`;
     }
     if (secondsPast < 172800) {
-        // moins de 2 jours
         return `hier`;
     }
     if (secondsPast < 604800) {
-        // moins de 7 jours
         const days = Math.floor(secondsPast / 86400);
         return `il y a ${days} jour${days > 1 ? "s" : ""}`;
     }
     if (secondsPast < 2592000) {
-        // moins d'un mois
         const weeks = Math.floor(secondsPast / 604800);
         return `il y a ${weeks} semaine${weeks > 1 ? "s" : ""}`;
     }
     if (secondsPast < 31536000) {
-        // moins d'un an
         const months = Math.floor(secondsPast / 2592000);
         return `il y a ${months} mois`;
     }
@@ -258,6 +261,7 @@ function timeAgo(date) {
     return `il y a ${years} an${years > 1 ? "s" : ""}`;
 }
 
+
 // MAP
 // MAP
 // MAP
@@ -265,10 +269,35 @@ function timeAgo(date) {
 // MAP
 // MAP
 
+function createCircularIcon(imageUrl, size = 64) {
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d");
+
+    const img = new Image();
+    img.crossOrigin = "anonymous"; // Permet d'éviter les problèmes CORS
+    img.src = imageUrl;
+
+    return new Promise((resolve) => {
+        img.onload = () => {
+            // Dessiner un cercle
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.clip(); // Appliquer le masque circulaire
+
+            // Dessiner l'image à l'intérieur du cercle
+            ctx.drawImage(img, 0, 0, size, size);
+
+            resolve(canvas.toDataURL()); // Retourner l'image en base64
+        };
+    });
+}
 
 
 // Fonction pour ajouter un marqueur
-function addMarker(longitude, latitude, pseudo, photoProfil, tempsEcoule) {
+async function addMarker(longitude, latitude, pseudo, photoProfil, tempsEcoule) {
     if (isNaN(longitude) || isNaN(latitude)) {
         console.error(`Coordonnées invalides pour ${pseudo}: ${longitude}, ${latitude}`);
         return;
@@ -280,17 +309,39 @@ function addMarker(longitude, latitude, pseudo, photoProfil, tempsEcoule) {
         geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude]))
     });
 
+    // marker.setStyle(new ol.style.Style({
+    //     image: new ol.style.Icon({
+    //         src: photoProfil ? photoProfil : "https://www.svgrepo.com/show/526022/map-point-wave.svg",
+    //         scale: photoProfil ? 0.25 : 0.1
+    //     }),
+    //     text: new ol.style.Text({
+    //         text: tempsEcoule ? `${pseudo}\n${tempsEcoule}` : `${pseudo}`,
+    //         offsetY: -25,
+    //         scale: 1.2,
+    //         fill: new ol.style.Fill({ color: '#000' }),
+    //         backgroundFill: new ol.style.Fill({ color: '#EAF5EE' })
+    //     })
+    // }));
+
+    let iconSrc = photoProfil ? await createCircularIcon(photoProfil, 64) : "https://www.svgrepo.com/show/526022/map-point-wave.svg";
+
     marker.setStyle(new ol.style.Style({
         image: new ol.style.Icon({
-            src: photoProfil,
-            scale: 1
+            src: iconSrc,
+            scale: photoProfil ? 0.75 : 0.05,
+            anchor: [0.5, 0], // Centre l'image et la place au-dessus du texte
         }),
         text: new ol.style.Text({
-            text: tempsEcoule ? `${pseudo}\n${tempsEcoule}` : `${pseudo}`,
-            offsetY: -25,
-            scale: 1.2,
-            fill: new ol.style.Fill({ color: '#000' }),
-            backgroundFill: new ol.style.Fill({ color: '#EAF5EE' })
+            text: tempsEcoule ?  `${pseudo}\n🕒 ${tempsEcoule}` : `${pseudo}`,
+            offsetY: photoProfil ? 70 : 60, // Met le texte en dessous de l'avatar
+            scale: 1,
+            font: 'bold 10px Arial, sans-serif',
+            fill: new ol.style.Fill({ color: '#fff' }), // Texte en blanc pour plus de contraste
+            stroke: new ol.style.Stroke({ color: 'rgba(0, 0, 0, 0.6)', width: 2 }), // Effet d'ombre légère
+            backgroundFill: new ol.style.Fill({ color: '#1F8C5C' }), // Fond vert moderne
+            padding: [8, 12, 8, 12], // Padding ajusté pour un effet plus aéré
+            textAlign: 'center', // Centrer le texte sous l'avatar
+            radius: 12 // Appliquer un effet arrondi au fond
         })
     }));
 
@@ -401,7 +452,7 @@ function LoadMap() {
 
 
 
-// POSTER PHGOTO
+// POSTER PHOTO
 
 function capturePhoto() {
     navigator.camera.getPicture(onSuccess, onFail, {
@@ -421,13 +472,20 @@ function onFail(message) {
     alert("Erreur: " + message);
 }
 
-function sendData() {
+async function sendData() {
     if (!imageBase64) {
         alert("Aucune image capturée");
         return;
     }
+    document.getElementById("sendBtn").style.display = "none";
+
 
     let textValue = document.getElementById("textArea").value;
+
+    document.getElementById("poster").innerHTML = "<div class=\"loader-container\">\n" +
+        "    <div class=\"loader\"></div>\n" +
+        "    <div class=\"logo\">Chargement...</div>\n" +
+        "</div>\n";
 
     let formData = new FormData();
     formData.append("idMapper", idMapper);
@@ -437,7 +495,7 @@ function sendData() {
     formData.append("latitude", latitude);
     formData.append("description", textValue);
 
-    fetch(URL + "post_service.php", {
+    await fetch(URL + "post_service.php", {
         method: "POST",
         body: formData
     })
@@ -453,6 +511,26 @@ function sendData() {
             // document.getElementById("apiResponse").style.display = "block";
             // document.getElementById("apiResponse").innerText = "Erreur lors de l'envoi des données : " + error;
         });
+
+    document.getElementById("poster").innerHTML = "<div style=\"align-items: center;\">\n" +
+        "               <h2 style=\"text-align: center; color: #3D7A56;margin-top: 5px;\">Nouvelle Publication</h2>\n" +
+        "            </div>\n" +
+        "            <img id=\"capturedImage\" src alt=\"Votre photo apparaîtra ici\"\n" +
+        "               class=\"img-fluid\"\n" +
+        "               style=\"width: 100%; height: auto;margin-bottom: 5px;\" />\n" +
+        "            <!-- Zone pour ajouter une description -->\n" +
+        "            <div style=\"margin: 2px;width: 96%;\">\n" +
+        "               <textarea id=\"textArea\"\n" +
+        "                  placeholder=\"Ajoutez une description...\"\n" +
+        "                  style=\"width: 96%; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;\n" +
+        "                  resize: none; height: 55px; padding: 10px; background-color: #f8f8f8;\n" +
+        "                  color: #333; font-family: Arial, sans-serif; outline: none;\"></textarea>\n" +
+        "            </div>\n" +
+        "            <!-- Bouton pour partager la photo -->\n" +
+        "            <button id=\"sendBtn\"\n" +
+        "               style=\"display: block; width: 20%; padding: 5px; background-color: #3D7A56; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 3px; margin: 1vw\">\n" +
+        "            Partager\n" +
+        "            </button>";
 }
 
 
@@ -602,6 +680,7 @@ async function saveProfile() {
         pseudo: pseudo,
         mail: email,
         mdp: password || "",
+        hashMdp: hashMdp,
         photoProfil: profilData.photo || "",
     };
 
@@ -610,8 +689,8 @@ async function saveProfile() {
 
         const response = await fetch(URL + "updateProfile.php", {
             method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: objectToUrlEncoded(data),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
         });
 
         if (!response.ok) {
@@ -619,23 +698,17 @@ async function saveProfile() {
         }
 
         const result = await response.json();
+        console.log("✅ Réponse serveur :", result);
 
-        if (result.success) {
-            alert("Profil mis à jour avec succès !");
-            console.log("✅ Réponse serveur :", result);
+        // Mise à jour des variables globales uniquement si la modification réussit
+        profilData.pseudo = result.pseudo || profilData.pseudo;
+        profilData.mail = result.mail || profilData.mail;
+        profilData.photo = result.photoProfil || profilData.photo;
 
-            // Mise à jour des variables globales uniquement si la modification réussit
-            profilData.pseudo = result.pseudo || profilData.pseudo;
-            profilData.mail = result.mail || profilData.mail;
-            profilData.photo = result.photoProfil || profilData.photo;
-
-            // Mise à jour de l'affichage et retour à la page profil
-            consulterProfil();
-            cacherToutesLesPages();
-            document.getElementById("profil").style.display = "block";
-        } else {
-            throw new Error(result.error || "Une erreur inconnue s'est produite.");
-        }
+        // Mise à jour de l'affichage et retour à la page profil
+        consulterProfil();
+        cacherLeProfil();
+        document.getElementById("profil").style.display = "block";
     } catch (error) {
         console.error("⛔ Erreur réseau ou serveur :", error);
         alert("Impossible de mettre à jour le profil.");
@@ -644,7 +717,7 @@ async function saveProfile() {
 
 // ======================== Gestion de l'affichage ========================
 // =====================================================================
-document.addEventListener("DOMContentLoaded", function () {
+function InteractModifProfil () {
     console.log("📌 Chargement de la page...");
 
     const profilePage = document.getElementById("profil");
@@ -652,8 +725,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const editProfileIcon = document.getElementById("editProfileIcon");
     const backToProfileBtn = document.getElementById("backToProfileBtn");
     const saveButton = document.getElementById("saveProfile");
-    const navBar = document.getElementById("nav_bar");
-    const navItems = document.querySelectorAll(".nav-item");
 
     if (saveButton) {
         saveButton.addEventListener("click", saveProfile);
@@ -664,46 +735,26 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("📌 Ouverture du formulaire de modification");
         remplirFormulaire(); // Appel ici pour s'assurer que les données sont mises à jour avant affichage
 
-        cacherToutesLesPages();
+        cacherLeProfil();
         editProfilePage.style.display = "block";
         backToProfileBtn.style.display = "block";
     });
 
     // 🔙 Quand on clique sur le bouton retour
     backToProfileBtn.addEventListener("click", function () {
-        cacherToutesLesPages();
+        cacherLeProfil();
         profilePage.style.display = "block";
     });
 
-    // 📌 Gestion de la navbar : cacher `modifierProfilPage` si un élément est cliqué
-    navItems.forEach((navItem) => {
-        navItem.addEventListener("click", function () {
-            cacherToutesLesPages();
-            afficherSection(this.id);
-        });
-    });
-
-    function cacherToutesLesPages() {
-        document.querySelectorAll("#profil, #modifierProfilPage, .nav-section").forEach((section) => {
-            section.style.display = "none";
-        });
-    }
-
-    function afficherSection(sectionId) {
-        cacherToutesLesPages();
-        const section = document.getElementById(sectionId);
-        if (section) {
-            section.style.display = "block";
-        } else if (sectionId === "account") {
-            profilePage.style.display = "block";
-        }
-    }
-
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
+}
 
-    consulterProfil();
-});
+function cacherLeProfil() {
+    document.querySelectorAll("#profil, #modifierProfilPage").forEach((section) => {
+        section.style.display = "none";
+    });
+}
 
 /***************************************************************/
 /* Fin du code                                                 */
