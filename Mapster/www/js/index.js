@@ -617,31 +617,6 @@ function objectToUrlEncoded(obj) {
 // ======================== Remplir le formulaire ========================
 // =======================================================================
 
-// function remplirFormulaire() {
-//     console.log("Remplissage du formulaire avec :", profilData);
-
-//     if (!profilData.pseudo || !profilData.mail) {
-//         console.warn("Données du profil manquantes. Impossible de remplir le formulaire.");
-//         return;
-//     }
-
-//     document.getElementById("pseudoForm").value = profilData.pseudo;
-//     document.getElementById("emailForm").value = profilData.mail;
-
-//     // Mise à jour de la photo dans le formulaire
-//     const photoPreview = document.getElementById("photoPreview");
-//     const defaultPhoto = "img/default.png";
-
-//     photoPreview.src = profilData.photo !== "null" ? profilData.photo : defaultPhoto;
-
-//     photoPreview.onerror = () => {
-//         photoPreview.onerror = null;
-//         photoPreview.src = defaultPhoto;
-//     };
-
-//     console.log("Formulaire mis à jour avec succès !");
-// }
-
 function remplirFormulaire() {
     console.log("Remplissage du formulaire avec :", profilData);
 
