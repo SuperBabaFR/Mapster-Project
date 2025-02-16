@@ -43,7 +43,7 @@
         <preference name="LoadUrlTimeoutValue" value="70000" />
 
         <!-- Configuration réseau pour autoriser certains domaines HTTP -->
-<!--         <resource-file src="src/android/xml/network_security_config.xml"
+        <!--         <resource-file src="src/android/xml/network_security_config.xml"
             target="res/xml/network_security_config.xml" /> -->
 
         <!-- Autorisations requises -->
@@ -82,7 +82,6 @@
             </dict>
         </edit-config>
 
-        
 
         <!-- Configuration de la géolocalisation -->
         <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
