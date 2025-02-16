@@ -309,20 +309,6 @@ async function addMarker(longitude, latitude, pseudo, photoProfil, tempsEcoule) 
         geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude]))
     });
 
-    // marker.setStyle(new ol.style.Style({
-    //     image: new ol.style.Icon({
-    //         src: photoProfil ? photoProfil : "https://www.svgrepo.com/show/526022/map-point-wave.svg",
-    //         scale: photoProfil ? 0.25 : 0.1
-    //     }),
-    //     text: new ol.style.Text({
-    //         text: tempsEcoule ? `${pseudo}\n${tempsEcoule}` : `${pseudo}`,
-    //         offsetY: -25,
-    //         scale: 1.2,
-    //         fill: new ol.style.Fill({ color: '#000' }),
-    //         backgroundFill: new ol.style.Fill({ color: '#EAF5EE' })
-    //     })
-    // }));
-
     let iconSrc = photoProfil ? await createCircularIcon(photoProfil, 64) : "https://www.svgrepo.com/show/526022/map-point-wave.svg";
 
     marker.setStyle(new ol.style.Style({
@@ -477,8 +463,6 @@ async function sendData() {
         alert("Aucune image capturée");
         return;
     }
-    document.getElementById("sendBtn").style.display = "none";
-
 
     let textValue = document.getElementById("textArea").value;
 
@@ -663,6 +647,7 @@ async function saveProfile() {
     const email = document.getElementById("emailForm").value.trim();
     const password = document.getElementById("passwordForm").value.trim();
     const confirmPassword = document.getElementById("confirmPasswordForm").value.trim();
+    const photoProfil = profilData.photo || "";
 
     if (!pseudo || !email) {
         alert("Le pseudo et l’email sont requis.");
@@ -674,18 +659,20 @@ async function saveProfile() {
         return;
     }
 
+    // Affichage du loader avant le début du traitement
+    afficherLoader(true);
+
     const data = {
-        action: "updateProfile",
         idMapper: idMapper,
+        hashMdp: hashMdp,
         pseudo: pseudo,
         mail: email,
         mdp: password || "",
-        hashMdp: hashMdp,
-        photoProfil: profilData.photo || "",
+        photoProfil: photoProfil,
     };
 
     try {
-        console.log("📤 Envoi des données au serveur :", data);
+        console.log("Envoi des données au serveur :", data);
 
         const response = await fetch(URL + "updateProfile.php", {
             method: "POST",
@@ -693,25 +680,46 @@ async function saveProfile() {
             body: JSON.stringify(data),
         });
 
-        if (!response.ok) {
-            throw new Error("Erreur HTTP " + response.status);
-        }
-
+        console.log("Réponse brute :", response);
         const result = await response.json();
-        console.log("✅ Réponse serveur :", result);
+        console.log("Réponse JSON :", result);
 
-        // Mise à jour des variables globales uniquement si la modification réussit
-        profilData.pseudo = result.pseudo || profilData.pseudo;
-        profilData.mail = result.mail || profilData.mail;
-        profilData.photo = result.photoProfil || profilData.photo;
+        if (response.ok && result.code === 200) {
+            console.log("Mise à jour réussie :", result);
 
-        // Mise à jour de l'affichage et retour à la page profil
-        consulterProfil();
-        cacherLeProfil();
-        document.getElementById("profil").style.display = "block";
+            // Attendre 1 seconde avant de récupérer les nouvelles données
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Récupérer les nouvelles données du profil
+            consulterProfil();
+
+            // Mise à jour des variables globales avec les nouvelles données
+            profilData.pseudo = result.pseudo || profilData.pseudo;
+            profilData.mail = result.mail || profilData.mail;
+            profilData.photo = result.photo || profilData.photo;
+
+            // Cacher le formulaire et afficher la page profil
+            cacherLeProfil();
+            document.getElementById("profil").style.display = "block";
+        } else {
+            throw new Error(result.descriptif || "Une erreur inconnue s'est produite.");
+        }
     } catch (error) {
-        console.error("⛔ Erreur réseau ou serveur :", error);
+        console.error("Erreur réseau ou serveur :", error);
         alert("Impossible de mettre à jour le profil.");
+    } finally {
+        // Masquer le loader après la mise à jour
+        afficherLoader(false);
+    }
+}
+
+/**
+ * Fonction pour afficher ou masquer le loader
+ */
+function afficherLoader(etat) {
+    const loader = document.getElementById("profileLoader");
+    if (loader) {
+        loader.style.display = etat ? "flex" : "none";
     }
 }
 
@@ -730,7 +738,7 @@ function InteractModifProfil () {
         saveButton.addEventListener("click", saveProfile);
     }
 
-    // 📌 Quand on clique sur l'icône pour modifier le profil
+    // Quand on clique sur l'icône pour modifier le profil
     editProfileIcon.addEventListener("click", function () {
         console.log("📌 Ouverture du formulaire de modification");
         remplirFormulaire(); // Appel ici pour s'assurer que les données sont mises à jour avant affichage
@@ -740,7 +748,7 @@ function InteractModifProfil () {
         backToProfileBtn.style.display = "block";
     });
 
-    // 🔙 Quand on clique sur le bouton retour
+    // Quand on clique sur le bouton retour
     backToProfileBtn.addEventListener("click", function () {
         cacherLeProfil();
         profilePage.style.display = "block";
