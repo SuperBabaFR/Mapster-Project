@@ -243,6 +243,30 @@
          </div>
 
          <!-- PAGE MODIFIER LE PROFIL (CACHÉE AU DÉPART) -->
+
+         <!-- Modal d'aperçu de la photo -->
+
+
+         <div id="photoModal" class="modal" style="display: none;">
+            <div class="modal-content">
+               <span class="close">&times;</span>
+               <img id="photoModalImg" src="" alt="Aperçu de la photo" class="modal-image">
+            </div>
+         </div>
+
+         <!-- Modal de sélection photo -->
+         <div id="photoOptionsModal" class="modal" style="display: none;">
+            <div class="modal-content">
+               <h4>Choisir une option</h4>
+               <button id="takePhoto">📷 Prendre une photo</button>
+               <button id="choosePhoto">📂 Importer une photo</button>
+               <button class="close">Annuler</button>
+            </div>
+         </div>
+
+         <!-- Champ caché pour l'importation d'images -->
+         <input type="file" id="photoInputHidden" accept="image/*" style="display: none;">
+
          <div id="modifierProfilPage" class="modifierProfil container mt-4" style="display: none;">
             <h3 class="text-center">Modifier le profil utilisateur</h3>
 
