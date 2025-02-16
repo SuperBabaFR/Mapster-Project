@@ -585,6 +585,7 @@ async function saveProfile() {
     const email = document.getElementById("emailForm").value.trim();
     const password = document.getElementById("passwordForm").value.trim();
     const confirmPassword = document.getElementById("confirmPasswordForm").value.trim();
+    const photoProfil = profilData.photo || "";
 
     if (!pseudo || !email) {
         alert("Le pseudo et l’email sont requis.");
@@ -596,49 +597,70 @@ async function saveProfile() {
         return;
     }
 
+    // Affichage du loader avant le début du traitement
+    afficherLoader(true);
+
     const data = {
-        action: "updateProfile",
         idMapper: idMapper,
+        hashMdp: hashMdp,
         pseudo: pseudo,
         mail: email,
         mdp: password || "",
-        photoProfil: profilData.photo || "",
+        photoProfil: photoProfil,
     };
 
     try {
-        console.log("📤 Envoi des données au serveur :", data);
+        console.log("Envoi des données au serveur :", data);
 
         const response = await fetch(URL + "updateProfile.php", {
             method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: objectToUrlEncoded(data),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
         });
 
-        if (!response.ok) {
-            throw new Error("Erreur HTTP " + response.status);
-        }
-
+        console.log("Réponse brute :", response);
         const result = await response.json();
+        console.log("Réponse JSON :", result);
 
-        if (result.success) {
-            alert("Profil mis à jour avec succès !");
-            console.log("✅ Réponse serveur :", result);
+        if (response.ok && result.code === 200) {
+            console.log("Mise à jour réussie :", result);
 
-            // Mise à jour des variables globales uniquement si la modification réussit
+            // Attendre 1 seconde avant de récupérer les nouvelles données
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Récupérer les nouvelles données du profil
+            consulterProfil();
+
+            // Mise à jour des variables globales avec les nouvelles données
             profilData.pseudo = result.pseudo || profilData.pseudo;
             profilData.mail = result.mail || profilData.mail;
-            profilData.photo = result.photoProfil || profilData.photo;
+            profilData.photo = result.photo || profilData.photo;
 
-            // Mise à jour de l'affichage et retour à la page profil
-            consulterProfil();
+            // Cacher le formulaire et afficher la page profil
             cacherToutesLesPages();
             document.getElementById("profil").style.display = "block";
+
+            // Afficher un message de succès
+            alert("Profil mis à jour avec succès !");
         } else {
-            throw new Error(result.error || "Une erreur inconnue s'est produite.");
+            throw new Error(result.descriptif || "Une erreur inconnue s'est produite.");
         }
     } catch (error) {
-        console.error("⛔ Erreur réseau ou serveur :", error);
+        console.error("Erreur réseau ou serveur :", error);
         alert("Impossible de mettre à jour le profil.");
+    } finally {
+        // Masquer le loader après la mise à jour
+        afficherLoader(false);
+    }
+}
+
+/**
+ * Fonction pour afficher ou masquer le loader
+ */
+function afficherLoader(etat) {
+    const loader = document.getElementById("profileLoader");
+    if (loader) {
+        loader.style.display = etat ? "flex" : "none";
     }
 }
 
@@ -659,7 +681,7 @@ document.addEventListener("DOMContentLoaded", function () {
         saveButton.addEventListener("click", saveProfile);
     }
 
-    // 📌 Quand on clique sur l'icône pour modifier le profil
+    // Quand on clique sur l'icône pour modifier le profil
     editProfileIcon.addEventListener("click", function () {
         console.log("📌 Ouverture du formulaire de modification");
         remplirFormulaire(); // Appel ici pour s'assurer que les données sont mises à jour avant affichage
@@ -669,13 +691,13 @@ document.addEventListener("DOMContentLoaded", function () {
         backToProfileBtn.style.display = "block";
     });
 
-    // 🔙 Quand on clique sur le bouton retour
+    // Quand on clique sur le bouton retour
     backToProfileBtn.addEventListener("click", function () {
         cacherToutesLesPages();
         profilePage.style.display = "block";
     });
 
-    // 📌 Gestion de la navbar : cacher `modifierProfilPage` si un élément est cliqué
+    // Gestion de la navbar : cacher `modifierProfilPage` si un élément est cliqué
     navItems.forEach((navItem) => {
         navItem.addEventListener("click", function () {
             cacherToutesLesPages();
