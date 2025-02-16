@@ -617,22 +617,49 @@ function objectToUrlEncoded(obj) {
 // ======================== Remplir le formulaire ========================
 // =======================================================================
 
+function onPhotoSuccess(imageData) {
+    console.log("Photo prise avec succès :", imageData);
+
+    // Vérifier que l'image est bien en base64 et éviter la double concaténation
+    if (!imageData.startsWith("data:image/")) {
+        imageData = "data:image/jpeg;base64," + imageData;
+    }
+
+    // Mettre à jour les données du profil avec la bonne base64
+    profilData.photo = imageData;
+
+    // Mettre à jour l'aperçu de la photo
+    document.getElementById("photoPreview").src = imageData;
+}
+
 function remplirFormulaire() {
     console.log("Remplissage du formulaire avec :", profilData);
 
     if (!profilData.pseudo || !profilData.mail) {
-        console.warn("⚠️ Données du profil manquantes. Impossible de remplir le formulaire.");
+        console.warn("Données du profil manquantes. Impossible de remplir le formulaire.");
         return;
     }
 
     document.getElementById("pseudoForm").value = profilData.pseudo;
     document.getElementById("emailForm").value = profilData.mail;
 
-    // Mise à jour de la photo dans le formulaire
     const photoPreview = document.getElementById("photoPreview");
     const defaultPhoto = "img/default.png";
 
-    photoPreview.src = profilData.photo && profilData.photo !== "null" ? profilData.photo : defaultPhoto;
+    if (profilData.photo) {
+        if (profilData.photo.startsWith("data:image/")) {
+            // C'est un base64, on l'affiche directement
+            photoPreview.src = profilData.photo;
+        } else if (profilData.photo.startsWith("http")) {
+            // C'est une URL, on l'affiche directement
+            photoPreview.src = profilData.photo;
+        } else {
+            // C'est un chemin relatif venant du serveur, on complète
+            photoPreview.src = "http://miage-antilles.fr/mapper/" + profilData.photo;
+        }
+    } else {
+        photoPreview.src = defaultPhoto;
+    }
 
     photoPreview.onerror = () => {
         photoPreview.onerror = null;
@@ -675,19 +702,24 @@ async function saveProfile() {
     }
 
     try {
+        let base64Image = profilData.photo || "";
+
+        // ✅ Si une image a été sélectionnée depuis la galerie
         if (photoFile) {
-            // Conversion de l'image en base64 AVANT l'envoi
-            const base64Image = await convertirFichierEnBase64(photoFile);
-            formData.append("photoProfilBase64", base64Image);
-        } else {
-            formData.append("photoProfilBase64", profilData.photo);
+            base64Image = await convertirFichierEnBase64(photoFile);
         }
 
-        // Une fois la conversion terminée, on envoie la requête
-        await envoyerProfil(formData);
+        // ✅ Vérification avant d'envoyer l'image (évite le problème `ERR_INVALID_URL`)
+        if (!base64Image.startsWith("data:image/")) {
+            base64Image = "data:image/jpeg;base64," + base64Image;
+        }
 
+        formData.append("photoProfilBase64", base64Image);
+
+        // ✅ Envoi des données au serveur
+        await envoyerProfil(formData);
     } catch (error) {
-        console.error("Erreur lors de la conversion de l'image :", error);
+        console.error("❌ Erreur lors de la conversion de l'image :", error);
         alert("Impossible de traiter l'image.");
         afficherLoader(false);
     }
@@ -707,21 +739,64 @@ function convertirFichierEnBase64(file) {
 // ======================== Envoi des données ============================
 // =======================================================================
 
+// async function envoyerProfil(formData) {
+//     try {
+//         console.log("Envoi des données au serveur :", formData);
+
+//         const response = await fetch(URL + "updateProfile.php", {
+//             method: "POST",
+//             body: formData
+//         });
+
+//         console.log("Réponse brute :", response);
+//         const result = await response.json();
+//         console.log("Réponse JSON :", result);
+
+//         if (response.ok && result.id && result.pseudo && result.mail) {
+//             console.log("Mise à jour réussie :", result);
+
+//             await new Promise(resolve => setTimeout(resolve, 1000));
+
+//             await consulterProfil();
+
+//             profilData.pseudo = result.pseudo || profilData.pseudo;
+//             profilData.mail = result.mail || profilData.mail;
+
+//             // Vérification et correction de l'URL complète de la photo
+//             profilData.photo = result.photo.startsWith("http")
+//                 ? result.photo
+//                 : `http://miage-antilles.fr/mapper/${result.photo}`;
+
+//             cacherLeProfil();
+//             document.getElementById("profil").style.display = "block";
+
+//             alert(result.message || "Profil mis à jour avec succès !");
+//         } else {
+//             throw new Error(result.message || "Une erreur inconnue s'est produite.");
+//         }
+//     } catch (error) {
+//         console.error("Erreur réseau ou serveur :", error);
+//         alert("Impossible de mettre à jour le profil.");
+//     } finally {
+//         afficherLoader(false);
+//     }
+// }
+
 async function envoyerProfil(formData) {
     try {
-        console.log("Envoi des données au serveur :", formData);
+        console.log("📤 Envoi des données au serveur :", formData);
 
         const response = await fetch(URL + "updateProfile.php", {
             method: "POST",
             body: formData
         });
 
-        console.log("Réponse brute :", response);
+        console.log("📩 Réponse brute :", response);
         const result = await response.json();
-        console.log("Réponse JSON :", result);
+        console.log("✅ Réponse JSON :", result);
 
         if (response.ok && result.id && result.pseudo && result.mail) {
-            console.log("Mise à jour réussie :", result);
+            console.log("🎉 Mise à jour réussie :", result);
 
             await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -730,10 +805,12 @@ async function envoyerProfil(formData) {
             profilData.pseudo = result.pseudo || profilData.pseudo;
             profilData.mail = result.mail || profilData.mail;
 
-            // Vérification et correction de l'URL complète de la photo
-            profilData.photo = result.photo.startsWith("http")
-                ? result.photo
-                : `http://miage-antilles.fr/mapper/${result.photo}`;
+            // ✅ Correction de l'URL de la photo récupérée
+            if (result.photo.startsWith("http")) {
+                profilData.photo = result.photo;
+            } else {
+                profilData.photo = `http://miage-antilles.fr/mapper/${result.photo}`;
+            }
 
             cacherLeProfil();
             document.getElementById("profil").style.display = "block";
@@ -743,7 +820,7 @@ async function envoyerProfil(formData) {
             throw new Error(result.message || "Une erreur inconnue s'est produite.");
         }
     } catch (error) {
-        console.error("Erreur réseau ou serveur :", error);
+        console.error("❌ Erreur réseau ou serveur :", error);
         alert("Impossible de mettre à jour le profil.");
     } finally {
         afficherLoader(false);
@@ -854,16 +931,16 @@ document.getElementById("photoOptionsModal").addEventListener("click", function 
 });
 
 // Prendre une photo
-document.getElementById("takePhoto").addEventListener("click", function () {
-    document.getElementById("photoOptionsModal").style.display = "none";
+// document.getElementById("takePhoto").addEventListener("click", function () {
+//     document.getElementById("photoOptionsModal").style.display = "none";
 
-    navigator.camera.getPicture(onPhotoSuccess, onPhotoFail, {
-        quality: 75,
-        destinationType: Camera.DestinationType.DATA_URL,
-        encodingType: Camera.EncodingType.JPEG,
-        correctOrientation: true
-    });
-});
+//     navigator.camera.getPicture(onPhotoSuccess, onPhotoFail, {
+//         quality: 75,
+//         destinationType: Camera.DestinationType.DATA_URL,
+//         encodingType: Camera.EncodingType.JPEG,
+//         correctOrientation: true
+//     });
+// });
 
 // Importer une photo
 document.getElementById("choosePhoto").addEventListener("click", function () {
