@@ -321,7 +321,7 @@ async function addMarker(longitude, latitude, pseudo, photoProfil, tempsEcoule) 
             anchor: [0.5, 0], // Centre l'image et la place au-dessus du texte
         }),
         text: new ol.style.Text({
-            text: tempsEcoule ?  `${pseudo}\n🕒 ${tempsEcoule}` : `${pseudo}`,
+            text: tempsEcoule ? `${pseudo}\n🕒 ${tempsEcoule}` : `${pseudo}`,
             offsetY: photoProfil ? 70 : 60, // Met le texte en dessous de l'avatar
             scale: 1,
             font: 'bold 10px Arial, sans-serif',
@@ -613,15 +613,15 @@ function objectToUrlEncoded(obj) {
         .join("&");
 }
 
-// =====================================================================
+// =======================================================================
 // ======================== Remplir le formulaire ========================
-// =====================================================================
+// =======================================================================
 
 function remplirFormulaire() {
-    console.log("📌 Remplissage du formulaire avec :", profilData);
+    console.log("Remplissage du formulaire avec :", profilData);
 
     if (!profilData.pseudo || !profilData.mail) {
-        console.warn("⚠️ Données du profil manquantes. Impossible de remplir le formulaire.");
+        console.warn("Données du profil manquantes. Impossible de remplir le formulaire.");
         return;
     }
 
@@ -642,15 +642,16 @@ function remplirFormulaire() {
     console.log("Formulaire mis à jour avec succès !");
 }
 
+// =======================================================================
 // ======================== Mise à jour du profil ========================
-// =====================================================================
+// =======================================================================
 
 async function saveProfile() {
     const pseudo = document.getElementById("pseudoForm").value.trim();
     const email = document.getElementById("emailForm").value.trim();
     const password = document.getElementById("passwordForm").value.trim();
     const confirmPassword = document.getElementById("confirmPasswordForm").value.trim();
-    const photoProfil = profilData.photo || "";
+    const photoFile = document.getElementById("photoInputHidden").files[0];
 
     if (!pseudo || !email) {
         alert("Le pseudo et l’email sont requis.");
@@ -662,56 +663,69 @@ async function saveProfile() {
         return;
     }
 
-    // Affichage du loader avant le début du traitement
     afficherLoader(true);
 
-    const data = {
-        idMapper: idMapper,
-        hashMdp: hashMdp,
-        pseudo: pseudo,
-        mail: email,
-        mdp: password || "",
-        photoProfil: photoProfil,
-    };
+    let formData = new FormData();
+    formData.append("idMapper", idMapper);
+    formData.append("hashMdp", hashMdp);
+    formData.append("pseudo", pseudo);
+    formData.append("mail", email);
+    if (password) {
+        formData.append("mdp", password);
+    }
 
+    if (photoFile) {
+        const reader = new FileReader();
+        reader.readAsDataURL(photoFile);
+        reader.onload = async function () {
+            formData.append("photoProfilBase64", reader.result);
+            await envoyerProfil(formData);
+        };
+    } else {
+        formData.append("photoProfilBase64", profilData.photo);
+        await envoyerProfil(formData);
+    }
+}
+
+async function envoyerProfil(formData) {
     try {
-        console.log("Envoi des données au serveur :", data);
+        console.log("Envoi des données au serveur :", formData);
 
         const response = await fetch(URL + "updateProfile.php", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
+            body: formData
         });
 
         console.log("Réponse brute :", response);
         const result = await response.json();
         console.log("Réponse JSON :", result);
 
-        if (response.ok) {
+        if (response.ok && result.id && result.pseudo && result.mail) {
             console.log("Mise à jour réussie :", result);
 
-            // Attendre 1 seconde avant de récupérer les nouvelles données
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // Récupérer les nouvelles données du profil
-            consulterProfil();
+            await consulterProfil();
 
-            // Mise à jour des variables globales avec les nouvelles données
             profilData.pseudo = result.pseudo || profilData.pseudo;
             profilData.mail = result.mail || profilData.mail;
-            profilData.photo = result.photo || profilData.photo;
 
-            // Cacher le formulaire et afficher la page profil
+            // Vérification et correction de l'URL complète
+            profilData.photo = result.photo.startsWith("http")
+                ? result.photo
+                : `http://miage-antilles.fr/mapper/${result.photo}`;
+
             cacherLeProfil();
             document.getElementById("profil").style.display = "block";
+
+            alert(result.message || "Profil mis à jour avec succès !");
         } else {
-            throw new Error(result.descriptif || "Une erreur inconnue s'est produite.");
+            throw new Error(result.message || "Une erreur inconnue s'est produite.");
         }
     } catch (error) {
         console.error("Erreur réseau ou serveur :", error);
         alert("Impossible de mettre à jour le profil.");
     } finally {
-        // Masquer le loader après la mise à jour
         afficherLoader(false);
     }
 }
@@ -725,11 +739,12 @@ function afficherLoader(etat) {
         loader.style.display = etat ? "flex" : "none";
     }
 }
+// =======================================================================
+// ======================== Gestion de l'affichage =======================
+// =======================================================================
 
-// ======================== Gestion de l'affichage ========================
-// =====================================================================
-function InteractModifProfil () {
-    console.log("📌 Chargement de la page...");
+function InteractModifProfil() {
+    console.log("Chargement de la page...");
 
     const profilePage = document.getElementById("profil");
     const editProfilePage = document.getElementById("modifierProfilPage");
@@ -743,7 +758,7 @@ function InteractModifProfil () {
 
     // Quand on clique sur l'icône pour modifier le profil
     editProfileIcon.addEventListener("click", function () {
-        console.log("📌 Ouverture du formulaire de modification");
+        console.log("Ouverture du formulaire de modification");
         remplirFormulaire(); // Appel ici pour s'assurer que les données sont mises à jour avant affichage
 
         cacherLeProfil();
@@ -765,6 +780,88 @@ function cacherLeProfil() {
     document.querySelectorAll("#profil, #modifierProfilPage").forEach((section) => {
         section.style.display = "none";
     });
+}
+
+
+// =======================================================================
+// ======================== Gestion modal photo  =======================
+// =======================================================================
+
+// Gestion de l'aperçu de la photo
+document.getElementById("photoPreview").addEventListener("click", function () {
+    const modal = document.getElementById("photoModal");
+    const modalImg = document.getElementById("photoModalImg");
+
+    modal.style.display = "block";
+    modalImg.src = this.src;
+});
+
+// Fermer le modal d'aperçu en cliquant sur le bouton de fermeture
+document.querySelectorAll(".modal .close").forEach(closeBtn => {
+    closeBtn.addEventListener("click", function () {
+        this.closest(".modal").style.display = "none";
+    });
+});
+
+// Fermer le modal d'aperçu en cliquant en dehors de l'image
+document.getElementById("photoModal").addEventListener("click", function (event) {
+    if (event.target === this) {
+        this.style.display = "none";
+    }
+});
+
+document.getElementById("editPhoto").addEventListener("click", function () {
+    document.getElementById("photoOptionsModal").style.display = "block";
+});
+
+// Fermer le modal de sélection en cliquant en dehors
+document.getElementById("photoOptionsModal").addEventListener("click", function (event) {
+    if (event.target === this) {
+        this.style.display = "none";
+    }
+});
+
+// Prendre une photo
+document.getElementById("takePhoto").addEventListener("click", function () {
+    document.getElementById("photoOptionsModal").style.display = "none";
+
+    navigator.camera.getPicture(onPhotoSuccess, onPhotoFail, {
+        quality: 75,
+        destinationType: Camera.DestinationType.DATA_URL,
+        encodingType: Camera.EncodingType.JPEG,
+        correctOrientation: true
+    });
+});
+
+// Importer une photo
+document.getElementById("choosePhoto").addEventListener("click", function () {
+    document.getElementById("photoOptionsModal").style.display = "none";
+    document.getElementById("photoInputHidden").click();
+});
+
+// Gestion du choix de fichier depuis la galerie
+document.getElementById("photoInputHidden").addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById("photoPreview").src = e.target.result;
+            profilData.photo = e.target.result; // Mettre à jour les données du profil
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Callback si la photo est prise avec la caméra
+function onPhotoSuccess(imageData) {
+    const imageSrc = "data:image/jpeg;base64," + imageData;
+    document.getElementById("photoPreview").src = imageSrc;
+    profilData.photo = imageSrc; // Mettre à jour les données du profil
+}
+
+// Callback en cas d'échec
+function onPhotoFail(message) {
+    console.error("Erreur lors de la prise de photo :", message);
 }
 
 /***************************************************************/
