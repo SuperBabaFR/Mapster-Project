@@ -575,7 +575,7 @@ function consulterProfil() {
                 postDiv.id = "photo" + post.id;
 
                 const image_post = document.createElement("img");
-                image_post.className = "img-post";
+                image_post.className = "img-post2";
                 image_post.src = post.photo;
                 image_post.alt = "Post Image";
 
