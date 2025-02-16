@@ -154,11 +154,41 @@
             <div style="padding: 4vh; width: 100%;"></div>
          </div>
          <!-- personne assigné -->
-         <div id="recherche">
-            <p>barre de recherche</p>
-            <p>filtres</p>
-            <p>personne assigné</p>
+         <div id="recherche" style="
+    text-align: center;
+    background-color: #EAF5EE;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;">
+            <div style="
+        max-width: 600px;
+        padding: 20px;
+    ">
+               <!-- Illustration SVG -->
+               <img src="img/website-maintenance.svg" alt="En construction"
+                    style="width: 240px; margin-bottom: 20px; animation: bounce 1.5s infinite alternate;">
+
+               <!-- Texte principal -->
+               <h1 style="font-size: 24px; color: #1F8C5C; margin-bottom: 10px;">Page en Construction</h1>
+               <p style="font-size: 16px; color: #555;">
+                  Nous travaillons actuellement sur cette page pour améliorer votre expérience.<br>Merci de votre patience !
+               </p>
+            </div>
+
+            <!-- Animation CSS intégrée -->
+            <style>
+               @keyframes bounce {
+                  from { transform: translateY(0); }
+                  to { transform: translateY(-10px); }
+               }
+            </style>
          </div>
+
          <!-- Yohann et Kény -->
          <div id="poster" style="background-color: #ffffff;padding-top: 15px;padding-bottom: 25px;height: auto;">
             <div style="align-items: center;">

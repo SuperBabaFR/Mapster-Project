@@ -216,6 +216,9 @@ function addNavInteractions() {
 
             navElement.classList.add("selected");
             divElement.style.display = "block"; // Affiche le div correspondant
+            if (item.nav === "search") {
+                document.getElementById("recherche").style.display = "flex";
+            }
         });
     });
 
@@ -468,7 +471,7 @@ async function sendData() {
 
     document.getElementById("poster").innerHTML = "<div class=\"loader-container\">\n" +
         "    <div class=\"loader\"></div>\n" +
-        "    <div class=\"logo\">Chargement...</div>\n" +
+        "    <div class=\"logo\">Publication en cours...</div>\n" +
         "</div>\n";
 
     let formData = new FormData();
