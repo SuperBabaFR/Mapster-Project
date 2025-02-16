@@ -684,7 +684,7 @@ async function saveProfile() {
         const result = await response.json();
         console.log("Réponse JSON :", result);
 
-        if (response.ok && result.code === 200) {
+        if (response.ok) {
             console.log("Mise à jour réussie :", result);
 
             // Attendre 1 seconde avant de récupérer les nouvelles données
