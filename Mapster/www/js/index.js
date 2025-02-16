@@ -710,7 +710,7 @@ async function envoyerProfil(formData) {
             profilData.pseudo = result.pseudo || profilData.pseudo;
             profilData.mail = result.mail || profilData.mail;
 
-            // ✅ Correction ici : Vérification et correction de l'URL complète
+            // Vérification et correction de l'URL complète
             profilData.photo = result.photo.startsWith("http")
                 ? result.photo
                 : `http://miage-antilles.fr/mapper/${result.photo}`;
@@ -796,15 +796,29 @@ document.getElementById("photoPreview").addEventListener("click", function () {
     modalImg.src = this.src;
 });
 
-// Fermer le modal d'aperçu
+// Fermer le modal d'aperçu en cliquant sur le bouton de fermeture
 document.querySelectorAll(".modal .close").forEach(closeBtn => {
     closeBtn.addEventListener("click", function () {
         this.closest(".modal").style.display = "none";
     });
 });
 
+// Fermer le modal d'aperçu en cliquant en dehors de l'image
+document.getElementById("photoModal").addEventListener("click", function (event) {
+    if (event.target === this) {
+        this.style.display = "none";
+    }
+});
+
 document.getElementById("editPhoto").addEventListener("click", function () {
     document.getElementById("photoOptionsModal").style.display = "block";
+});
+
+// Fermer le modal de sélection en cliquant en dehors
+document.getElementById("photoOptionsModal").addEventListener("click", function (event) {
+    if (event.target === this) {
+        this.style.display = "none";
+    }
 });
 
 // Prendre une photo
@@ -819,7 +833,7 @@ document.getElementById("takePhoto").addEventListener("click", function () {
     });
 });
 
-// 📂 Importer une photo
+// Importer une photo
 document.getElementById("choosePhoto").addEventListener("click", function () {
     document.getElementById("photoOptionsModal").style.display = "none";
     document.getElementById("photoInputHidden").click();
