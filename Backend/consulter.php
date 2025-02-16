@@ -4,7 +4,10 @@
 require_once 'db_config.php';
 
 // Définir l'en-tête pour la réponse en JSON
-header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+
 
 // Essayer de se connecter à la base de données
 try {
@@ -68,39 +71,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Préparer la requête pour récupérer les posts dans un rayon donné
-        $query = $pdo->prepare("
-        SELECT 
-            Post.*, 
-            Mapper.pseudo, 
-            Mapper.photoProfil
-        FROM 
-            Post
-        JOIN 
-            Mapper 
-        ON 
-            Post.mapperId = Mapper.idMapper
-        WHERE 
-            (ABS(Post.latitude - :latitude) <= :rayon / 111000)
-            AND 
-            (ABS(Post.longitude - :longitude) <= :rayon / (111000 * Post.latitude))
-    ");
-
-        // Exécuter la requête avec les paramètres
-        $query->execute([
-            ':latitude'  => $latitude,
-            ':longitude' => $longitude,
-            ':rayon'     => $rayon
-        ]);
-
-        // Récupérer tous les résultats sous forme de tableau associatif
-        $results = $query->fetchAll(PDO::FETCH_ASSOC);
-
         // Créer un objet contenant une propriété "liste" avec les résultats
         $response = ["liste" => $results];
 
-        // Renvoyer les résultats au format JSON
-        echo json_encode($response);
+        // Préparer la requête pour récupérer les posts dans un rayon donné
+$query = $pdo->prepare("
+SELECT 
+    Post.id, 
+    Post.photo, 
+    Post.date as date,
+    Post.latitude, 
+    Post.longitude, 
+    Post.description, 
+    Mapper.idMapper, 
+    Mapper.pseudo AS pseudoMapper, 
+    Mapper.photoProfil,
+    (6371000 * ACOS(
+        COS(RADIANS(:latitude)) * COS(RADIANS(Post.latitude)) * 
+        COS(RADIANS(Post.longitude) - RADIANS(:longitude)) + 
+        SIN(RADIANS(:latitude)) * SIN(RADIANS(Post.latitude))
+    )) AS distanceUser
+FROM Post
+JOIN Mapper ON Post.mapperId = Mapper.idMapper
+HAVING distanceUser <= :rayon
+ORDER BY distanceUser ASC
+");
+
+// Exécuter la requête avec les paramètres
+$query->execute([
+':latitude'  => $latitude,
+':longitude' => $longitude,
+':rayon'     => $rayon
+]);
+
+// Récupérer tous les résultats sous forme de tableau associatif
+$results = $query->fetchAll(PDO::FETCH_ASSOC);
+
+// Structurer les résultats selon le format demandé
+$liste = [];
+foreach ($results as $row) {
+$liste[] = [
+    "id" => (int)$row['id'],
+    "photo" => $row['photo'],
+    "date" => $row['date'],
+    "longitude" => (float)$row['longitude'],
+    "latitude" => (float)$row['latitude'],
+    "distanceUser" => round($row['distanceUser'], 2), // Distance en mètres
+    "descriptions" => $row['description'],
+    "Maper" => [
+        "idMapper" => (int)$row['idMapper'],
+        "pseudoMapper" => $row['pseudoMapper'],
+        "photoProfil" => $row['photoProfil']
+    ]
+];
+}
+
+// Retourner la réponse en JSON
+header('Content-Type: application/json');
+echo json_encode(["liste" => $liste], JSON_PRETTY_PRINT);
     } catch (PDOException $e) {
         // En cas d'erreur lors de l'exécution de la requête, renvoyer un message JSON d'erreur
         echo json_encode(["error" => "Erreur lors de l'exécution de la requête : " . $e->getMessage()]);
