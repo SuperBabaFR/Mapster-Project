@@ -1,6 +1,6 @@
 # 📍 Mapster – Partage de photos géolocalisées 
 
-![Mapster Logo](img/logo_mapster.jpg)
+![Mapster Logo](Mapster/www/img/logo_mapster.jpg)
 
 **Une application sociale permettant le partage et la consultation de photos en fonction de la géolocalisation.**  
 Développée avec passion par une équipe talentueuse. 🚀📷
