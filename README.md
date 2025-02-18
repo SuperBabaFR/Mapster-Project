@@ -1,6 +1,6 @@
 # 📍 Mapster – Partage de photos géolocalisées 
 
-![Mapster Logo](Mapster/www/img/logo_mapster.jpg)
+![Mapster Logo](https://github.com/SuperBabaFR/Mapster-Project/blob/main/Mapster/www/img/logo%20mapster.jpg)
 
 **Une application sociale permettant le partage et la consultation de photos en fonction de la géolocalisation.**  
 Développée avec passion par une équipe talentueuse. 🚀📷
@@ -10,10 +10,7 @@ Développée avec passion par une équipe talentueuse. 🚀📷
 ## 📌 Table des matières
 - [🌟 Fonctionnalités](#-fonctionnalités)
 - [💡 Objectif du projet](#-objectif-du-projet)
-- [🛠️ Technologies utilisées](#-technologies-utilisées)
-- [🚀 Installation et configuration](#-installation-et-configuration)
-- [📸 Aperçu](#-aperçu)
-- [👨‍💻 Contributeurs](#-contributeurs)
+- [🛠️ Technologies utilisées](#%EF%B8%8F-technologies-utilisées)
 - [📜 Licence](#-licence)
 
 ---
