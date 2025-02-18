@@ -518,6 +518,7 @@ async function sendData() {
         "               style=\"display: block; width: 20%; padding: 5px; background-color: #3D7A56; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 3px; margin: 1vw\">\n" +
         "            Partager\n" +
         "            </button>";
+    document.getElementById("sendBtn").addEventListener("click", sendData);
 }
 
 
